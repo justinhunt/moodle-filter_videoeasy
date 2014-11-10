@@ -58,13 +58,13 @@ function filter_videoeasy_fetch_template_requires($players){
 				
 			case 'sublimevideo':
 				$requires['css'] ='';
-				$requires['js'] = '//cdn.sublimevideo.net/js/@@PERSONALJSCODE@@.js';
+				$requires['js'] = '//cdn.sublimevideo.net/js/PERSONALJSCODE.js';
 				$requires['jquery'] = 0;				
 				break;
 				
 			case 'jwplayer':
 				$requires['css'] ='';
-				$requires['js'] = 'http://jwpsrv.com/library/@@PERSONALJSCODE@@.js';
+				$requires['js'] = 'http://jwpsrv.com/library/PERSONALJSCODE.js';
 				$requires['jquery'] = 0;
 				break;
 				
@@ -126,13 +126,13 @@ function filter_videoeasy_fetch_template_presets($players){
 		$presets = false;
 		switch($player){
 			case 'videojs':
-				$presets = '<video id="@@AUTOID@@" class="video-js vjs-default-skin" controls preload="auto" width="@@WIDTH@@" height="@@HEIGHT@@" poster="@@AUTOPOSTERURLPNG@@" data-setup=\'{"example_option":true}\'>';
+				$presets = '<video id="@@AUTOID@@" class="video-js vjs-default-skin" controls preload="auto" width="@@WIDTH@@" height="@@HEIGHT@@" poster="@@DEFAULTPOSTERURL@@" data-setup=\'{"example_option":true}\'>';
  				$presets .='<source src="@@VIDEOURL@@" type="@@AUTOMIME@@" />';
 				$presets .='</video>';
 				break;
 				
 			case 'sublimevideo':
-				$presets = '<video id="@@AUTOID@@" class="sublime" width="@@WIDTH@@" height="@@HEIGHT@@" poster="@@AUTOPOSTERURLJPG@@" data-uid="@@TITLE@@" title="@@TITLE@@" preload="none">';
+				$presets = '<video id="@@AUTOID@@" class="sublime" width="@@WIDTH@@" height="@@HEIGHT@@" poster="@@DEFAULTPOSTERURL@@" data-uid="@@TITLE@@" title="@@TITLE@@" preload="none">';
   				$presets .= '<source src="@@VIDEOURL@@" type="@@AUTOMIME@@"/>';
 				$presets .='</video>';	
 				break;
@@ -191,7 +191,7 @@ function filter_videoeasy_fetch_template_scripts($players){
 			case 'jwplayer':
 				$scripts = 'jwplayer("@@AUTOID@@").setup({
 file: "@@VIDEOURL@@",
-image: "@@AUTOPOSTERURLPNG@@",
+image: "@@DEFAULTPOSTERURL@@",
 title: "@@TITLE@@",
 width: "100%",
 aspectratio: "4:3"
