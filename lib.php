@@ -193,7 +193,7 @@ function filter_videoeasy_fetch_template_scripts($players){
 file: "@@VIDEOURL@@",
 image: "@@DEFAULTPOSTERURL@@",
 title: "@@TITLE@@",
-width: "100%",
+width: "400",
 aspectratio: "4:3"
 });';
 				break;

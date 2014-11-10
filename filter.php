@@ -205,7 +205,7 @@ global $CFG, $PAGE;
 	$autoid = time() . (string)rand(100,32767) ;
 	
 	//get default splash
-	$defaultposterurl = $CFG->wwwroot . '/filter/videoeasy/splash.jpg';
+	$defaultposterurl = $CFG->wwwroot . '/filter/videoeasy/static.jpg';
 
 	//make up mime type
 	switch ($ext){
