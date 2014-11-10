@@ -71,6 +71,8 @@ Note that while the template replacement is a simple swap out of the placeholder
  
  loader script: player{ id: "@@AUTOID@@"
  becomes: player{ id: opts['AUTOID']
+ 
+And a finall caution, Video Easy generates a loader script from the template (if required) but this will be cached by Moodle in most cases. Thats a good thing too. But it means you will need to run Moodle "purge all caches" after making changes to anything on the Video Easy filter settings page.
 
 Enjoy
 
