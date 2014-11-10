@@ -176,9 +176,10 @@ global $CFG, $PAGE;
 	//get presets
 	$preset=$conf->{'templatepreset_' . $player};
 	$defaults=$conf->{'templatedefaults_' . $player};
-	$proparray = filter_videoeasy_parsepropstring($defaults);
-	//do something about this
-	//print_r(filter_videoeasy_fetch_emptyproparray());
+	//make sure we have all the keys and defaults in our proparray
+	$proparray = filter_videoeasy_fetch_emptyproparray();
+	$proparray = array_merge($proparray,filter_videoeasy_parsepropstring($defaults));
+	
 	
 	//use default widths or explicit width/heights if they were passed in ie http://url.to.video.mp4?d=640x480
 	if (!empty($link[3])) {
@@ -202,6 +203,9 @@ global $CFG, $PAGE;
 	//I liked this better, but jquery was odd about it.
 	//$autoid = $urlstub . '_' . time() . (string)rand(100,32767) ;
 	$autoid = time() . (string)rand(100,32767) ;
+	
+	//get default splash
+	$defaultposterurl = $CFG->wwwroot . '/filter/videoeasy/splash.jpg';
 
 	//make up mime type
 	switch ($ext){
@@ -214,6 +218,7 @@ global $CFG, $PAGE;
 	
 	$proparray['AUTOMIME'] = $automime;
 	$proparray['FILENAME'] = $filename;
+	$proparray['DEFAULTPOSTERURL'] = $defaultposterurl;
 	$proparray['AUTOPNGFILENAME'] = $autopngfilename;
 	$proparray['AUTOJPGFILENAME'] = $autojpgfilename;
 	$proparray['VIDEOURL'] = $videourl;

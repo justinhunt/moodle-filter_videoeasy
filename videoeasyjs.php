@@ -36,14 +36,17 @@ $player=$conf->useplayer;
 
 //get presets
 $thescript=$conf->{'templatescript_' . $player};
-//get blank props array
-$propsarray=filter_videoeasy_fetch_emptyproparray();
+$defaults=$conf->{'templatedefaults_' . $player};
+//merge defaults with blank proparray  to get all fields
+$defaultsarray = filter_videoeasy_parsepropstring($defaults);
+$proparray=array_merge(filter_videoeasy_fetch_emptyproparray(), $defaultsarray);
+
 
 //these props are in the opts array in the allopts[] array on the page
 //since we are writing the JS we write the opts['name'] into the js, but 
 //have to remove quotes from template eg "@@VAR@@" => opts['var'] //NB no quotes.
 //thats worth knowing for the admin who writed the JS load code for the template.
-foreach($propsarray as $propname=>$propvalue){
+foreach($proparray as $propname=>$propvalue){
 	//case: single quotes
 	$thescript = str_replace("'@@" . $propname ."@@'",'opts["' . $propname . '"]',$thescript);
 	//case: double quotes

@@ -33,6 +33,7 @@ function filter_videoeasy_fetch_emptyproparray(){
 	$proparray['VIDEOURL'] = '';
 	$proparray['AUTOPOSTERURLJPG'] = '';
 	$proparray['AUTOPOSTERURLPNG'] = '';
+	$proparray['DEFAULTPOSTERURL'] = '';
 	$proparray['TITLE'] = '';
 	$proparray['AUTOID'] = '';
 	$proparray['CSSLINK'] = '';
@@ -77,8 +78,8 @@ function filter_videoeasy_fetch_template_requires($players){
 				break;
 				
 			case 'mediaelement':
-				$requires['css'] ='mediaelementplayer.css';
-				$requires['js'] ='mediaelement-and-player.min.js';
+				$requires['css'] ='/filter/videoeasy/players/mediaelementjs/mediaelementplayer.css';
+				$requires['js'] ='/filter/videoeasy/players/mediaelementjs/mediaelement-and-player.min.js';
 				$requires['jquery'] = 1;
 				break;
 				
