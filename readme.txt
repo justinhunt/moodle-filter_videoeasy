@@ -25,6 +25,19 @@ Site Administration / plugins / filters / manage filters
 
 Templates and Variables and Configuration
 ==========================================
+Configure the settings at 
+Site Administration / plugins / filters / Video Easy
+
+You need to check the filetypes you wish the Video Easy filter to handle at the top of the settings page. You can choose any or all of mp4 / webm or ogg.
+And you should also check which of the players you wish to enable from the drop down list.
+NB You should TURN OFF file handling for any extensions you select here, in the Moodle Multi Media Plugins filter, and the PoodLL filter if installed.
+Multi Media Plugins filter settings can be found at:
+Site Administration / appearance / media embedding
+
+PoodLL filter settings can be found at:
+Site Administration / plugins / filters / PoodLL
+
+
 There are ten templates and the first five are taken by the most popular html5 players, Video.js, Sublime Video, JW Player, Flowplayer and MediaElement.js
 SublimeVideo and JW Player require you register with their site to get a personal javascript link. So you will need to do that first then enter it in the template before you can use them.
 
