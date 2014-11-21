@@ -62,13 +62,19 @@ class filter_videoeasy extends moodle_text_filter {
 			//check for webm
 			if ($conf->handlewebm) {
 					$search = '/<a\s[^>]*href="([^"#\?]+\.webm)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
-					$newtext = preg_replace_callback($search, 'filter_poodll_webm_callback', $newtext);
+					$newtext = preg_replace_callback($search, 'filter_videoeasy_webm_callback', $newtext);
 			}
 			
 			//check for ogg
 			if ($conf->handleogg) {
 					$search = '/<a\s[^>]*href="([^"#\?]+\.ogg)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
-					$newtext = preg_replace_callback($search, 'filter_poodll_ogg_callback', $newtext);
+					$newtext = preg_replace_callback($search, 'filter_videoeasy_ogg_callback', $newtext);
+			}
+			
+			//check for mp3
+			if ($conf->handlemp3) {
+					$search = '/<a\s[^>]*href="([^"#\?]+\.mp3)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
+					$newtext = preg_replace_callback($search, 'filter_videoeasy_mp3_callback', $newtext);
 			}
 		
 		if (is_null($newtext) or $newtext === $text) {
@@ -113,6 +119,16 @@ function filter_videoeasy_webm_callback($link) {
 }
 
 /**
+ * Replace mp3 links with player
+ *
+ * @param  $link
+ * @return string
+ */
+function filter_videoeasy_mp3_callback($link) {
+	return filter_videoeasy_process($link,'mp3');
+}
+
+/**
  * Replace mp4 or flv links with player
  *
  * @param  $link
@@ -136,7 +152,7 @@ global $CFG, $PAGE;
 	//get our template info
 	//$conf = get_object_vars(get_config('filter_videoeasy'));
 	 $conf = get_config('filter_videoeasy');
-	$player=$conf->useplayer;
+	$player=$conf->{'useplayer' . $ext};
 	
 	$require_js = $conf->{'templaterequire_js_' . $player};
 	$require_css = $conf->{'templaterequire_css_' . $player};
@@ -209,6 +225,7 @@ global $CFG, $PAGE;
 
 	//make up mime type
 	switch ($ext){
+		case 'mp3': $automime='audio/mpeg';break;
 		case 'webm': $automime='video/webm';break;
 		case 'ogg': $automime='video/ogg';break;	
 		case 'mp4': 
@@ -272,7 +289,7 @@ global $CFG, $PAGE;
 		);
 		
 		//require any scripts from the template
-	$PAGE->requires->js('/filter/videoeasy/videoeasyjs.php');
+	$PAGE->requires->js('/filter/videoeasy/videoeasyjs.php?ext=' . $ext);
 		
 		
 	//setup our JS call

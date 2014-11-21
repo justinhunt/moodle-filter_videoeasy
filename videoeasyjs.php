@@ -16,10 +16,8 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Prints a particular instance of timedpage
- *
- * You can have a rather longer description of the file as well,
- * if you like, and it can span multiple lines.
+ * Returns the JS for a specified player
+ * Its php but looks to browser like js file, cos that is what it returns.
  *
  * @package    filter_videoeasy
  * @copyright  2014 Justin Hunt
@@ -30,9 +28,10 @@
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
 
+$ext = required_param('ext',PARAM_TEXT);
 
 $conf = get_config('filter_videoeasy');
-$player=$conf->useplayer;
+$player=$conf->{'useplayer' . $ext};
 
 //get presets
 $thescript=$conf->{'templatescript_' . $player};

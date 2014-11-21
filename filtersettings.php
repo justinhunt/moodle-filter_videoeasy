@@ -28,19 +28,25 @@ require_once($CFG->dirroot.'/filter/videoeasy/lib.php');
 
 if ($ADMIN->fulltree) {
 	
-	$players = array('videojs','sublimevideo','jwplayer','flowplayer','mediaelement','playersix','playerseven','playereight','playernine','playerten');
-	$extensions = array('mp4','webm','ogg');
 	
-	//add player select list
+	//heading of template
+	$settings->add(new admin_setting_heading('filter_videoeasy/extensionheading', 
+			get_string('extensionheading', 'filter_videoeasy'), ''));
+	
+	//get the players we use and the extensions we handle
+	$players = filter_videoeasy_fetch_players();
+	$extensions = filter_videoeasy_fetch_extensions();
+	
+	//create player select list
 	$playeroptions=array();
 	foreach($players as $keyvalue){
 		$playeroptions[$keyvalue] = get_string('player_' .$keyvalue,'filter_videoeasy');
 	}
-	 $settings->add(new admin_setting_configselect('filter_videoeasy/useplayer', get_string('useplayer', 'filter_videoeasy'), get_string('useplayerdesc', 'filter_videoeasy'), 'flowplayer', $playeroptions));
 	
 	//add extensions checkbox
 	foreach($extensions as $ext){
-		$settings->add(new admin_setting_configcheckbox('filter_videoeasy/handle' . $ext, get_string('handle', 'filter_videoeasy') . ' ' . $ext, '', 0));
+		$settings->add(new admin_setting_configcheckbox('filter_videoeasy/handle' . $ext, get_string('handle', 'filter_videoeasy', strtoupper($ext)), '', 0));
+		$settings->add(new admin_setting_configselect('filter_videoeasy/useplayer' . $ext, get_string('useplayer', 'filter_videoeasy', strtoupper($ext)),  get_string('useplayerdesc', 'filter_videoeasy'), 'flowplayer', $playeroptions));
 	}
 	
 	//prepare template info

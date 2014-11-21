@@ -24,6 +24,17 @@
 defined('MOODLE_INTERNAL') || die;
 
 
+
+function filter_videoeasy_fetch_players(){
+	$players = array('videojs','sublimevideo','jwplayer','flowplayer','mediaelement','playersix','playerseven','playereight','playernine','playerten');
+	return $players;
+}
+
+function filter_videoeasy_fetch_extensions(){
+	$extensions = array('mp4','webm','ogg','mp3');
+	return $extensions;
+}	
+
 function filter_videoeasy_fetch_emptyproparray(){
 	$proparray=array();
 	$proparray['AUTOMIME'] = '';
@@ -142,7 +153,7 @@ function filter_videoeasy_fetch_template_presets($players){
 				break;
 				
 			case 'flowplayer':
-				$presets='<div id="@@AUTOID@@" class="flowplayer video-flowplayer"></div>';
+				$presets='<div id="@@AUTOID@@" class="flowplayer filter_videoeasy-flowplayer"></div>';
 				break;
 				
 			case 'mediaelement':
