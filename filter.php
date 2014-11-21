@@ -161,7 +161,17 @@ global $CFG, $PAGE;
     
     //get the bits of the url
 	$bits = parse_url($rawurl);
-	$scheme = $bits['scheme'] . ':';
+	if(!array_key_exists('scheme',$bits)){
+		//add scheme to url if there was none
+		if(strpos($PAGE->url->out(),'https:')===0){
+			$scheme='https:';
+		}else{
+			$scheme='http:';
+		}
+	}else{
+		$scheme = $bits['scheme'] . ':';
+	}
+	
 	$filename = basename($bits['path']);
 	$autopngfilename = str_replace('.' . $ext,'.png',$filename);
 	$autojpgfilename = str_replace('.' . $ext,'.png',$filename);
