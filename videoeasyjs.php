@@ -33,6 +33,7 @@ $ext = required_param('ext',PARAM_TEXT);
 $conf = get_config('filter_videoeasy');
 $player=$conf->{'useplayer' . $ext};
 
+
 //get presets
 $thescript=$conf->{'templatescript_' . $player};
 $defaults=$conf->{'templatedefaults_' . $player};
