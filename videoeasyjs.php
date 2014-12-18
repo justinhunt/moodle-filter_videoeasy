@@ -54,9 +54,12 @@ foreach($proparray as $propname=>$propvalue){
 	//case: no quotes
 	$thescript = str_replace('@@' . $propname .'@@',"opts['" . $propname . "']",$thescript);
 }
-
-$theloop = "M.filter_videoeasy.gyui.Array.each(M.filter_videoeasy.allopts, function(opts) {" . $thescript. "});";
+/*
+$theloop = "M.filter_videoeasy.gyui.Array.each(M.filter_videoeasy.allopts['". $ext . "'], function(opts) {" . $thescript. "});";
 $thefunction = "function filter_videoeasy_doscripts(){ " . $theloop . "}";
+*/
+$thefunction = "if(typeof filter_videoeasy_extfunctions == 'undefined'){filter_videoeasy_extfunctions={};}";
+$thefunction .= "filter_videoeasy_extfunctions['" . $ext . "']= function(opts) {" . $thescript. "};";
 //$thefunction = "function filter_videoeasy_doscripts(){ " . $thescript . "}";
 header('Content-Type: application/javascript');
 echo $thefunction;

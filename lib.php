@@ -31,7 +31,7 @@ function filter_videoeasy_fetch_players(){
 }
 
 function filter_videoeasy_fetch_extensions(){
-	$extensions = array('mp4','webm','ogg','mp3');
+	$extensions = array('mp4','webm','ogg','mp3','rss');
 	return $extensions;
 }	
 
@@ -39,6 +39,7 @@ function filter_videoeasy_fetch_emptyproparray(){
 	$proparray=array();
 	$proparray['AUTOMIME'] = '';
 	$proparray['FILENAME'] = '';
+	$proparray['FILETITLE'] = '';
 	$proparray['AUTOPNGFILENAME'] = '';
 	$proparray['AUTOJPGFILENAME'] = '';
 	$proparray['VIDEOURL'] = '';
@@ -51,6 +52,7 @@ function filter_videoeasy_fetch_emptyproparray(){
 	$proparray['PLAYER'] = '';
 	$proparray['WIDTH'] = '';
 	$proparray['HEIGHT'] = '';
+	$proparray['FILEEXT'] = '';
 	return $proparray;
 }
 

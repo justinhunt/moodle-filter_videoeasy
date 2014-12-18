@@ -77,6 +77,12 @@ class filter_videoeasy extends moodle_text_filter {
 					$newtext = preg_replace_callback($search, 'filter_videoeasy_mp3_callback', $newtext);
 			}
 		
+			//check for rss
+			if ($conf->handlerss) {
+					$search = '/<a\s[^>]*href="([^"#\?]+\.rss)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
+					$newtext = preg_replace_callback($search, 'filter_videoeasy_rss_callback', $newtext);
+			}
+		
 		if (is_null($newtext) or $newtext === $text) {
 			// error or not filtered
 			return $text;
@@ -129,6 +135,16 @@ function filter_videoeasy_mp3_callback($link) {
 }
 
 /**
+ * Replace rss links with player
+ *
+ * @param  $link
+ * @return string
+ */
+function filter_videoeasy_rss_callback($link) {
+	return filter_videoeasy_process($link,'rss');
+}
+
+/**
  * Replace mp4 or flv links with player
  *
  * @param  $link
@@ -173,6 +189,7 @@ global $CFG, $PAGE;
 	}
 	
 	$filename = basename($bits['path']);
+	$filetitle = str_replace('.' . $ext,'',$filename);
 	$autopngfilename = str_replace('.' . $ext,'.png',$filename);
 	$autojpgfilename = str_replace('.' . $ext,'.png',$filename);
 	//print_r($bits);
@@ -245,6 +262,7 @@ global $CFG, $PAGE;
 	
 	$proparray['AUTOMIME'] = $automime;
 	$proparray['FILENAME'] = $filename;
+	$proparray['FILETITLE'] = $filetitle;
 	$proparray['DEFAULTPOSTERURL'] = $defaultposterurl;
 	$proparray['AUTOPNGFILENAME'] = $autopngfilename;
 	$proparray['AUTOJPGFILENAME'] = $autojpgfilename;
@@ -253,6 +271,7 @@ global $CFG, $PAGE;
 	$proparray['AUTOPOSTERURLPNG'] = $autoposterurlpng;
 	$proparray['TITLE'] = $title;
 	$proparray['AUTOID'] = $autoid;
+	$proparray['FILEEXT'] = $ext;
 	
 	//might need this if cant load into header, but need to.
 	//$scripttag="<script src='@@REQUIREJS@@'></script>";

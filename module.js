@@ -9,9 +9,11 @@
 
 M.filter_videoeasy = {
 
-	allopts: Array(),
+	allopts: {},
 	
-	csslink: false,
+	extscripts: {},
+	
+	csslinks: Array(),
 	
 	gyui: null,
 	
@@ -27,15 +29,28 @@ M.filter_videoeasy = {
 	loadvideoeasy: function(Y,opts) {
 		//stash our Y and opts for later use
 		this.gyui = Y;
-		this.allopts.push(opts);
-			
-		//load our css in head
+		
+		//load our css in head if required
+		//only do it once per extension though
 		if(opts['CSSLINK']){
-			if (!this.csslink){
-				this.csslink=true;
+			if (this.csslinks.indexOf(opts['FILEEXT'])<0){
+				this.csslinks.push(opts['FILEEXT']);
 				this.injectcss(opts['CSSLINK']);
 			}
 		}
-		filter_videoeasy_doscripts();		
+		
+		
+		/*
+		if(!this.allopts[opts['FILEEXT']]){this.allopts[opts['FILEEXT']]=Array();}		
+		this.allopts[opts['FILEEXT']].push(opts);
+		console.log(this.allopts);
+		filter_videoeasy_doscripts(opts);
+		*/
+		
+		if(typeof filter_videoeasy_extfunctions != 'undefined'){ 
+			if(typeof filter_videoeasy_extfunctions[opts['FILEEXT']] == 'function'){ 
+				filter_videoeasy_extfunctions[opts['FILEEXT']](opts);
+			}
+		}
 	}//end of function
 }//end of class
