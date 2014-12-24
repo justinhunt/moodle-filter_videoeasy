@@ -28,9 +28,16 @@ require_once($CFG->dirroot.'/filter/videoeasy/lib.php');
 
 if ($ADMIN->fulltree) {
 	
+	$settings=null;
+
+	//add folder in property tree for settings pages
+	 $ADMIN->add('filtersettings', new admin_category('filter_videoeasy_category', 'Video Easy'));
+	 
+	 //template settings Page Settings 
+   	$settings_page = new admin_settingpage('filter_videoeasy_templatepage_handlers',get_string('templatepageheading_handlers', 'filter_videoeasy'));
 	
 	//heading of template
-	$settings->add(new admin_setting_heading('filter_videoeasy/extensionheading', 
+	$settings_page->add(new admin_setting_heading('filter_videoeasy/extensionheading', 
 			get_string('extensionheading', 'filter_videoeasy'), ''));
 	
 	//get the players we use and the extensions we handle
@@ -45,9 +52,12 @@ if ($ADMIN->fulltree) {
 	
 	//add extensions checkbox
 	foreach($extensions as $ext){
-		$settings->add(new admin_setting_configcheckbox('filter_videoeasy/handle' . $ext, get_string('handle', 'filter_videoeasy', strtoupper($ext)), '', 0));
-		$settings->add(new admin_setting_configselect('filter_videoeasy/useplayer' . $ext, get_string('useplayer', 'filter_videoeasy', strtoupper($ext)),  get_string('useplayerdesc', 'filter_videoeasy'), 'flowplayer', $playeroptions));
+		$settings_page->add(new admin_setting_configcheckbox('filter_videoeasy/handle' . $ext, get_string('handle', 'filter_videoeasy', strtoupper($ext)), '', 0));
+		$settings_page->add(new admin_setting_configselect('filter_videoeasy/useplayer' . $ext, get_string('useplayer', 'filter_videoeasy', strtoupper($ext)),  get_string('useplayerdesc', 'filter_videoeasy'), 'flowplayer', $playeroptions));
 	}
+	
+	//add page to category
+	$ADMIN->add('filter_videoeasy_category', $settings_page);
 	
 	//prepare template info
 	$templaterequires=filter_videoeasy_fetch_template_requires($players);
@@ -57,44 +67,52 @@ if ($ADMIN->fulltree) {
 	
 	//add 10 templates
 	foreach($players as $player){
+	
+		//playername
 		$playername = get_string('player_' .$player,'filter_videoeasy');
 		
+		 //template settings Page Settings 
+		$settings_page = new admin_settingpage('filter_videoeasy_templatepage_' . $player,get_string('templatepageheading', 'filter_videoeasy',$playername));
+		
 		//heading of template
-		$settings->add(new admin_setting_heading('filter_videoeasy/templateheading_' . $player, 
-				get_string('templateheading', 'filter_videoeasy') . ' ' . $playername , ''));
+		$settings_page->add(new admin_setting_heading('filter_videoeasy/templateheading_' . $player, 
+				get_string('templateheading', 'filter_videoeasy', $playername), ''));
 				
 		//template JS heading
-		 $settings->add(new admin_setting_configtext('filter_videoeasy/templaterequire_js_' . $player , 
+		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/templaterequire_js_' . $player , 
 				$playername  . get_string('templaterequirejs', 'filter_videoeasy') ,
 				get_string('templaterequirejs_desc', 'filter_videoeasy'), 
 				 $templaterequires[$player]['js']), PARAM_RAW);		
 				
 		//template css heading
-		 $settings->add(new admin_setting_configtext('filter_videoeasy/templaterequire_css_' . $player , 
+		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/templaterequire_css_' . $player , 
 				$playername  . get_string('templaterequirecss', 'filter_videoeasy'),
 				get_string('templaterequirecss_desc', 'filter_videoeasy'), 
 				 $templaterequires[$player]['css']), PARAM_RAW);
 		
 		//template jquery heading		
-		 $settings->add(new admin_setting_configcheckbox('filter_videoeasy/templaterequire_jquery_' . $player, 
+		 $settings_page->add(new admin_setting_configcheckbox('filter_videoeasy/templaterequire_jquery_' . $player, 
 				$playername  . get_string('templaterequirejquery', 'filter_videoeasy'),
 				get_string('templaterequirejquery_desc', 'filter_videoeasy'), 
 				 $templaterequires[$player]['jquery']));		 
 				 
 		//template body
-		 $settings->add(new admin_setting_configtextarea('filter_videoeasy/templatepreset_' . $player,
+		 $settings_page->add(new admin_setting_configtextarea('filter_videoeasy/templatepreset_' . $player,
 					$playername  . get_string('template', 'filter_videoeasy'),
 					get_string('template_desc', 'filter_videoeasy'),$templatepresets[$player]));
 
 		//template body script
-		 $settings->add(new admin_setting_configtextarea('filter_videoeasy/templatescript_' . $player,
+		 $settings_page->add(new admin_setting_configtextarea('filter_videoeasy/templatescript_' . $player,
 					$playername  . get_string('templatescript', 'filter_videoeasy'),
 					get_string('templatescript_desc', 'filter_videoeasy'),$templatescripts[$player]));
 
 
 		//template defaults			
-		 $settings->add(new admin_setting_configtextarea('filter_videoeasy/templatedefaults_' . $player,
+		 $settings_page->add(new admin_setting_configtextarea('filter_videoeasy/templatedefaults_' . $player,
 					$playername  . get_string('templatedefaults', 'filter_videoeasy'),
 					get_string('templatedefaults_desc', 'filter_videoeasy'),$templatedefaults[$player]));
+					
+		//add page to category
+		$ADMIN->add('filter_videoeasy_category', $settings_page);
 	}
 }
