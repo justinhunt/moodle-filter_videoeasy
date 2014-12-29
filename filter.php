@@ -246,7 +246,7 @@ global $CFG, $PAGE;
 	
 	//I liked this better, but jquery was odd about it.
 	//$autoid = $urlstub . '_' . time() . (string)rand(100,32767) ;
-	$autoid = time() . (string)rand(100,32767) ;
+	$autoid = 'fv_' . time() . (string)rand(100,32767) ;
 	
 	//get default splash
 	$defaultposterurl = $CFG->wwwroot . '/filter/videoeasy/static.jpg';
