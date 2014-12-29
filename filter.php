@@ -173,8 +173,8 @@ global $CFG, $PAGE;
 	$require_js = $conf->{'templaterequire_js_' . $player};
 	$require_css = $conf->{'templaterequire_css_' . $player};
 	$require_jquery = $conf->{'templaterequire_jquery_' . $player};
-	$uploadcssfile = $conf['uploadcss_' . $player];
-	$uploadjsfile = $conf['uploadjs_' . $player];
+	$uploadcssfile = $conf->{'uploadcss_' . $player};
+	$uploadjsfile = $conf->{'uploadjs_' . $player};
 	
     //get the bits of the url
 	$bits = parse_url($rawurl);
