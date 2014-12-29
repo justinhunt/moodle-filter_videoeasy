@@ -173,8 +173,9 @@ global $CFG, $PAGE;
 	$require_js = $conf->{'templaterequire_js_' . $player};
 	$require_css = $conf->{'templaterequire_css_' . $player};
 	$require_jquery = $conf->{'templaterequire_jquery_' . $player};
-
-    
+	$uploadcssfile = $conf['uploadcss_' . $player];
+	$uploadjsfile = $conf['uploadjs_' . $player];
+	
     //get the bits of the url
 	$bits = parse_url($rawurl);
 	if(!array_key_exists('scheme',$bits)){
@@ -286,28 +287,52 @@ global $CFG, $PAGE;
 		$preset = str_replace('@@' . $name .'@@',$value,$preset);
 	}
 	//error_log($preset);
-
-
-	//prepare additional params our JS will use
-	$proparray['PLAYER'] = $player;
-	$proparray['CSSLINK']=false;
 	
 	//load jquery
 	if($require_jquery){
 		$PAGE->requires->js(new moodle_url($scheme . '//code.jquery.com/jquery-1.11.0.min.js'));
 	}
 
-	//get js
-	$PAGE->requires->js(new moodle_url($require_js));
-	
-	//load css in header if not too late
-	//$PAGE->requires->is_head_done()
-	if($require_css && !$PAGE->headerprinted){
-		$PAGE->requires->css( new moodle_url($require_css));
-	}else{
-		$proparray['CSSLINK']=$require_css;
+	//get any required js
+	if($require_js){
+		$PAGE->requires->js(new moodle_url($require_js));
 	}
 	
+	//get uploaded js
+	if($uploadjsfile){
+		$uploadjsurl = filter_videoeasy_setting_file_url($uploadjsfile,'uploadjs_' . $player);
+		$PAGE->requires->js($uploadjsurl);
+	}
+	
+	//prepare additional params our JS will use
+	$proparray['PLAYER'] = $player;
+	$proparray['CSSLINK']=false;
+	$proparray['CSSUPLOAD']=false;
+	
+	//load css in header if not too late
+	//if not too late: load css in header
+	// if too late: inject it there via JS
+	if($uploadcssfile){
+		$uploadcssurl = filter_videoeasy_setting_file_url($uploadcssfile,'uploadcss_' . $player);
+	}
+	
+	if(!$PAGE->headerprinted && !$PAGE->requires->is_head_done()){
+		if($require_css){
+			$PAGE->requires->css( new moodle_url($require_css));
+		}
+		if($uploadcssfile){
+			$PAGE->requires->css( new moodle_url($uploadcssurl));
+		}
+	}else{
+		if($require_css){
+			$proparray['CSSLINK']=$require_css;
+		}
+		if($uploadcssfile){
+			//need a new strategy here!!!
+			$proparray['CSSUPLOAD']=$uploadcssurl;
+		}
+		
+	}
 	
 	//initialise our JS and call it to load
 	//We need this so that we can require the JSON , for json stringify

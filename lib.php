@@ -49,6 +49,7 @@ function filter_videoeasy_fetch_emptyproparray(){
 	$proparray['TITLE'] = '';
 	$proparray['AUTOID'] = '';
 	$proparray['CSSLINK'] = '';
+	$proparray['CSSUPLOAD'] = '';
 	$proparray['PLAYER'] = '';
 	$proparray['WIDTH'] = '';
 	$proparray['HEIGHT'] = '';
@@ -335,3 +336,68 @@ function filter_videoeasy_parsepropstring($rawproperties){
 	}
 	return $itemprops;
 }
+
+
+function filter_videoeasy_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
+
+	for($i=1;$i<=10;$i++){
+    	if($context->contextlevel == CONTEXT_SYSTEM and $filearea === 'uploadjs' . $i) {
+        	return filter_videoeasy_setting_file_serve($filearea,$args,$forcedownload, $options);
+		} 
+	}
+	send_file_not_found();
+}
+
+
+/**
+       * Returns URL to the stored file via pluginfile.php.
+       *
+       * theme revision is used instead of the itemid.
+      *
+       * @param string $setting
+       * @param string $filearea
+       * @return string protocol relative URL or null if not present
+       */
+   function filter_videoeasy_setting_file_url($filepath, $filearea) {
+          global $CFG;
+
+ 
+         $component = 'filter_videoeasy';
+         $itemid = 0;
+         $syscontext = context_system::instance();
+  
+          $url = moodle_url::make_file_url("$CFG->wwwroot/pluginfile.php", "/$syscontext->id/$component/$filearea/$itemid".$filepath);
+  
+          // Now this is tricky because the we can not hardcode http or https here, lets use the relative link.
+         // Note: unfortunately moodle_url does not support //urls yet.
+        // $url = preg_replace('|^https?://|i', '//', $url->out(false));
+         return $url;
+     }
+
+
+function filter_videoeasy_setting_file_serve($filearea, $args, $forcedownload, $options) {
+         global $CFG;
+         require_once("$CFG->libdir/filelib.php");
+  
+          $syscontext = context_system::instance();
+         $component = 'filter_videoeasy';
+  
+          $revision = array_shift($args);
+         if ($revision < 0) {
+             $lifetime = 0;
+         } else {
+              $lifetime = 60*60*24*60;
+         }
+  
+          $fs = get_file_storage();
+         $relativepath = implode('/', $args);
+  
+         $fullpath = "/{$syscontext->id}/{$component}/{$filearea}/0/{$relativepath}";
+          $fullpath = rtrim($fullpath, '/');
+          if ($file = $fs->get_file_by_hash(sha1($fullpath))) {
+              send_stored_file($file, $lifetime, 0, $forcedownload, $options);
+              return true;
+          } else {
+             send_file_not_found();
+          }
+      }

@@ -108,6 +108,20 @@ if (is_siteadmin()) {
 					$playername  . get_string('templatedefaults', 'filter_videoeasy'),
 					get_string('templatedefaults_desc', 'filter_videoeasy'),$templatedefaults[$player]));
 					
+		//additional JS (upload)
+		//see here: for integrating this https://moodle.org/mod/forum/discuss.php?d=227249
+		$name = 'filter_videoeasy/uploadjs_' . $player;
+		$title = $playername . ' ' .  get_string('uploadjs', 'filter_videoeasy') ;
+		$description = get_string('uploadjs_desc', 'filter_videoeasy');
+		$settings_page->add(new admin_setting_configstoredfile($name, $title, $description, 'uploadjs_' . $player));
+		
+		//additional CSS (upload)
+		$name = 'filter_videoeasy/uploadcss_' . $player;
+		$title =$playername . ' ' . get_string('uploadcss', 'filter_videoeasy');
+		$description = get_string('uploadcss_desc', 'filter_videoeasy');
+		$settings_page->add(new admin_setting_configstoredfile($name, $title, $description, 'uploadcss_' . $player));
+
+					
 		//add page to category
 		$ADMIN->add('filter_videoeasy_category', $settings_page);
 	}

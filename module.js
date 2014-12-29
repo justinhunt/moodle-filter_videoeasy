@@ -31,11 +31,19 @@ M.filter_videoeasy = {
 		this.gyui = Y;
 		
 		//load our css in head if required
-		//only do it once per extension though
+		//only do it once per file though
 		if(opts['CSSLINK']){
-			if (this.csslinks.indexOf(opts['FILEEXT'])<0){
-				this.csslinks.push(opts['FILEEXT']);
+			if (this.csslinks.indexOf(opts['CSSLINK'])<0){
+				this.csslinks.push(opts['CSSLINK']);
 				this.injectcss(opts['CSSLINK']);
+			}
+		}
+		//load our css in head if required
+		//only do it once per extension though
+		if(opts['CSSUPLOAD']){
+			if (this.csslinks.indexOf(opts['CSSUPLOAD'])<0){
+				this.csslinks.push(opts['CSSUPLOAD']);
+				this.injectcss(opts['CSSUPLOAD']);
 			}
 		}
 		
