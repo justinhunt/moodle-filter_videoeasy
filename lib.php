@@ -339,10 +339,12 @@ function filter_videoeasy_parsepropstring($rawproperties){
 
 
 function filter_videoeasy_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
-
-	for($i=1;$i<=10;$i++){
-    	if($context->contextlevel == CONTEXT_SYSTEM and $filearea === 'uploadjs' . $i) {
-        	return filter_videoeasy_setting_file_serve($filearea,$args,$forcedownload, $options);
+	$players = filter_videoeasy_fetch_players();
+	foreach($players as $player){
+    	if($context->contextlevel == CONTEXT_SYSTEM){
+    		if($filearea === 'uploadjs_' . $player || $filearea === 'uploadcss_' . $player ) {
+        		return filter_videoeasy_setting_file_serve($filearea,$args,$forcedownload, $options);
+        	}
 		} 
 	}
 	send_file_not_found();
