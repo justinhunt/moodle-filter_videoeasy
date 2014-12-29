@@ -321,7 +321,7 @@ global $CFG, $PAGE;
 			$PAGE->requires->css( new moodle_url($require_css));
 		}
 		if($uploadcssfile){
-			$PAGE->requires->css( new moodle_url($uploadcssurl));
+			$PAGE->requires->css($uploadcssurl);
 		}
 	}else{
 		if($require_css){
@@ -329,7 +329,7 @@ global $CFG, $PAGE;
 		}
 		if($uploadcssfile){
 			//need a new strategy here!!!
-			$proparray['CSSUPLOAD']=$uploadcssurl;
+			$proparray['CSSUPLOAD']=$uploadcssurl->out();
 		}
 		
 	}

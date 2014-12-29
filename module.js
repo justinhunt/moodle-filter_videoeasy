@@ -20,8 +20,12 @@ M.filter_videoeasy = {
 	injectcss: function(csslink){
 		var link = document.createElement("link");
 		link.href = csslink;
-		link.type = "text/css";
-		link.rel = "stylesheet";
+		if(csslink.toLowerCase().lastIndexOf('.html')==csslink.length-5){
+			link.rel = 'import';
+		}else{
+			link.type = "text/css";
+			link.rel = "stylesheet";	
+		}
 		document.getElementsByTagName("head")[0].appendChild(link);	
 	},
 	
