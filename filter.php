@@ -290,7 +290,7 @@ global $CFG, $PAGE;
 	
 	//load jquery
 	if($require_jquery){
-		$PAGE->requires->js(new moodle_url($scheme . '//code.jquery.com/jquery-1.11.0.min.js'));
+		$PAGE->requires->js(new moodle_url($scheme . $conf->{'jqueryurl'}));
 	}
 
 	//get any required js

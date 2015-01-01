@@ -46,7 +46,6 @@ $string['templatedefaults_desc'] = 'Defaults are usually just width, and height.
 $string['useplayer'] = '{$a} Player';
 $string['useplayerdesc'] = "The player selected will use the information from the appropriate template below.";
 $string['handle'] = 'Handle {$a}';
-$players = array('videojs','sublimevideo','jwplayer','flowplayer','mediaelement','playersix','playerseven','playereight','playernine','playerten');
 $string['player_videojs'] = "Video.js";
 $string['player_sublimevideo'] = "Sublime Video";
 $string['player_jwplayer'] = "JW Player";
@@ -62,6 +61,10 @@ $string['templatepageheading_handlers'] = 'Register File Extensions';
 
 $string['uploadjs'] = 'Upload JS';
 $string['uploadjs_desc'] = 'You can upload one js library file which will be loaded for your template. Only one.';
+
+$string['jqueryurl'] = 'JQuery URL';
+$string['jqueryurl_desc'] = 'The URL VideoEasy will use when adding jquery to the host page. Defaults to the CDN hosted version. If you site does not have internet access you will probably need to point this to a location on your Moodle server. Whatever you do dont http: ot https: begin the url with // ';
+
 
 $string['uploadcss'] = 'Upload CSS';
 $string['uploadcss_desc'] = 'You can upload one CSS file which will be loaded for your template. Only one.';

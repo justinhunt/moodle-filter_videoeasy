@@ -52,6 +52,12 @@ if (is_siteadmin()) {
 		$settings_page->add(new admin_setting_configselect('filter_videoeasy/useplayer' . $ext, get_string('useplayer', 'filter_videoeasy', strtoupper($ext)),  get_string('useplayerdesc', 'filter_videoeasy'), 'flowplayer', $playeroptions));
 	}
 	
+	//add jquery path 
+	$settings_page->add(new admin_setting_configtext('filter_videoeasy/jqueryurl', 
+				get_string('jqueryurl', 'filter_videoeasy'),
+				get_string('jqueryurl_desc', 'filter_videoeasy'), 
+				 '//code.jquery.com/jquery-1.11.2.min.js', PARAM_RAW));
+	
 	//add page to category
 	$ADMIN->add('filter_videoeasy_category', $settings_page);
 	
