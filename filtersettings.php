@@ -25,6 +25,7 @@
 $settings = null;
 defined('MOODLE_INTERNAL') || die;
 if (is_siteadmin()) {
+	require_once($CFG->dirroot . '/filter/videoeasy/lib.php');
 
 	//add folder in property tree for settings pages
 	 $ADMIN->add('filtersettings', new admin_category('filter_videoeasy_category', 'Video Easy'));
