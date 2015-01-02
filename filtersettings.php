@@ -56,7 +56,7 @@ if (is_siteadmin()) {
 	$settings_page->add(new admin_setting_configtext('filter_videoeasy/jqueryurl', 
 				get_string('jqueryurl', 'filter_videoeasy'),
 				get_string('jqueryurl_desc', 'filter_videoeasy'), 
-				 '//code.jquery.com/jquery-1.11.2.min.js', PARAM_RAW));
+				 '//code.jquery.com/jquery-1.11.2.min.js', PARAM_RAW,50));
 	
 	//add page to category
 	$ADMIN->add('filter_videoeasy_category', $settings_page);
@@ -84,13 +84,13 @@ if (is_siteadmin()) {
 		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/templaterequire_js_' . $player , 
 				$playername  . get_string('templaterequirejs', 'filter_videoeasy') ,
 				get_string('templaterequirejs_desc', 'filter_videoeasy'), 
-				 $templaterequires[$player]['js']), PARAM_RAW);		
+				 $templaterequires[$player]['js']), PARAM_RAW,50);		
 				
 		//template css heading
 		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/templaterequire_css_' . $player , 
 				$playername  . get_string('templaterequirecss', 'filter_videoeasy'),
 				get_string('templaterequirecss_desc', 'filter_videoeasy'), 
-				 $templaterequires[$player]['css']), PARAM_RAW);
+				 $templaterequires[$player]['css']), PARAM_RAW,50);
 		
 		//template jquery heading		
 		 $settings_page->add(new admin_setting_configcheckbox('filter_videoeasy/templaterequire_jquery_' . $player, 
