@@ -29,6 +29,8 @@ defined('MOODLE_INTERNAL') || die();
 require_once(dirname(__FILE__).'/lib.php');
 
 class filter_videoeasy extends moodle_text_filter {
+	protected $adminconfig=null;
+	protected $courseconfig=null;
 
     /**
      * Apply the filter to the text
@@ -39,7 +41,6 @@ class filter_videoeasy extends moodle_text_filter {
      * @return string text after processing
      */
     public function filter($text, array $options = array()) {
-	
 			if (!is_string($text)) {
 				// non string data can not be filtered anyway
 				return $text;
@@ -51,36 +52,38 @@ class filter_videoeasy extends moodle_text_filter {
 			if(!$havelinks){return $text;}
 			
 			 //$conf = get_object_vars(get_config('filter_videoeasy'));
-			 $conf = get_config('filter_videoeasy');			
+			 //$conf = get_config('filter_videoeasy');
+			 $this->adminconfig =get_config('filter_videoeasy');
+					
 			
 			//check for mp4
-			if ($conf->handlemp4) {
+			if ($this->fetchconf('handlemp4')) {
 					$search = '/<a\s[^>]*href="([^"#\?]+\.mp4)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
-					$newtext = preg_replace_callback($search, 'filter_videoeasy_mp4_callback', $newtext);
+					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_mp4_callback', $newtext);
 			}
 			
 			//check for webm
-			if ($conf->handlewebm) {
+			if ($this->fetchconf('handlewebm')) {
 					$search = '/<a\s[^>]*href="([^"#\?]+\.webm)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
-					$newtext = preg_replace_callback($search, 'filter_videoeasy_webm_callback', $newtext);
+					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_webm_callback', $newtext);
 			}
 			
 			//check for ogg
-			if ($conf->handleogg) {
+			if ($this->fetchconf('handleogg')) {
 					$search = '/<a\s[^>]*href="([^"#\?]+\.ogg)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
-					$newtext = preg_replace_callback($search, 'filter_videoeasy_ogg_callback', $newtext);
+					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_ogg_callback', $newtext);
 			}
 			
 			//check for mp3
-			if ($conf->handlemp3) {
+			if ($this->fetchconf('handlemp3')) {
 					$search = '/<a\s[^>]*href="([^"#\?]+\.mp3)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
-					$newtext = preg_replace_callback($search, 'filter_videoeasy_mp3_callback', $newtext);
+					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_mp3_callback', $newtext);
 			}
 		
 			//check for rss
-			if ($conf->handlerss) {
+			if ($this->fetchconf('handlerss')) {
 					$search = '/<a\s[^>]*href="([^"#\?]+\.rss)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
-					$newtext = preg_replace_callback($search, 'filter_videoeasy_rss_callback', $newtext);
+					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_rss_callback', $newtext);
 			}
 		
 		if (is_null($newtext) or $newtext === $text) {
@@ -90,266 +93,284 @@ class filter_videoeasy extends moodle_text_filter {
 
 		return $newtext;
     }
-   
-}//end of class
-
-
-/**
- * Replace mp4 links with player
- *
- * @param  $link
- * @return string
- */
-function filter_videoeasy_mp4_callback($link) {
-	return filter_videoeasy_process($link,'mp4');
-}
-
-/**
- * Replace ogg links with player
- *
- * @param  $link
- * @return string
- */
-function filter_videoeasy_ogg_callback($link) {
-	return filter_videoeasy_process($link,'ogg');
-}
-
-/**
- * Replace webm links with player
- *
- * @param  $link
- * @return string
- */
-function filter_videoeasy_webm_callback($link) {
-	return filter_videoeasy_process($link,'webm');
-}
-
-/**
- * Replace mp3 links with player
- *
- * @param  $link
- * @return string
- */
-function filter_videoeasy_mp3_callback($link) {
-	return filter_videoeasy_process($link,'mp3');
-}
-
-/**
- * Replace rss links with player
- *
- * @param  $link
- * @return string
- */
-function filter_videoeasy_rss_callback($link) {
-	return filter_videoeasy_process($link,'rss');
-}
-
-/**
- * Replace mp4 or flv links with player
- *
- * @param  $link
- * @param  $ext
- * @return string
- */
-function filter_videoeasy_process($link, $ext) {
-global $CFG, $PAGE;
-/*
-* 1 = url, 2=?, 3=width,4=height,5=linkedtext
-*
-*/
-//	print_r($link);
-
-	//clean up url
-	$url = $link[1];
-    $url = str_replace('&amp;', '&', $url);
-    $rawurl = $url;
-	$url = clean_param($url, PARAM_URL);
+    
+    private function fetchconf($prop){
+    global $COURSE;
+    	//I don't know why we need this whole courseconfig business.
+    	//we are supposed to be able to just call $this->localconfig / $this->localconfig[$propertyname]
+    	//as per here:https://docs.moodle.org/dev/Filters#Local_configuration , but its always empty
+    	//I just gave up and do it myself and stuff it in $this->courseconfig . bug?? Justin 20150106
+    	if($this->localconfig && !empty($this->localconfig)){
+    		$this->courseconfig = $this->localconfig;
+    	}
+    	if(!$this->courseconfig){
+    		$this->courseconfig = filter_get_local_config('videoeasy', context_course::instance($COURSE->id)->id);
+    	}
+		if($this->courseconfig && isset($this->courseconfig[$prop]) && $this->courseconfig[$prop] != 'sitedefault') {
+			return $this->courseconfig[$prop];
+		}else{
+			return $this->adminconfig->{$prop};
+		}
+	}
 	
-	//get our template info
-	//$conf = get_object_vars(get_config('filter_videoeasy'));
-	 $conf = get_config('filter_videoeasy');
-	$player=$conf->{'useplayer' . $ext};
+	/**
+	 * Replace mp4 links with player
+	 *
+	 * @param  $link
+	 * @return string
+	 */
+	private function filter_videoeasy_mp4_callback($link) {
+		return $this->filter_videoeasy_process($link,'mp4');
+	}
+
+	/**
+	 * Replace ogg links with player
+	 *
+	 * @param  $link
+	 * @return string
+	 */
+	private function filter_videoeasy_ogg_callback($link) {
+		return $this->filter_videoeasy_process($link,'ogg');
+	}
+
+	/**
+	 * Replace webm links with player
+	 *
+	 * @param  $link
+	 * @return string
+	 */
+	private function filter_videoeasy_webm_callback($link) {
+		return $this->filter_videoeasy_process($link,'webm');
+	}
+
+	/**
+	 * Replace mp3 links with player
+	 *
+	 * @param  $link
+	 * @return string
+	 */
+	private function filter_videoeasy_mp3_callback($link) {
+		return $this->filter_videoeasy_process($link,'mp3');
+	}
+
+	/**
+	 * Replace rss links with player
+	 *
+	 * @param  $link
+	 * @return string
+	 */
+	private function filter_videoeasy_rss_callback($link) {
+		return $this->filter_videoeasy_process($link,'rss');
+	}
+
+	/**
+	 * Replace mp4 or flv links with player
+	 *
+	 * @param  $link
+	 * @param  $ext
+	 * @return string
+	 */
+	private function filter_videoeasy_process($link, $ext) {
+	global $CFG, $PAGE;
+	/*
+	* 1 = url, 2=?, 3=width,4=height,5=linkedtext
+	*
+	*/
+	//	print_r($link);
+
+		//clean up url
+		$url = $link[1];
+		$url = str_replace('&amp;', '&', $url);
+		$rawurl = $url;
+		$url = clean_param($url, PARAM_URL);
 	
-	$require_js = $conf->{'templaterequire_js_' . $player};
-	$require_css = $conf->{'templaterequire_css_' . $player};
-	$require_jquery = $conf->{'templaterequire_jquery_' . $player};
-	$uploadcssfile = $conf->{'uploadcss_' . $player};
-	$uploadjsfile = $conf->{'uploadjs_' . $player};
+		//get our template info
+		$player=$this->fetchconf('useplayer' . $ext);
+		$conf = get_config('filter_videoeasy');
 	
-    //get the bits of the url
-	$bits = parse_url($rawurl);
-	if(!array_key_exists('scheme',$bits)){
+		$require_js = $conf->{'templaterequire_js_' . $player};
+		$require_css = $conf->{'templaterequire_css_' . $player};
+		$require_jquery = $conf->{'templaterequire_jquery_' . $player};
+		$uploadcssfile = $conf->{'uploadcss_' . $player};
+		$uploadjsfile = $conf->{'uploadjs_' . $player};
+	
+		//get the bits of the url
+		$bits = parse_url($rawurl);
+		if(!array_key_exists('scheme',$bits)){
+			//add scheme to url if there was none
+			if(strpos($PAGE->url->out(),'https:')===0){
+				$scheme='https:';
+			}else{
+				$scheme='http:';
+			}
+		}else{
+			$scheme = $bits['scheme'] . ':';
+		}
+	
+		$filename = basename($bits['path']);
+		$filetitle = str_replace('.' . $ext,'',$filename);
+		$autopngfilename = str_replace('.' . $ext,'.png',$filename);
+		$autojpgfilename = str_replace('.' . $ext,'.png',$filename);
+		//print_r($bits);
+		//echo $scheme . ":" . $filename . ":" . $autopngfilename ;
+	
+		/*
 		//add scheme to url if there was none
 		if(strpos($PAGE->url->out(),'https:')===0){
 			$scheme='https:';
 		}else{
 			$scheme='http:';
 		}
-	}else{
-		$scheme = $bits['scheme'] . ':';
-	}
-	
-	$filename = basename($bits['path']);
-	$filetitle = str_replace('.' . $ext,'',$filename);
-	$autopngfilename = str_replace('.' . $ext,'.png',$filename);
-	$autojpgfilename = str_replace('.' . $ext,'.png',$filename);
-	//print_r($bits);
-	//echo $scheme . ":" . $filename . ":" . $autopngfilename ;
-    
-    /*
-	//add scheme to url if there was none
-	if(strpos($PAGE->url->out(),'https:')===0){
-		$scheme='https:';
-	}else{
-		$scheme='http:';
-	}
-	*/
-	//fill out require js and require css full urls
-	if(strpos($require_js,'//')===0){
-		$require_js = $scheme . $require_js;
-	}elseif(strpos($require_js,'/')===0){
-		$require_js = $CFG->wwwroot . $require_js;
-	}
-	
-	if(strpos($require_css,'//')===0){
-		$require_css = $scheme . $require_css;
-	}elseif(strpos($require_css,'/')===0){
-		$require_css = $CFG->wwwroot . $require_css;
-	}
-	
-	//get presets
-	$preset=$conf->{'templatepreset_' . $player};
-	$defaults=$conf->{'templatedefaults_' . $player};
-	//make sure we have all the keys and defaults in our proparray
-	$proparray = filter_videoeasy_fetch_emptyproparray();
-	$proparray = array_merge($proparray,filter_videoeasy_parsepropstring($defaults));
-	
-	
-	//use default widths or explicit width/heights if they were passed in ie http://url.to.video.mp4?d=640x480
-	if (!empty($link[3])) {
-		$proparray['WIDTH'] = $link[3];
-	}
-	if (!empty($link[4])) {
-		$proparray['HEIGHT'] = $link[3];
-	}
-	
-	
-	
-	//get the url  - extenstion
-	$urlstub = substr($rawurl,0,strpos($rawurl,'.' . $ext));
-	//$url = $link[5];
-	$videourl = $rawurl;
-	$autoposterurljpg = $urlstub . '.jpg';
-	$autoposterurlpng = $urlstub . '.png';
-	$title = $link[5];
-
-	
-	//I liked this better, but jquery was odd about it.
-	//$autoid = $urlstub . '_' . time() . (string)rand(100,32767) ;
-	$autoid = 'fv_' . time() . (string)rand(100,32767) ;
-	
-	//get default splash
-	$defaultposterurl = $CFG->wwwroot . '/filter/videoeasy/static.jpg';
-
-	//make up mime type
-	switch ($ext){
-		case 'mp3': $automime='audio/mpeg';break;
-		case 'webm': $automime='video/webm';break;
-		case 'ogg': $automime='video/ogg';break;	
-		case 'mp4': 
-		default:
-			$automime='video/mp4';
-	}
-	
-	$proparray['AUTOMIME'] = $automime;
-	$proparray['FILENAME'] = $filename;
-	$proparray['FILETITLE'] = $filetitle;
-	$proparray['DEFAULTPOSTERURL'] = $defaultposterurl;
-	$proparray['AUTOPNGFILENAME'] = $autopngfilename;
-	$proparray['AUTOJPGFILENAME'] = $autojpgfilename;
-	$proparray['VIDEOURL'] = $videourl;
-	$proparray['AUTOPOSTERURLJPG'] = $autoposterurljpg;
-	$proparray['AUTOPOSTERURLPNG'] = $autoposterurlpng;
-	$proparray['TITLE'] = $title;
-	$proparray['AUTOID'] = $autoid;
-	$proparray['FILEEXT'] = $ext;
-	
-	//might need this if cant load into header, but need to.
-	//$scripttag="<script src='@@REQUIREJS@@'></script>";
-	
-	/*
-	foreach($proparray as $key=>$value){
-		echo $key . ': ' . $value . '<br />';
-	}
-	*/
-	//replace the specified names with spec values
-	foreach($proparray as $name=>$value){
-		$preset = str_replace('@@' . $name .'@@',$value,$preset);
-	}
-	//error_log($preset);
-	
-	//load jquery
-	if($require_jquery){
-		$PAGE->requires->js(new moodle_url($scheme . $conf->{'jqueryurl'}));
-	}
-
-	//get any required js
-	if($require_js){
-		$PAGE->requires->js(new moodle_url($require_js));
-	}
-	
-	//get uploaded js
-	if($uploadjsfile){
-		$uploadjsurl = filter_videoeasy_setting_file_url($uploadjsfile,'uploadjs_' . $player);
-		$PAGE->requires->js($uploadjsurl);
-	}
-	
-	//prepare additional params our JS will use
-	$proparray['PLAYER'] = $player;
-	$proparray['CSSLINK']=false;
-	$proparray['CSSUPLOAD']=false;
-	
-	//load css in header if not too late
-	//if not too late: load css in header
-	// if too late: inject it there via JS
-	if($uploadcssfile){
-		$uploadcssurl = filter_videoeasy_setting_file_url($uploadcssfile,'uploadcss_' . $player);
-	}
-	
-	if(!$PAGE->headerprinted && !$PAGE->requires->is_head_done()){
-		if($require_css){
-			$PAGE->requires->css( new moodle_url($require_css));
+		*/
+		//fill out require js and require css full urls
+		if(strpos($require_js,'//')===0){
+			$require_js = $scheme . $require_js;
+		}elseif(strpos($require_js,'/')===0){
+			$require_js = $CFG->wwwroot . $require_js;
 		}
+	
+		if(strpos($require_css,'//')===0){
+			$require_css = $scheme . $require_css;
+		}elseif(strpos($require_css,'/')===0){
+			$require_css = $CFG->wwwroot . $require_css;
+		}
+	
+		//get presets
+		$preset=$conf->{'templatepreset_' . $player};
+		$defaults=$conf->{'templatedefaults_' . $player};
+		//make sure we have all the keys and defaults in our proparray
+		$proparray = filter_videoeasy_fetch_emptyproparray();
+		$proparray = array_merge($proparray,filter_videoeasy_parsepropstring($defaults));
+	
+	
+		//use default widths or explicit width/heights if they were passed in ie http://url.to.video.mp4?d=640x480
+		if (!empty($link[3])) {
+			$proparray['WIDTH'] = $link[3];
+		}
+		if (!empty($link[4])) {
+			$proparray['HEIGHT'] = $link[3];
+		}
+	
+	
+	
+		//get the url  - extenstion
+		$urlstub = substr($rawurl,0,strpos($rawurl,'.' . $ext));
+		//$url = $link[5];
+		$videourl = $rawurl;
+		$autoposterurljpg = $urlstub . '.jpg';
+		$autoposterurlpng = $urlstub . '.png';
+		$title = $link[5];
+
+	
+		//I liked this better, but jquery was odd about it.
+		//$autoid = $urlstub . '_' . time() . (string)rand(100,32767) ;
+		$autoid = 'fv_' . time() . (string)rand(100,32767) ;
+	
+		//get default splash
+		$defaultposterurl = $CFG->wwwroot . '/filter/videoeasy/static.jpg';
+
+		//make up mime type
+		switch ($ext){
+			case 'mp3': $automime='audio/mpeg';break;
+			case 'webm': $automime='video/webm';break;
+			case 'ogg': $automime='video/ogg';break;	
+			case 'mp4': 
+			default:
+				$automime='video/mp4';
+		}
+	
+		$proparray['AUTOMIME'] = $automime;
+		$proparray['FILENAME'] = $filename;
+		$proparray['FILETITLE'] = $filetitle;
+		$proparray['DEFAULTPOSTERURL'] = $defaultposterurl;
+		$proparray['AUTOPNGFILENAME'] = $autopngfilename;
+		$proparray['AUTOJPGFILENAME'] = $autojpgfilename;
+		$proparray['VIDEOURL'] = $videourl;
+		$proparray['AUTOPOSTERURLJPG'] = $autoposterurljpg;
+		$proparray['AUTOPOSTERURLPNG'] = $autoposterurlpng;
+		$proparray['TITLE'] = $title;
+		$proparray['AUTOID'] = $autoid;
+		$proparray['FILEEXT'] = $ext;
+	
+		//might need this if cant load into header, but need to.
+		//$scripttag="<script src='@@REQUIREJS@@'></script>";
+	
+		/*
+		foreach($proparray as $key=>$value){
+			echo $key . ': ' . $value . '<br />';
+		}
+		*/
+		//replace the specified names with spec values
+		foreach($proparray as $name=>$value){
+			$preset = str_replace('@@' . $name .'@@',$value,$preset);
+		}
+		//error_log($preset);
+	
+		//load jquery
+		if($require_jquery){
+			$PAGE->requires->js(new moodle_url($scheme . $conf->{'jqueryurl'}));
+		}
+
+		//get any required js
+		if($require_js){
+			$PAGE->requires->js(new moodle_url($require_js));
+		}
+	
+		//get uploaded js
+		if($uploadjsfile){
+			$uploadjsurl = filter_videoeasy_setting_file_url($uploadjsfile,'uploadjs_' . $player);
+			$PAGE->requires->js($uploadjsurl);
+		}
+	
+		//prepare additional params our JS will use
+		$proparray['PLAYER'] = $player;
+		$proparray['CSSLINK']=false;
+		$proparray['CSSUPLOAD']=false;
+	
+		//load css in header if not too late
+		//if not too late: load css in header
+		// if too late: inject it there via JS
 		if($uploadcssfile){
-			$PAGE->requires->css($uploadcssurl);
+			$uploadcssurl = filter_videoeasy_setting_file_url($uploadcssfile,'uploadcss_' . $player);
 		}
-	}else{
-		if($require_css){
-			$proparray['CSSLINK']=$require_css;
-		}
-		if($uploadcssfile){
-			//need a new strategy here!!!
-			$proparray['CSSUPLOAD']=$uploadcssurl->out();
-		}
-		
-	}
 	
-	//initialise our JS and call it to load
-	//We need this so that we can require the JSON , for json stringify
-		$jsmodule = array(
-			'name'     => 'filter_videoeasy',
-			'fullpath' => '/filter/videoeasy/module.js',
-			'requires' => array('json')
-		);
+		if(!$PAGE->headerprinted && !$PAGE->requires->is_head_done()){
+			if($require_css){
+				$PAGE->requires->css( new moodle_url($require_css));
+			}
+			if($uploadcssfile){
+				$PAGE->requires->css($uploadcssurl);
+			}
+		}else{
+			if($require_css){
+				$proparray['CSSLINK']=$require_css;
+			}
+			if($uploadcssfile){
+				//need a new strategy here!!!
+				$proparray['CSSUPLOAD']=$uploadcssurl->out();
+			}
 		
-		//require any scripts from the template
-	$PAGE->requires->js('/filter/videoeasy/videoeasyjs.php?ext=' . $ext);
+		}
+	
+		//initialise our JS and call it to load
+		//We need this so that we can require the JSON , for json stringify
+			$jsmodule = array(
+				'name'     => 'filter_videoeasy',
+				'fullpath' => '/filter/videoeasy/module.js',
+				'requires' => array('json')
+			);
+		
+			//require any scripts from the template
+		$PAGE->requires->js('/filter/videoeasy/videoeasyjs.php?ext=' . $ext);
 		
 		
-	//setup our JS call
-	$PAGE->requires->js_init_call('M.filter_videoeasy.loadvideoeasy', array($proparray),false,$jsmodule);
+		//setup our JS call
+		$PAGE->requires->js_init_call('M.filter_videoeasy.loadvideoeasy', array($proparray),false,$jsmodule);
 	
 
-	//return our expanded template
-	return $preset;
-}
+		//return our expanded template
+		return $preset;
+	}
+
+   
+}//end of class

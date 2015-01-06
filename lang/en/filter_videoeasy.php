@@ -48,6 +48,7 @@ $string['templatedefaults_desc'] = 'Defaults are usually just width, and height.
 $string['useplayer'] = '{$a} Player';
 $string['useplayerdesc'] = "The player selected will use the information from the appropriate template below.";
 $string['handle'] = 'Handle {$a}';
+$string['sitedefault'] = "Site Default";
 $string['player_videojs'] = "Video.js";
 $string['player_sublimevideo'] = "Sublime Video";
 $string['player_jwplayer'] = "JW Player";
