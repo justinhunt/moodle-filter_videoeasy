@@ -31,7 +31,10 @@ if (is_siteadmin()) {
 	 $ADMIN->add('filtersettings', new admin_category('filter_videoeasy_category', 'Video Easy'));
 	 
 	 //template settings Page Settings 
-   	$settings_page = new admin_settingpage('filter_videoeasy_templatepage_handlers',get_string('templatepageheading_handlers', 'filter_videoeasy'));
+	 // we changed this to use the default settings id for the top page. This way in the settings link on the manage filters
+	 //page, we will arrive here. Else the link will show there, but it will error out if clicked.
+   //	$settings_page = new admin_settingpage('filter_videoeasy_templatepage_handlers',get_string('templatepageheading_handlers', 'filter_videoeasy'));
+	$settings_page = new admin_settingpage('filtersettingvideoeasy',get_string('templatepageheading_handlers', 'filter_videoeasy'));
 	
 	//heading of template
 	$settings_page->add(new admin_setting_heading('filter_videoeasy/extensionheading', 
