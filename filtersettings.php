@@ -29,6 +29,7 @@ if (is_siteadmin()) {
 
 	//add folder in property tree for settings pages
 	 $ADMIN->add('filtersettings', new admin_category('filter_videoeasy_category', 'Video Easy'));
+	 $conf = get_config('filter_videoeasy');
 	 
 	 //template settings Page Settings 
 	 // we changed this to use the default settings id for the top page. This way in the settings link on the manage filters
@@ -47,7 +48,14 @@ if (is_siteadmin()) {
 	//create player select list
 	$playeroptions=array();
 	foreach($players as $keyvalue){
-		$playeroptions[$keyvalue] = get_string('player_' .$keyvalue,'filter_videoeasy');
+		//player name
+		 if($conf && property_exists($conf,'templatekey_' . $keyvalue)){
+		 	$playername = $conf->{'templatekey_' . $keyvalue};
+		 	if(!$playername || empty($playername)){$playername='Player ??';}
+		 }else{
+		 	$playername = get_string('player_' .$keyvalue,'filter_videoeasy');
+		 }
+		$playeroptions[$keyvalue] = $playername;
 	}
 	
 	//add extensions checkbox
@@ -73,9 +81,9 @@ if (is_siteadmin()) {
 	
 	//add 10 templates
 	foreach($players as $player){
-	
-		//playername
-		$playername = get_string('player_' .$player,'filter_videoeasy');
+		
+		//player name
+		$playername=$playeroptions[$player];
 		
 		 //template settings Page Settings 
 		$settings_page = new admin_settingpage('filter_videoeasy_templatepage_' . $player,get_string('templatepageheading', 'filter_videoeasy',$playername));
@@ -83,6 +91,12 @@ if (is_siteadmin()) {
 		//heading of template
 		$settings_page->add(new admin_setting_heading('filter_videoeasy/templateheading_' . $player, 
 				get_string('templateheading', 'filter_videoeasy', $playername), ''));
+				
+		//template key
+		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/templatekey_' . $player , 
+				get_string('templatekey', 'filter_videoeasy',$player),
+				get_string('templatekey_desc', 'filter_videoeasy'), 
+				 get_string('player_' .$player,'filter_videoeasy'), PARAM_RAW));
 				
 		//template JS heading
 		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/templaterequire_js_' . $player , 
