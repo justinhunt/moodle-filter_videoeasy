@@ -54,11 +54,16 @@ $string['player_sublimevideo'] = "Sublime Video";
 $string['player_jwplayer'] = "JW Player";
 $string['player_flowplayer'] = "Flowplayer";
 $string['player_mediaelement'] = "MediaElement.js";
-$string['player_playersix'] = "Player 6";
+$string['player_playersix'] = "YouTube Lightbox";
 $string['player_playerseven'] = "Player 7";
 $string['player_playereight'] = "Player 8";
 $string['player_playernine'] = "Player 9";
 $string['player_playerten'] = "Player 10";
+$string['player_playereleven'] = "Player 11";
+$string['player_playertwelve'] = "Player 12";
+$string['player_playerthirteen'] = "Player 13";
+$string['player_playerfourteen'] = "Player 14";
+$string['player_playerfifteen'] = "Player 15";
 $string['templatepageheading'] = 'Template: {$a}';
 $string['templatepageheading_handlers'] = 'Register File Extensions';
 

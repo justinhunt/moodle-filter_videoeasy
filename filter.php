@@ -85,6 +85,13 @@ class filter_videoeasy extends moodle_text_filter {
 					$search = '/<a\s[^>]*href="([^"#\?]+\.rss)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
 					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_rss_callback', $newtext);
 			}
+			
+           //check for youtube
+			if ($this->fetchconf('handleyoutube')) {
+					 $search = '/<a\s[^>]*href="(?:https?:\/\/)?(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|v\/)?([\w-]{10,})(?:.*?)<\/a>/is';
+					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_youtube_callback', $newtext);
+			}
+
 		
 		if (is_null($newtext) or $newtext === $text) {
 			// error or not filtered
@@ -99,6 +106,7 @@ class filter_videoeasy extends moodle_text_filter {
     	//I don't know why we need this whole courseconfig business.
     	//we are supposed to be able to just call $this->localconfig / $this->localconfig[$propertyname]
     	//as per here:https://docs.moodle.org/dev/Filters#Local_configuration , but its always empty
+    	//at least at course context, in mod context it works ... 
     	//I just gave up and do it myself and stuff it in $this->courseconfig . bug?? Justin 20150106
     	if($this->localconfig && !empty($this->localconfig)){
     		$this->courseconfig = $this->localconfig;
@@ -111,6 +119,17 @@ class filter_videoeasy extends moodle_text_filter {
 		}else{
 			return $this->adminconfig->{$prop};
 		}
+	}
+	
+	
+	/**
+	 * Replace youtube links with player
+	 *
+	 * @param  $link
+	 * @return string
+	 */
+	private function filter_videoeasy_youtube_callback($link) {
+		return $this->filter_videoeasy_process($link,'youtube');
 	}
 	
 	/**
@@ -172,17 +191,7 @@ class filter_videoeasy extends moodle_text_filter {
 	 */
 	private function filter_videoeasy_process($link, $ext) {
 	global $CFG, $PAGE;
-	/*
-	* 1 = url, 2=?, 3=width,4=height,5=linkedtext
-	*
-	*/
-	//	print_r($link);
-
-		//clean up url
-		$url = $link[1];
-		$url = str_replace('&amp;', '&', $url);
-		$rawurl = $url;
-		$url = clean_param($url, PARAM_URL);
+	
 	
 		//get our template info
 		$player=$this->fetchconf('useplayer' . $ext);
@@ -193,35 +202,58 @@ class filter_videoeasy extends moodle_text_filter {
 		$require_jquery = $conf->{'templaterequire_jquery_' . $player};
 		$uploadcssfile = $conf->{'uploadcss_' . $player};
 		$uploadjsfile = $conf->{'uploadjs_' . $player};
-	
-		//get the bits of the url
-		$bits = parse_url($rawurl);
-		if(!array_key_exists('scheme',$bits)){
-			//add scheme to url if there was none
-			if(strpos($PAGE->url->out(),'https:')===0){
-				$scheme='https:';
-			}else{
-				$scheme='http:';
-			}
-		}else{
-			$scheme = $bits['scheme'] . ':';
-		}
-	
-		$filename = basename($bits['path']);
-		$filetitle = str_replace('.' . $ext,'',$filename);
-		$autopngfilename = str_replace('.' . $ext,'.png',$filename);
-		$autojpgfilename = str_replace('.' . $ext,'.png',$filename);
-		//print_r($bits);
-		//echo $scheme . ":" . $filename . ":" . $autopngfilename ;
-	
+		
 		/*
-		//add scheme to url if there was none
-		if(strpos($PAGE->url->out(),'https:')===0){
-			$scheme='https:';
-		}else{
-			$scheme='http:';
-		}
+		* 1 = url, 2=?, 3=width,4=height,5=linkedtext
+		*
 		*/
+		//	print_r($link);
+		//clean up url
+		$url = $link[1];
+		$url = str_replace('&amp;', '&', $url);
+		$rawurl = $url;
+		$url = clean_param($url, PARAM_URL);
+		
+		if($ext=="youtube"){
+			$filename = $link[1];
+			$url="https://www.youtube.com/watch?v=" . $filename;
+			$videourl="https://www.youtube.com/watch?v=" . $filename;
+			$autojpgfilename ="hqdefault.jpg";
+			$autopngfilename ="hqdefault.png";
+			$autoposterurljpg  ="http://img.youtube.com/vi/" . $filename ."/hqdefault.jpg";
+			$autoposterurlpng  ="http://img.youtube.com/vi/" . $filename ."/hqdefault.png";
+			$filetitle="";
+			$title="";
+			$scheme='https:';
+		}else{	
+			//get the bits of the url
+			$bits = parse_url($rawurl);
+			if(!array_key_exists('scheme',$bits)){
+				//add scheme to url if there was none
+				if(strpos($PAGE->url->out(),'https:')===0){
+					$scheme='https:';
+				}else{
+					$scheme='http:';
+				}
+			}else{
+				$scheme = $bits['scheme'] . ':';
+			}
+	
+			$filename = basename($bits['path']);
+			$filetitle = str_replace('.' . $ext,'',$filename);
+			$autopngfilename = str_replace('.' . $ext,'.png',$filename);
+			$autojpgfilename = str_replace('.' . $ext,'.jpg',$filename);
+			
+			//get the url  - extenstion
+			$urlstub = substr($rawurl,0,strpos($rawurl,'.' . $ext));
+			//$url = $link[5];
+			$videourl = $rawurl;
+			$autoposterurljpg = $urlstub . '.jpg';
+			$autoposterurlpng = $urlstub . '.png';
+			$title = $link[5];
+		}
+		
+		
 		//fill out require js and require css full urls
 		if(strpos($require_js,'//')===0){
 			$require_js = $scheme . $require_js;
@@ -250,16 +282,6 @@ class filter_videoeasy extends moodle_text_filter {
 		if (!empty($link[4])) {
 			$proparray['HEIGHT'] = $link[3];
 		}
-	
-	
-	
-		//get the url  - extenstion
-		$urlstub = substr($rawurl,0,strpos($rawurl,'.' . $ext));
-		//$url = $link[5];
-		$videourl = $rawurl;
-		$autoposterurljpg = $urlstub . '.jpg';
-		$autoposterurlpng = $urlstub . '.png';
-		$title = $link[5];
 
 	
 		//I liked this better, but jquery was odd about it.
@@ -275,6 +297,7 @@ class filter_videoeasy extends moodle_text_filter {
 			case 'webm': $automime='video/webm';break;
 			case 'ogg': $automime='video/ogg';break;	
 			case 'mp4': 
+			case 'youtube': 
 			default:
 				$automime='video/mp4';
 		}
