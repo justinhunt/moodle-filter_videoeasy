@@ -69,6 +69,12 @@ if (is_siteadmin()) {
 				get_string('jqueryurl', 'filter_videoeasy'),
 				get_string('jqueryurl_desc', 'filter_videoeasy'), 
 				 '//code.jquery.com/jquery-1.11.2.min.js', PARAM_RAW,50));
+				 
+	//add upload area for default poster image
+	$name = 'filter_videoeasy/defaultposterimage';
+	$title = get_string('defaultposterimage', 'filter_videoeasy') ;
+	$description = get_string('defaultposterimage_desc', 'filter_videoeasy');
+	$settings_page->add(new admin_setting_configstoredfile($name, $title, $description, 'defaultposterimage'));
 	
 	//add page to category
 	$ADMIN->add('filter_videoeasy_category', $settings_page);
@@ -131,7 +137,7 @@ if (is_siteadmin()) {
 		 $settings_page->add(new admin_setting_configtextarea('filter_videoeasy/templatedefaults_' . $player,
 					$playername  . get_string('templatedefaults', 'filter_videoeasy'),
 					get_string('templatedefaults_desc', 'filter_videoeasy'),$templatedefaults[$player]));
-					
+
 		//additional JS (upload)
 		//see here: for integrating this https://moodle.org/mod/forum/discuss.php?d=227249
 		$name = 'filter_videoeasy/uploadjs_' . $player;

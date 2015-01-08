@@ -196,7 +196,7 @@ class filter_videoeasy extends moodle_text_filter {
 		//get our template info
 		$player=$this->fetchconf('useplayer' . $ext);
 		$conf = get_config('filter_videoeasy');
-	
+		$defaultposterimage =  $conf->{'defaultposterimage'};
 		$require_js = $conf->{'templaterequire_js_' . $player};
 		$require_css = $conf->{'templaterequire_css_' . $player};
 		$require_jquery = $conf->{'templaterequire_jquery_' . $player};
@@ -286,10 +286,16 @@ class filter_videoeasy extends moodle_text_filter {
 	
 		//I liked this better, but jquery was odd about it.
 		//$autoid = $urlstub . '_' . time() . (string)rand(100,32767) ;
-		$autoid = 'fv_' . time() . (string)rand(100,32767) ;
+		$autoid = 'fv_' . time() . (string)mt_rand() ;
 	
-		//get default splash
-		$defaultposterurl = $CFG->wwwroot . '/filter/videoeasy/static.jpg';
+		//get default poster
+		//get uploaded js
+		if($defaultposterimage){
+			$defaultposterurl = filter_videoeasy_setting_file_url($defaultposterimage,'defaultposterimage');
+		}else{
+			$defaultposterurl = $CFG->wwwroot . '/filter/videoeasy/defaultposter.jpg';
+		}
+		
 
 		//make up mime type
 		switch ($ext){

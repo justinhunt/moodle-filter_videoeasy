@@ -65,7 +65,7 @@ function filter_videoeasy_fetch_template_requires($players){
 			// '<link href="//vjs.zencdn.net/4.10/video-js.css" rel="stylesheet">';
 				$requires['css'] ='//vjs.zencdn.net/4.10/video-js.css';
 				$requires['js'] = '//vjs.zencdn.net/4.10/video.js';
-				$requires['jquery'] = 0;
+				$requires['jquery'] = 1;
 				break;
 				
 			case 'sublimevideo':
@@ -135,7 +135,8 @@ function filter_videoeasy_fetch_template_presets($players){
 				break;
 				
 			case 'flowplayer':
-				$presets='<div id="@@AUTOID@@" class="flowplayer filter_videoeasy-flowplayer"></div>';
+				$presets='<div><div id="@@AUTOID@@" style="max-width: @@WIDTH@@px; background-color:#777;';
+				$presets .=' background-image:url(@@DEFAULTPOSTERURL@@);"class="flowplayer videoeasy-flowplayer"></div></div>';
 				break;
 				
 			case 'mediaelement':
@@ -231,7 +232,7 @@ function filter_videoeasy_fetch_template_defaults($players){
 				break;
 				
 			case 'flowplayer':
-				$defaults='';
+				$defaults='WIDTH=640,HEIGHT=480';
 				break;
 				
 			case 'mediaelement':
@@ -284,7 +285,7 @@ function filter_videoeasy_pluginfile($course, $cm, $context, $filearea, $args, $
 	$players = filter_videoeasy_fetch_players();
 	foreach($players as $player){
     	if($context->contextlevel == CONTEXT_SYSTEM){
-    		if($filearea === 'uploadjs_' . $player || $filearea === 'uploadcss_' . $player ) {
+    		if($filearea === 'uploadjs_' . $player || $filearea === 'uploadcss_' . $player || $filearea === 'defaultposterimage' ) {
         		return filter_videoeasy_setting_file_serve($filearea,$args,$forcedownload, $options);
         	}
 		} 

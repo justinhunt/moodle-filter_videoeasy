@@ -34,7 +34,7 @@ $string['templateheading'] = 'Settings for {$a}';
 $string['template'] = ' template';
 $string['template_desc'] = 'Put the template here, define variables by surrounding them with @@ marks at either e. eg @@variable@@';
 $string['templatescript'] = ' load script';
-$string['templatescript_desc'] = 'Put the load script (if any) here, define variables by surrounding them with @@ marks at either e. eg @@variable@@';
+$string['templatescript_desc'] = 'Put the load script (if any) here, define variables by surrounding them with @@ marks at either end. eg @@variable@@';
 $string['templaterequirejs'] = ' javascript URL';
 $string['templaterequirejs_desc'] = 'Almost all the players require script tags in the page header. Just put the URL here.';
 $string['templaterequirecss'] = ' CSS URL';
@@ -44,7 +44,7 @@ $string['templatekey_desc'] = 'The name of this template.';
 $string['templaterequirejquery'] = ' needs JQuery';
 $string['templaterequirejquery_desc'] = 'Some players require JQuery. Check here if the player does';
 $string['templatedefaults'] = ' defaults';
-$string['templatedefaults_desc'] = 'Defaults are usually just width, and height. But you could also define custom variables here. Define the variables in comma delimited sets of name=value pairs. eg width=800,height=900,feeling=joy';
+$string['templatedefaults_desc'] = 'Default values for custom variables in the template/script. Usually just width, and height. Enter comma delimited sets of name=value pairs. eg width=800,height=900,feeling=joy';
 $string['useplayer'] = '{$a} Player';
 $string['useplayerdesc'] = "The player selected will use the information from the appropriate template below.";
 $string['handle'] = 'Handle {$a}';
@@ -65,14 +65,13 @@ $string['player_playerthirteen'] = "Player 13";
 $string['player_playerfourteen'] = "Player 14";
 $string['player_playerfifteen'] = "Player 15";
 $string['templatepageheading'] = 'Template: {$a}';
-$string['templatepageheading_handlers'] = 'Register File Extensions';
-
+$string['templatepageheading_handlers'] = 'General Settings';
 $string['uploadjs'] = 'Upload JS';
 $string['uploadjs_desc'] = 'You can upload one js library file which will be loaded for your template. Only one.';
-
 $string['jqueryurl'] = 'JQuery URL';
-$string['jqueryurl_desc'] = 'The URL VideoEasy will use when adding jquery to the host page. Defaults to the CDN hosted version. If you site does not have internet access you will probably need to point this to a location on your Moodle server. Whatever you do dont http: ot https: begin the url with // ';
-
-
+$string['jqueryurl_desc'] = 'The URL VideoEasy will be used when adding jquery to the host page. Defaults to the CDN hosted version. If your site does not have internet access you will probably need to point this to a location on your Moodle server. Do not start with http: or https:. Begin the url with // ';
 $string['uploadcss'] = 'Upload CSS';
 $string['uploadcss_desc'] = 'You can upload one CSS file which will be loaded for your template. Only one.';
+$string['defaultposterimage']='Default poster image';
+$string['defaultposterimage_desc']='The standard default poster image is just a grey box. Here you can upload a custom image that better suits your site. A default poster image will only be shown if the player template specifies it.';
+
