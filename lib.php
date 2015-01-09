@@ -146,7 +146,7 @@ function filter_videoeasy_fetch_template_presets($players){
 				$presets='<a href="#" data-featherlight="#@@AUTOID@@">';
 				$presets.='<img src="@@AUTOPOSTERURLJPG@@" width="@@width@@" height="@@height@@"/></a>';				
 				$presets.='<div style="display: none;"><div  id="@@AUTOID@@">';
-				$presets.='<iframe width="@@videowidth@@" height="@@videoheight@@" src="//www.youtube.com/embed/@@FILENAME@@" frameborder="0" allowfullscreen>';
+				$presets.='<iframe width="@@videowidth@@" height="@@videoheight@@" src="//www.youtube.com/embed/@@FILENAME@@?rel=0" frameborder="0" allowfullscreen>';
 				$presets.='</iframe></div></div>';
 				break;
 	
@@ -240,7 +240,7 @@ function filter_videoeasy_fetch_template_defaults($players){
 				break;
 				
 			case 'playersix':
-				$defaults='width=320,height=240,videowidth=420,videoheight=315';
+				$defaults='width=240,height=160,videowidth=600,videoheight=400';
 				break;
 
 			default:

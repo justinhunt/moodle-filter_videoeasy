@@ -60,8 +60,14 @@ if (is_siteadmin()) {
 	
 	//add extensions checkbox
 	foreach($extensions as $ext){
+		switch($ext){
+			case 'youtube': $def_player='playersix';break;
+			case 'rss': $def_player='jwplayer';break;
+			default:
+				$def_player = 'flowplayer';
+		}
 		$settings_page->add(new admin_setting_configcheckbox('filter_videoeasy/handle' . $ext, get_string('handle', 'filter_videoeasy', strtoupper($ext)), '', 0));
-		$settings_page->add(new admin_setting_configselect('filter_videoeasy/useplayer' . $ext, get_string('useplayer', 'filter_videoeasy', strtoupper($ext)),  get_string('useplayerdesc', 'filter_videoeasy'), 'flowplayer', $playeroptions));
+		$settings_page->add(new admin_setting_configselect('filter_videoeasy/useplayer' . $ext, get_string('useplayer', 'filter_videoeasy', strtoupper($ext)),  get_string('useplayerdesc', 'filter_videoeasy'), $def_player, $playeroptions));
 	}
 	
 	//add jquery path 
