@@ -23,16 +23,63 @@
 
 defined('MOODLE_INTERNAL') || die;
 
+define('FILTER_VIDEOEASY_TEMPLATE_COUNT', 15);
+
+
+/**
+ * Return an array of template ids. A legacy of when each had a name really. But we need it.
+ * @return array of template ids
+ */
 function filter_videoeasy_fetch_players(){
-	$players = array('videojs','sublimevideo','jwplayer','flowplayer','mediaelement','playersix','playerseven','playereight','playernine','playerten','playereleven','playertwelve','playerthirteen','playerfourteen','playerfifteen');
+	//$players = array('videojs','sublimevideo','jwplayer','flowplayer','mediaelement','playersix','playerseven','playereight','playernine','playerten','playereleven','playertwelve','playerthirteen','playerfourteen','playerfifteen');
+	$players = array();
+	for ($i=1;$i<=FILTER_VIDEOEASY_TEMPLATE_COUNT;$i++){
+		$players[]=$i;
+	}
 	return $players;
 }
 
+/**
+ * Return an array of OLD player names. For mapping to template indexes, so early adopters 
+ * don't get errors and lose templates etc
+ * @return array of player names
+ */
+function filter_videoeasy_fetch_oldplayers(){
+	$oldplayers = array('videojs','sublimevideo','jwplayer','flowplayer','mediaelement','playersix','playerseven','playereight','playernine','playerten','playereleven','playertwelve','playerthirteen','playerfourteen','playerfifteen');
+	$players = array();
+	for ($i=1;$i<=FILTER_VIDEOEASY_TEMPLATE_COUNT;$i++){
+		$players[$i]=$oldplayers[$i-1];
+	}
+	return $players;
+}
+
+/**
+ * Fetch the old value of the old style template name, and for use as a default
+ * when upgrading. If no old value, just the new defaults
+ * @return string default value
+ */
+function filter_videoeasy_fetch_default($conf, $oldpropname, $newdefault){
+	if($conf && property_exists($conf,$oldpropname)){
+			$defvalue=$conf->{$oldpropname} ;
+	}else{
+		$defvalue=$newdefault;
+	}
+	return $defvalue;
+}
+
+/**
+ * Return an array of extensions we might handle
+ * @return array of variable names parsed from template string
+ */
 function filter_videoeasy_fetch_extensions(){
-	$extensions = array('mp4','webm','ogg','mp3','rss','youtube');
+	$extensions = array('mp4','webm','ogg','flv','mp3','rss','youtube');
 	return $extensions;
 }	
 
+/**
+ * Return an array of properties, empty, to ensure we have all the variables when we need them
+ * @return array of properties
+ */
 function filter_videoeasy_fetch_emptyproparray(){
 	$proparray=array();
 	$proparray['AUTOMIME'] = '';
@@ -55,46 +102,56 @@ function filter_videoeasy_fetch_emptyproparray(){
 	return $proparray;
 }
 
+/**
+ * Return an array of arrays. Each containing info about the required CSS, JS and JQuery
+ * @param array a list of players to fetch the requires for. 
+ * @return array of array of CSS/JS/JQuery requires values.
+ */
 function filter_videoeasy_fetch_template_requires($players){
 	$ret = array();
 	
 	foreach($players as $player){
 		$requires = array();
 		switch($player){
+			case '1':
 			case 'videojs':
 			// '<link href="//vjs.zencdn.net/4.10/video-js.css" rel="stylesheet">';
 				$requires['css'] ='//vjs.zencdn.net/4.10/video-js.css';
 				$requires['js'] = '//vjs.zencdn.net/4.10/video.js';
 				$requires['jquery'] = 1;
 				break;
-				
+			
+			case '2':	
 			case 'sublimevideo':
 				$requires['css'] ='';
 				$requires['js'] = '//cdn.sublimevideo.net/js/PERSONALJSCODE.js';
 				$requires['jquery'] = 0;				
 				break;
-				
+			
+			case '3':	
 			case 'jwplayer':
 				$requires['css'] ='';
 				$requires['js'] = 'http://jwpsrv.com/library/PERSONALJSCODE.js';
 				$requires['jquery'] = 0;
 				break;
-				
+			
+			case '4':	
 			case 'flowplayer':
 				//<script src="//releases.flowplayer.org/5.5.0/flowplayer.min.js"></script>';
 				//$requires .= '<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>';
 				$requires['css'] ='//releases.flowplayer.org/5.5.0/skin/minimalist.css';
 				$requires['js'] = '//releases.flowplayer.org/5.5.0/flowplayer.min.js';
 				$requires['jquery'] = 1;
-				
 				break;
-				
+			
+			case '5':	
 			case 'mediaelement':
 				$requires['css'] ='/filter/videoeasy/players/mediaelementjs/mediaelementplayer.css';
 				$requires['js'] ='/filter/videoeasy/players/mediaelementjs/mediaelement-and-player.min.js';
 				$requires['jquery'] = 1;
 				break;
-				
+			
+			case '6':	
 			case 'playersix':
 				$requires['css'] ='//cdn.rawgit.com/noelboss/featherlight/1.0.3/release/featherlight.min.css';
 				$requires['js'] ='//cdn.rawgit.com/noelboss/featherlight/1.0.3/release/featherlight.min.js';
@@ -112,36 +169,48 @@ function filter_videoeasy_fetch_template_requires($players){
 	return $ret;
 }
 
-function filter_videoeasy_fetch_template_presets($players){
+/**
+ * Return an array of the body text of the template for each template index(player)
+ * @param array a list of players/templates to fetch the data for. 
+ * @return array of array of body text for each template/player
+ */
+function filter_videoeasy_fetch_template_bodys($players){
 	$ret = array();
 	
 	foreach($players as $player){
 		$presets = false;
 		switch($player){
+			case '1':
 			case 'videojs':
 				$presets = '<video id="@@AUTOID@@" class="video-js vjs-default-skin" controls preload="auto" width="@@WIDTH@@" height="@@HEIGHT@@" poster="@@DEFAULTPOSTERURL@@" data-setup=\'{"example_option":true}\'>';
  				$presets .='<source src="@@VIDEOURL@@" type="@@AUTOMIME@@" />';
 				$presets .='</video>';
 				break;
-				
+			
+			case '2':
 			case 'sublimevideo':
 				$presets = '<video id="@@AUTOID@@" class="sublime" width="@@WIDTH@@" height="@@HEIGHT@@" poster="@@DEFAULTPOSTERURL@@" data-uid="@@TITLE@@" title="@@TITLE@@" preload="none">';
   				$presets .= '<source src="@@VIDEOURL@@" type="@@AUTOMIME@@"/>';
 				$presets .='</video>';	
 				break;
-				
+			
+			case '3':	
 			case 'jwplayer':
 				$presets = '<div id="@@AUTOID@@"></div>';
 				break;
-				
+			
+			case '4':	
 			case 'flowplayer':
 				$presets='<div><div id="@@AUTOID@@" style="max-width: @@WIDTH@@px; background-color:#777;';
 				$presets .=' background-image:url(@@DEFAULTPOSTERURL@@);"class="flowplayer videoeasy-flowplayer"></div></div>';
 				break;
-				
+			
+			case '5':	
 			case 'mediaelement':
 				$presets = '<video id="@@AUTOID@@" src="@@VIDEOURL@@" width="@@WIDTH@@" height="@@HEIGHT@@"></video>';
 				break;
+			
+			case '6':
 			case 'playersix':
 				$presets='<a href="#" data-featherlight="#@@AUTOID@@">';
 				$presets.='<img src="@@AUTOPOSTERURLJPG@@" width="@@width@@" height="@@height@@"/></a>';				
@@ -160,20 +229,58 @@ function filter_videoeasy_fetch_template_presets($players){
 	return $ret;
 }
 
+/**
+ * Return an array of the inline styles for each template index(player)
+ * @param array a list of players/templates to fetch the data for. 
+ * @return array of array of inline style for each template/player
+ */
+function filter_videoeasy_fetch_template_styles($players){
+	$ret = array();
+	
+	foreach($players as $player){
+		$styles = false;
+		switch($player){
+			case '1':
+			case 'videojs':
+				$styles = '';
+				break;
+			
+			case '2':	
+			case 'sublimevideo':
+				$styles = '';	
+				break;
+				
+			default: $styles='';
+		}
+		if($styles!==false){
+			$ret[$player] = $styles;
+		}	
+	}
+	return $ret;
+}
+		
+/**
+ * Return an array of the inline scripts for each template index(player)
+ * @param array a list of players/templates to fetch the data for. 
+ * @return array of array of inline scripts for each template/player
+ */
 function filter_videoeasy_fetch_template_scripts($players){
 	$ret = array();
 	
 	foreach($players as $player){
 		$scripts = false;
 		switch($player){
+			case '1':
 			case 'videojs':
 				$scripts = '';
 				break;
-				
+			
+			case '2':	
 			case 'sublimevideo':
 				$scripts = '';	
 				break;
-				
+			
+			case '3':	
 			case 'jwplayer':
 				$scripts = 'jwplayer("@@AUTOID@@").setup({
 file: "@@VIDEOURL@@",
@@ -183,7 +290,8 @@ width: "400",
 aspectratio: "4:3"
 });';
 				break;
-				
+			
+			case '4':	
 			case 'flowplayer':
 				$scripts='$(function () {$("#" + "@@AUTOID@@").flowplayer({
 playlist: [
@@ -196,7 +304,8 @@ splash: true
 }); 
 });';
 				break;
-				
+			
+			case '5':	
 			case 'mediaelement':
 				$scripts = '$("#" + "@@AUTOID@@").mediaelementplayer(/* Options */);';				
 				break;
@@ -211,8 +320,64 @@ splash: true
 	return $ret;
 }
 
+/**
+ * Return an array of template keys(visible names) for each template index(player)
+ * 
+ * @param array a list of players/templates to fetch the data for. 
+ * @return array of array of keys for each template/player
+ */
+function filter_videoeasy_fetch_template_keys($players){
+	$ret = array();
+	
+	foreach($players as $player){
+		$key = false;
+		switch($player){
+			case '1':
+			case 'videojs':
+				$key='Video JS';
+				break;
+			
+			case '2':	
+			case 'sublimevideo':	
+				$key='Sublime Video';
+				break;
+			
+			case '3':	
+			case 'jwplayer':
+				$key='JW Player';
+				break;
+			
+			case '4':	
+			case 'flowplayer':
+				$key='Flowplayer';
+				break;
+			
+			case '5':	
+			case 'mediaelement':
+				$key='Media Element';
+				break;
+			
+			case '6':	
+			case 'playersix':
+				$key='YouTube Lightbox';
+				break;
 
+			default:
+				$key='';
+		}
+		if($key!==false){
+			$ret[$player] = $key;
+		}	
+	}
+	return $ret;
+}
 
+/**
+ * Return an array of template variable default values for each template index(player)
+ * In the format of prop=value,prop=value
+ * @param array a list of players/templates to fetch the data for. 
+ * @return array of array of defaults for each template/player
+ */
 function filter_videoeasy_fetch_template_defaults($players){
 	$ret = array();
 	
@@ -253,6 +418,11 @@ function filter_videoeasy_fetch_template_defaults($players){
 	return $ret;
 }
 
+/**
+ * Takes a string of prop="value",prop="value" and returns a nice array of prop/values
+ * @param string a defaults string. prop="value",prop="value"
+ * @return array of prop/values
+ */
 function filter_videoeasy_parsepropstring($rawproperties){
 	//Now we just have our properties string
 	//Lets run our regular expression over them
@@ -280,7 +450,11 @@ function filter_videoeasy_parsepropstring($rawproperties){
 	return $itemprops;
 }
 
-
+/**
+       * Serves files for this plugin
+       *
+       * 
+       */
 function filter_videoeasy_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
 	$players = filter_videoeasy_fetch_players();
 	foreach($players as $player){

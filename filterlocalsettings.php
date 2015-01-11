@@ -35,7 +35,9 @@ class videoeasy_filter_local_settings_form extends filter_local_settings_form {
 		$siteconf = get_config('filter_videoeasy');
 	
 		//create player select list
+		//complex because of old playername mapping. Can be removed soon.(01/2015)
 		$playeroptions=array();
+		$oldplayers = filter_videoeasy_fetch_oldplayers();
 		$playeroptions['sitedefault'] = get_string('sitedefault','filter_videoeasy');
 		foreach($players as $keyvalue){
 			//player name
@@ -43,10 +45,15 @@ class videoeasy_filter_local_settings_form extends filter_local_settings_form {
 				$playername = $siteconf->{'templatekey_' . $keyvalue};
 				if(!$playername || empty($playername)){$playername='Player ??';}
 			 }else{
-				$playername = get_string('player_' .$keyvalue,'filter_videoeasy');
+			 	if($siteconf && property_exists($siteconf,'templatekey_' . $oldplayers[$keyvalue])){
+		 			$playername = get_string('player_' . $oldplayers[$keyvalue],'filter_videoeasy');
+				}else{
+					$playername = get_string('player','filter_videoeasy', $keyvalue);
+				}
 			 }
 			$playeroptions[$keyvalue] = $playername;
 		}
+		
 		
 		//add extensions checkbox and dropdown list
 		foreach($extensions as $ext){

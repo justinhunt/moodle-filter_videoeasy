@@ -86,6 +86,12 @@ class filter_videoeasy extends moodle_text_filter {
 					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_rss_callback', $newtext);
 			}
 			
+			//check for flv
+			if ($this->fetchconf('handleflv')) {
+					$search = '/<a\s[^>]*href="([^"#\?]+\.flv)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
+					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_flv_callback', $newtext);
+			}
+			
            //check for youtube
 			if ($this->fetchconf('handleyoutube')) {
 					 $search = '/<a\s[^>]*href="(?:https?:\/\/)?(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|v\/)?([\w-]{10,})(?:.*?)<\/a>/is';
@@ -140,6 +146,16 @@ class filter_videoeasy extends moodle_text_filter {
 	 */
 	private function filter_videoeasy_mp4_callback($link) {
 		return $this->filter_videoeasy_process($link,'mp4');
+	}
+
+	/**
+	 * Replace flv links with player
+	 *
+	 * @param  $link
+	 * @return string
+	 */
+	private function filter_videoeasy_flv_callback($link) {
+		return $this->filter_videoeasy_process($link,'flv');
 	}
 
 	/**
@@ -350,12 +366,7 @@ class filter_videoeasy extends moodle_text_filter {
 			$uploadjsurl = filter_videoeasy_setting_file_url($uploadjsfile,'uploadjs_' . $player);
 			$PAGE->requires->js($uploadjsurl);
 		}
-	
-		//prepare additional params our JS will use
-		$proparray['PLAYER'] = $player;
-		$proparray['CSSLINK']=false;
-		$proparray['CSSUPLOAD']=false;
-	
+		
 		//load css in header if not too late
 		//if not too late: load css in header
 		// if too late: inject it there via JS
@@ -363,6 +374,22 @@ class filter_videoeasy extends moodle_text_filter {
 			$uploadcssurl = filter_videoeasy_setting_file_url($uploadcssfile,'uploadcss_' . $player);
 		}
 	
+	
+		//prepare additional params our JS will use
+		$proparray['PLAYER'] = $player;
+		$proparray['CSSLINK']=false;
+		$proparray['CSSUPLOAD']=false;
+		$proparray['CSSCUSTOM']=false;
+	
+		//require any styles from the template
+		$customcssurl=false;
+		$customstyle=$conf->{'templatestyle_' . $player};
+		if($customstyle){
+			$customcssurl =new moodle_url( '/filter/videoeasy/videoeasycss.php?t=' . $player);
+
+		}
+
+			
 		if(!$PAGE->headerprinted && !$PAGE->requires->is_head_done()){
 			if($require_css){
 				$PAGE->requires->css( new moodle_url($require_css));
@@ -370,16 +397,22 @@ class filter_videoeasy extends moodle_text_filter {
 			if($uploadcssfile){
 				$PAGE->requires->css($uploadcssurl);
 			}
+			if($customcssurl){
+				$PAGE->requires->css($customcssurl);
+			}
 		}else{
 			if($require_css){
-				$proparray['CSSLINK']=$require_css;
+				$filterprops['CSSLINK']=$require_css;
 			}
 			if($uploadcssfile){
-				//need a new strategy here!!!
-				$proparray['CSSUPLOAD']=$uploadcssurl->out();
+				$filterprops['CSSUPLOAD']=$uploadcssurl->out();
+			}
+			if($customcssurl){
+				$filterprops['CSSCUSTOM']=$customcssurl->out();
 			}
 		
 		}
+
 	
 		//initialise our JS and call it to load
 		//We need this so that we can require the JSON , for json stringify
@@ -389,7 +422,7 @@ class filter_videoeasy extends moodle_text_filter {
 				'requires' => array('json')
 			);
 		
-			//require any scripts from the template
+		//require any scripts from the template
 		$PAGE->requires->js('/filter/videoeasy/videoeasyjs.php?ext=' . $ext);
 		
 		

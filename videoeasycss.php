@@ -15,18 +15,24 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Version details
+ * Returns the CSS for a specified template
+ * Its php but looks to browser like js file, cos that is what it returns.
  *
- * @package    filter
- * @subpackage videoeasy
- * @copyright  2014 Justin Hunt <poodllsupport@gmail.com>
+ * @package    filter_videoeasy
+ * @copyright  2014 Justin Hunt
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-defined('MOODLE_INTERNAL') || die();
+//define('AJAX_SCRIPT', true);
+require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
+require_once(dirname(__FILE__).'/lib.php');
 
-$plugin->version   = 2015012001;        // The current plugin version (Date: YYYYMMDDXX)
-$plugin->requires  = 2011070100;        // Requires this Moodle version
-$plugin->component = 'filter_videoeasy'; // Full name of the plugin (used for diagnostics)
-$plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '1.0.7(Build 2015010801)';
+$tindex = required_param('t',PARAM_TEXT);
+
+$conf = get_config('filter_videoeasy');
+
+//get presets
+$thestyle=$conf->{'templatestyle_' . $tindex};
+
+header('Content-Type: text/css');
+echo $thestyle;

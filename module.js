@@ -51,6 +51,15 @@ M.filter_videoeasy = {
 			}
 		}
 		
+		//load our css in head if required
+		//only do it once per extension though
+		if(opts['CSSCUSTOM']){
+			if (this.csslinks.indexOf(opts['CSSCUSTOM'])<0){
+				this.csslinks.push(opts['CSSCUSTOM']);
+				this.injectcss(opts['CSSCUSTOM']);
+			}
+		}
+		
 		
 		/*
 		if(!this.allopts[opts['FILEEXT']]){this.allopts[opts['FILEEXT']]=Array();}		

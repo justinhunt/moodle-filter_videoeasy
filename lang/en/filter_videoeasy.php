@@ -49,6 +49,7 @@ $string['useplayer'] = '{$a} Player';
 $string['useplayerdesc'] = "The player selected will use the information from the appropriate template below.";
 $string['handle'] = 'Handle {$a}';
 $string['sitedefault'] = "Site Default";
+$string['player'] = "Player {$a}";
 $string['player_videojs'] = "Video.js";
 $string['player_sublimevideo'] = "Sublime Video";
 $string['player_jwplayer'] = "JW Player";
@@ -74,4 +75,7 @@ $string['uploadcss'] = 'Upload CSS';
 $string['uploadcss_desc'] = 'You can upload one CSS file which will be loaded for your template. Only one.';
 $string['defaultposterimage']='Default poster image';
 $string['defaultposterimage_desc']='The standard default poster image is just a grey box. Here you can upload a custom image that better suits your site. A default poster image will only be shown if the player template specifies it.';
-
+$string['presets'] = 'Autofill template with a Preset';
+$string['presets_desc'] = 'Generico comes with some default presets you can use out of the box, or to help you get started with your own template. Choose one of those here, or just create your own template from scratch.';
+$string['templatestyle'] = 'Custom CSS (template {$a})';
+$string['templatestyle_desc'] = 'Enter any custom CSS that your template uses here. Template variables will not work here. Just plain old css.';
