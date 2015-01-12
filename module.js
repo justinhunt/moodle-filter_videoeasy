@@ -72,7 +72,6 @@ M.filter_videoeasy = {
 		if(typeof filter_videoeasy_extfunctions != 'undefined'){ 
 			if(typeof filter_videoeasy_extfunctions[opts['FILEEXT']] == 'function'){ 
 				filter_videoeasy_extfunctions[opts['FILEEXT']](opts);
-				console.log(opts);
 			}
 		}
 	}//end of function

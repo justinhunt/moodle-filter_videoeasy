@@ -135,7 +135,7 @@ class admin_setting_videoeasypresets extends admin_setting {
 
 	$ret = array();
 	$defaultpresets = array(1,2,3,4,5,6);//filter_videoeasy_fetch_players();
-	$additionalpresets = array(7,8,9,10);
+	$additionalpresets = array(7,8,9,10,11,12);
 	
 	//prepare template info
 	$templaterequires=filter_videoeasy_fetch_template_requires($defaultpresets);
@@ -173,7 +173,7 @@ class admin_setting_videoeasypresets extends admin_setting {
 				$presets['style'] = '';
 				break;
 			case 8:
-				$presets['key'] ='multisourcevideo';
+				$presets['key'] ='Multi Source Video';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '';
 				$presets['jquery'] = 0;
@@ -183,7 +183,7 @@ class admin_setting_videoeasypresets extends admin_setting {
 				$presets['style'] = '';
 				break;
 			case 9:
-				$presets['key'] ='multisourceaudio';
+				$presets['key'] ='Multi Source Audio';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '';
 				$presets['jquery'] = 0;
@@ -212,14 +212,14 @@ listbar: {
 				$presets['style'] = '';
 				break;
 			case 11:
-				$presets['key'] ='soundmanager';
+				$presets['key'] ='SoundManager2';
 				$presets['requirecss'] ='';
-				$presets['requirejs'] =  '//cdn.jsdelivr.net/soundmanager2/2.97a.20130512/soundmanager2-nodebug-jsmin.js';
+				$presets['requirejs'] =  '//cdn.jsdelivr.net/soundmanager2/2.97a.20130512/soundmanager2.js';
 				$presets['jquery'] = 0;
 				$presets['defaults'] = '';
 				$presets['body'] ='<a onClick="soundManager.play(\'@@AUTOID@@\')" >@@FILENAME@@</a>';
 				$presets['script'] = 'soundManager.setup({
-  url: "//cdn.jsdelivr.net/soundmanager2/2.97a.20130512/soundmanager2.swf",
+  url: "//cdn.jsdelivr.net/soundmanager2/2.97a.20130512/soundmanager2_flash9.swf",
   flashVersion: 9, // optional: shiny features (default = 8)
   // preferFlash: true;
   preferFlash: false,
@@ -228,8 +228,6 @@ listbar: {
       id: @@AUTOID@@, // optional: provide your own unique id
       url: @@VIDEOURL@@,
        autoPlay: false
-      }
-      // other options here..
     });
   }
 });';
@@ -237,7 +235,7 @@ listbar: {
 				break;
 			case 12:
 			default:
-				$presets['key'] ='none';
+				$presets['key'] ='None';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '';
 				$presets['jquery'] = 0;
