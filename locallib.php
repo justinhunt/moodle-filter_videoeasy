@@ -178,7 +178,11 @@ class admin_setting_videoeasypresets extends admin_setting {
 				$presets['requirejs'] =  '';
 				$presets['jquery'] = 0;
 				$presets['defaults'] = '';
-				$presets['body'] ='';
+				$presets['body'] ='<video width="320" height="240" controls>
+  <source src="@@VIDEOURL@@" type="video/mp4">
+  <source src="@@URLSTUB@@.ogg" type="video/ogg">
+Your browser does not support the video tag.
+</video>';
 				$presets['script'] = '';
 				$presets['style'] = '';
 				break;
@@ -188,7 +192,11 @@ class admin_setting_videoeasypresets extends admin_setting {
 				$presets['requirejs'] =  '';
 				$presets['jquery'] = 0;
 				$presets['defaults'] = '';
-				$presets['body'] ='';
+				$presets['body'] ='<audio controls>
+  <source src="@@VIDEOURL@@" type="audio/mpeg">
+  <source src="@@URLSTUB@@.ogg" type="audio/ogg">
+Your browser does not support the audio element.
+</audio>';
 				$presets['script'] = '';
 				$presets['style'] = '';
 				break;

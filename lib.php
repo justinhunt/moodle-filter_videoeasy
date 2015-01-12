@@ -88,6 +88,7 @@ function filter_videoeasy_fetch_emptyproparray(){
 	$proparray['AUTOPNGFILENAME'] = '';
 	$proparray['AUTOJPGFILENAME'] = '';
 	$proparray['VIDEOURL'] = '';
+	$proparray['URLSTUB'] = '';
 	$proparray['AUTOPOSTERURLJPG'] = '';
 	$proparray['AUTOPOSTERURLPNG'] = '';
 	$proparray['DEFAULTPOSTERURL'] = '';

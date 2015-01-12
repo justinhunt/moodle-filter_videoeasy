@@ -231,6 +231,7 @@ class filter_videoeasy extends moodle_text_filter {
 		$url = str_replace('&amp;', '&', $url);
 		$rawurl = $url;
 		$url = clean_param($url, PARAM_URL);
+		$urlstub = substr($rawurl,0,strpos($rawurl,'.' . $ext));
 		
 		if($ext=="youtube"){
 			$filename = $link[1];
@@ -261,9 +262,7 @@ class filter_videoeasy extends moodle_text_filter {
 			$filetitle = str_replace('.' . $ext,'',$filename);
 			$autopngfilename = str_replace('.' . $ext,'.png',$filename);
 			$autojpgfilename = str_replace('.' . $ext,'.jpg',$filename);
-			
-			//get the url  - extenstion
-			$urlstub = substr($rawurl,0,strpos($rawurl,'.' . $ext));
+
 			//$url = $link[5];
 			$videourl = $rawurl;
 			$autoposterurljpg = $urlstub . '.jpg';
@@ -327,6 +326,7 @@ class filter_videoeasy extends moodle_text_filter {
 		}
 	
 		$proparray['AUTOMIME'] = $automime;
+		$proparray['URLSTUB'] = $urlstub;
 		$proparray['FILENAME'] = $filename;
 		$proparray['FILETITLE'] = $filetitle;
 		$proparray['DEFAULTPOSTERURL'] = $defaultposterurl;
