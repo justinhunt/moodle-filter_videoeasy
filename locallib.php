@@ -163,12 +163,12 @@ class admin_setting_videoeasypresets extends admin_setting {
 		$presets = array();
 		switch ($preset){
 			case 7:
-				$presets['key'] ='youtube';
+				$presets['key'] ='YouTube';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '';
 				$presets['jquery'] = 0;
-				$presets['defaults'] = '';
-				$presets['body'] ='';
+				$presets['defaults'] = 'width=600,height=400';
+				$presets['body'] ='<iframe width="@@width@@" height="@@height@@" src="//www.youtube.com/embed/@@FILENAME@@" frameborder="0" allowfullscreen></iframe>';
 				$presets['script'] = '';
 				$presets['style'] = '';
 				break;
@@ -193,23 +193,46 @@ class admin_setting_videoeasypresets extends admin_setting {
 				$presets['style'] = '';
 				break;
 			case 10:
-				$presets['key'] ='jwplayerrss';
+				$presets['key'] ='JW Player RSS';
 				$presets['requirecss'] ='';
-				$presets['requirejs'] =  '';
+				$presets['requirejs'] =  'http://jwpsrv.com/library/PERSONALCODE.js';
 				$presets['jquery'] = 0;
 				$presets['defaults'] = '';
-				$presets['body'] ='';
-				$presets['script'] = '';
+				$presets['body'] ='<div id="@@AUTOID@@"></div>';
+				$presets['script'] = 'jwplayer("@@AUTOID@@").setup({
+playlist: "@@videourl@@"",
+width: "640",
+height: "360",
+listbar: {
+        position: "right",
+        size: 240,
+        layout: "basic"
+      }
+});';
 				$presets['style'] = '';
 				break;
 			case 11:
 				$presets['key'] ='soundmanager';
 				$presets['requirecss'] ='';
-				$presets['requirejs'] =  '';
+				$presets['requirejs'] =  '//cdn.jsdelivr.net/soundmanager2/2.97a.20130512/soundmanager2-nodebug-jsmin.js';
 				$presets['jquery'] = 0;
 				$presets['defaults'] = '';
-				$presets['body'] ='';
-				$presets['script'] = '';
+				$presets['body'] ='<a onClick="soundManager.play(\'@@AUTOID@@\')" >@@FILENAME@@</a>';
+				$presets['script'] = 'soundManager.setup({
+  url: "//cdn.jsdelivr.net/soundmanager2/2.97a.20130512/soundmanager2.swf",
+  flashVersion: 9, // optional: shiny features (default = 8)
+  // preferFlash: true;
+  preferFlash: false,
+  onready: function() {
+   var mySound = soundManager.createSound({
+      id: @@AUTOID@@, // optional: provide your own unique id
+      url: @@VIDEOURL@@,
+       autoPlay: false
+      }
+      // other options here..
+    });
+  }
+});';
 				$presets['style'] = '';
 				break;
 			case 12:
