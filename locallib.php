@@ -134,30 +134,100 @@ class admin_setting_videoeasypresets extends admin_setting {
 	protected function fetch_presets(){
 
 	$ret = array();
-	$players = filter_videoeasy_fetch_players();
+	$defaultpresets = array(1,2,3,4,5,6);//filter_videoeasy_fetch_players();
+	$additionalpresets = array(7,8,9,10);
 	
 	//prepare template info
-	$templaterequires=filter_videoeasy_fetch_template_requires($players);
-	$templatebodys=filter_videoeasy_fetch_template_bodys($players);
-	$templatescripts=filter_videoeasy_fetch_template_scripts($players);
-	$templatestyles=filter_videoeasy_fetch_template_styles($players);
-	$templatedefaults=filter_videoeasy_fetch_template_defaults($players);
-	$templatekeys=filter_videoeasy_fetch_template_keys($players);
+	$templaterequires=filter_videoeasy_fetch_template_requires($defaultpresets);
+	$templatebodys=filter_videoeasy_fetch_template_bodys($defaultpresets);
+	$templatescripts=filter_videoeasy_fetch_template_scripts($defaultpresets);
+	$templatestyles=filter_videoeasy_fetch_template_styles($defaultpresets);
+	$templatedefaults=filter_videoeasy_fetch_template_defaults($defaultpresets);
+	$templatekeys=filter_videoeasy_fetch_template_keys($defaultpresets);
 	
-	foreach($players as $player){
+	foreach($defaultpresets as $preset){
 		$presets = array();
-		$presets['key'] =$templatekeys[$player];
+		$presets['key'] =$templatekeys[$preset];
 		if(!$presets['key']){continue;}
-		$presets['requirecss'] =$templaterequires[$player]['css'];
-		$presets['requirejs'] =  $templaterequires[$player]['js'];
-		$presets['jquery'] = $templaterequires[$player]['jquery'];
-		$presets['defaults'] = $templatedefaults[$player];
-		$presets['body'] =$templatebodys[$player];
-		$presets['script'] = $templatescripts[$player];
-		$presets['style'] = $templatestyles[$player];		
+		$presets['requirecss'] =$templaterequires[$preset]['css'];
+		$presets['requirejs'] =  $templaterequires[$preset]['js'];
+		$presets['jquery'] = $templaterequires[$preset]['jquery'];
+		$presets['defaults'] = $templatedefaults[$preset];
+		$presets['body'] =$templatebodys[$preset];
+		$presets['script'] = $templatescripts[$preset];
+		$presets['style'] = $templatestyles[$preset];		
 	  //update our return value
-	    $ret[$player] = $presets;
-	}
+	    $ret[$preset] = $presets;
+	}//end of for each
+	foreach($additionalpresets as $preset){
+		$presets = array();
+		switch ($preset){
+			case 7:
+				$presets['key'] ='youtube';
+				$presets['requirecss'] ='';
+				$presets['requirejs'] =  '';
+				$presets['jquery'] = 0;
+				$presets['defaults'] = '';
+				$presets['body'] ='';
+				$presets['script'] = '';
+				$presets['style'] = '';
+				break;
+			case 8:
+				$presets['key'] ='multisourcevideo';
+				$presets['requirecss'] ='';
+				$presets['requirejs'] =  '';
+				$presets['jquery'] = 0;
+				$presets['defaults'] = '';
+				$presets['body'] ='';
+				$presets['script'] = '';
+				$presets['style'] = '';
+				break;
+			case 9:
+				$presets['key'] ='multisourceaudio';
+				$presets['requirecss'] ='';
+				$presets['requirejs'] =  '';
+				$presets['jquery'] = 0;
+				$presets['defaults'] = '';
+				$presets['body'] ='';
+				$presets['script'] = '';
+				$presets['style'] = '';
+				break;
+			case 10:
+				$presets['key'] ='jwplayerrss';
+				$presets['requirecss'] ='';
+				$presets['requirejs'] =  '';
+				$presets['jquery'] = 0;
+				$presets['defaults'] = '';
+				$presets['body'] ='';
+				$presets['script'] = '';
+				$presets['style'] = '';
+				break;
+			case 11:
+				$presets['key'] ='soundmanager';
+				$presets['requirecss'] ='';
+				$presets['requirejs'] =  '';
+				$presets['jquery'] = 0;
+				$presets['defaults'] = '';
+				$presets['body'] ='';
+				$presets['script'] = '';
+				$presets['style'] = '';
+				break;
+			case 12:
+			default:
+				$presets['key'] ='none';
+				$presets['requirecss'] ='';
+				$presets['requirejs'] =  '';
+				$presets['jquery'] = 0;
+				$presets['defaults'] = '';
+				$presets['body'] ='';
+				$presets['script'] = '';
+				$presets['style'] = '';
+			
+		}//end of switch		
+	  //update our return value
+	    $ret[$preset] = $presets;
+	
+	}//end of for each
 	return $ret;
 	
 }

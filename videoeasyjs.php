@@ -29,10 +29,12 @@ require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
 
 $ext = required_param('ext',PARAM_TEXT);
+$player = optional_param('t','',PARAM_TEXT);
 
 $conf = get_config('filter_videoeasy');
-$player=$conf->{'useplayer' . $ext};
-
+if(empty($player)){
+	$player=$conf->{'useplayer' . $ext};
+}
 
 //get presets
 $thescript=$conf->{'templatescript_' . $player};

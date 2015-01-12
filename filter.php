@@ -120,6 +120,7 @@ class filter_videoeasy extends moodle_text_filter {
     	if(!$this->courseconfig){
     		$this->courseconfig = filter_get_local_config('videoeasy', context_course::instance($COURSE->id)->id);
     	}
+    	
 		if($this->courseconfig && isset($this->courseconfig[$prop]) && $this->courseconfig[$prop] != 'sitedefault') {
 			return $this->courseconfig[$prop];
 		}else{
@@ -220,10 +221,11 @@ class filter_videoeasy extends moodle_text_filter {
 		$uploadjsfile = $conf->{'uploadjs_' . $player};
 		
 		/*
-		* 1 = url, 2=?, 3=width,4=height,5=linkedtext
+		* 1 = url, 2=filename?, 3=width,4=height,5=linkedtext
 		*
 		*/
-		//	print_r($link);
+		//echo "player:" . $player;
+		//print_r($link);
 		//clean up url
 		$url = $link[1];
 		$url = str_replace('&amp;', '&', $url);
@@ -350,7 +352,7 @@ class filter_videoeasy extends moodle_text_filter {
 			$preset = str_replace('@@' . $name .'@@',$value,$preset);
 		}
 		//error_log($preset);
-	
+		
 		//load jquery
 		if($require_jquery){
 			$PAGE->requires->js(new moodle_url($scheme . $conf->{'jqueryurl'}));
@@ -402,13 +404,13 @@ class filter_videoeasy extends moodle_text_filter {
 			}
 		}else{
 			if($require_css){
-				$filterprops['CSSLINK']=$require_css;
+				$proparray['CSSLINK']=$require_css;
 			}
 			if($uploadcssfile){
-				$filterprops['CSSUPLOAD']=$uploadcssurl->out();
+				$proparray['CSSUPLOAD']=$uploadcssurl->out();
 			}
 			if($customcssurl){
-				$filterprops['CSSCUSTOM']=$customcssurl->out();
+				$proparray['CSSCUSTOM']=$customcssurl->out();
 			}
 		
 		}
@@ -423,7 +425,7 @@ class filter_videoeasy extends moodle_text_filter {
 			);
 		
 		//require any scripts from the template
-		$PAGE->requires->js('/filter/videoeasy/videoeasyjs.php?ext=' . $ext);
+		$PAGE->requires->js('/filter/videoeasy/videoeasyjs.php?ext=' . $ext . '&t=' . $player);
 		
 		
 		//setup our JS call

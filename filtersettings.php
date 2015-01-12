@@ -48,7 +48,7 @@ if (is_siteadmin()) {
 	
 	//create player select list
 	//this looks way complicated, because we made a big shift in the naming of the filter properties
-	//we are trying to map old names to new property indexes here.
+	//we are trying to map old property names to new property names here.
 	$playeroptions=array();
 	$oldplayers = filter_videoeasy_fetch_oldplayers();
 	foreach($players as $keyvalue){
