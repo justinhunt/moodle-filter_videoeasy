@@ -163,22 +163,36 @@ class admin_setting_videoeasypresets extends admin_setting {
 		$presets = array();
 		switch ($preset){
 			case 7:
-				$presets['key'] ='YouTube';
+				$presets['key'] ='YouTube(standard)';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '';
 				$presets['jquery'] = 0;
-				$presets['defaults'] = 'width=600,height=400';
-				$presets['body'] ='<iframe width="@@width@@" height="@@height@@" src="//www.youtube.com/embed/@@FILENAME@@" frameborder="0" allowfullscreen></iframe>';
+				$presets['defaults'] = 'WIDTH=600,HEIGHT=400';
+				$presets['body'] ='<iframe width="@@WIDTH@@" height="@@HEIGHT@@" src="//www.youtube.com/embed/@@FILENAME@@" frameborder="0" allowfullscreen></iframe>';
 				$presets['script'] = '';
 				$presets['style'] = '';
 				break;
+		/*
+			case 8:
+				$presets['key'] ='YouTube(Mediaelement.js)';
+				$presets['requirecss'] ='https://cdnjs.cloudflare.com/ajax/libs/mediaelement/2.13.2/css/mediaelementplayer.min.css';
+				$presets['requirejs'] ='https://cdnjs.cloudflare.com/ajax/libs/mediaelement/2.13.2/js/mediaelement-and-player.min.js';
+				$presets['jquery'] = 1;
+				$presets['defaults'] = 'WIDTH=640,HEIGHT=480';
+				$presets['body'] ='<video width="@@WIDTH@@" height="@@HEIGHT@@" id="@@AUTOID@@" preload="none">
+    <source type="video/youtube" src="http://www.youtube.com/watch?v=@@FILENAME@@" />
+</video>';
+				$presets['script'] = '';
+				$presets['style'] = '';
+				break;
+		*/
 			case 8:
 				$presets['key'] ='Multi Source Video';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '';
 				$presets['jquery'] = 0;
-				$presets['defaults'] = '';
-				$presets['body'] ='<video width="320" height="240" controls>
+				$presets['defaults'] = 'WIDTH=640,HEIGHT=480';
+				$presets['body'] ='<video width="@@WIDTH@@" height="@@HEIGHT@@" controls>
   <source src="@@VIDEOURL@@" type="video/mp4">
   <source src="@@URLSTUB@@.ogg" type="video/ogg">
 Your browser does not support the video tag.
@@ -205,12 +219,12 @@ Your browser does not support the audio element.
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  'http://jwpsrv.com/library/PERSONALCODE.js';
 				$presets['jquery'] = 0;
-				$presets['defaults'] = '';
+				$presets['defaults'] = 'WIDTH=640,HEIGHT=360';
 				$presets['body'] ='<div id="@@AUTOID@@"></div>';
 				$presets['script'] = 'jwplayer("@@AUTOID@@").setup({
 playlist: "@@videourl@@"",
-width: "640",
-height: "360",
+width: "@@WIDTH@@",
+height: "@@HEIGHT@@",
 listbar: {
         position: "right",
         size: 240,

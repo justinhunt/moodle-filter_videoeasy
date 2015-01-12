@@ -147,8 +147,8 @@ function filter_videoeasy_fetch_template_requires($players){
 			
 			case '5':	
 			case 'mediaelement':
-				$requires['css'] ='/filter/videoeasy/players/mediaelementjs/mediaelementplayer.css';
-				$requires['js'] ='/filter/videoeasy/players/mediaelementjs/mediaelement-and-player.min.js';
+				$requires['css'] ='https://cdnjs.cloudflare.com/ajax/libs/mediaelement/2.13.2/css/mediaelementplayer.min.css';
+				$requires['js'] ='https://cdnjs.cloudflare.com/ajax/libs/mediaelement/2.13.2/js/mediaelement-and-player.min.js';
 				$requires['jquery'] = 1;
 				break;
 			
@@ -214,7 +214,7 @@ function filter_videoeasy_fetch_template_bodys($players){
 			case '6':
 			case 'playersix':
 				$presets='<a href="#" data-featherlight="#@@AUTOID@@">';
-				$presets.='<img src="@@AUTOPOSTERURLJPG@@" width="@@width@@" height="@@height@@"/></a>';				
+				$presets.='<img src="@@AUTOPOSTERURLJPG@@" width="@@WIDTH@@" height="@@HEIGHT@@"/></a>';				
 				$presets.='<div style="display: none;"><div  id="@@AUTOID@@">';
 				$presets.='<iframe width="@@videowidth@@" height="@@videoheight@@" src="//www.youtube.com/embed/@@FILENAME@@?rel=0" frameborder="0" allowfullscreen>';
 				$presets.='</iframe></div></div>';
@@ -355,12 +355,12 @@ function filter_videoeasy_fetch_template_keys($players){
 			
 			case '5':	
 			case 'mediaelement':
-				$key='Media Element';
+				$key='Mediaelement.js';
 				break;
 			
 			case '6':	
 			case 'playersix':
-				$key='YouTube Lightbox';
+				$key='YouTube(Lightbox)';
 				break;
 
 			default:
@@ -385,28 +385,34 @@ function filter_videoeasy_fetch_template_defaults($players){
 	foreach($players as $player){
 		$defaults = false;
 		switch($player){
+			case "1":
 			case 'videojs':
 				$defaults='WIDTH=640,HEIGHT=480';
 				break;
 				
+			case "2":
 			case 'sublimevideo':	
 				$defaults='WIDTH=640,HEIGHT=480';
 				break;
-				
+			
+			case "3":	
 			case 'jwplayer':
 				$defaults='';
 				break;
-				
+			
+			case "4":	
 			case 'flowplayer':
 				$defaults='WIDTH=640,HEIGHT=480';
 				break;
-				
+			
+			case "5":	
 			case 'mediaelement':
 				$defaults='WIDTH=640,HEIGHT=480';
 				break;
-				
+			
+			case "6":	
 			case 'playersix':
-				$defaults='width=240,height=160,videowidth=600,videoheight=400';
+				$defaults='WIDTH=240,HEIGHT=160,videowidth=600,videoheight=400';
 				break;
 
 			default:
