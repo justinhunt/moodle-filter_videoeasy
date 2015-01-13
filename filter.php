@@ -63,56 +63,12 @@ class filter_videoeasy extends moodle_text_filter {
 					$handleexts[] = $ext;
 				}
 			}
-			
+			//do all the non youtube extensions in one foul swoop
 			if(!empty($handleexts)){
 				$handleextstring = implode('|',$handleexts);
 				$search = '/<a\s[^>]*href="([^"#\?]+\.(' .  $handleextstring. '))(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
 				$newtext = preg_replace_callback($search, 'self::filter_videoeasy_allexts_callback', $newtext);
 			}
-			
-			/*
-			//check for mp4
-			if ($this->fetchconf('handlemp4')) {
-					$search = '/<a\s[^>]*href="([^"#\?]+\.mp4)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
-					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_mp4_callback', $newtext);
-			}
-			
-			//check for webm
-			if ($this->fetchconf('handlewebm')) {
-					$search = '/<a\s[^>]*href="([^"#\?]+\.webm)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
-					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_webm_callback', $newtext);
-			}
-			
-			//check for ogg
-			if ($this->fetchconf('handleogg')) {
-					$search = '/<a\s[^>]*href="([^"#\?]+\.ogg)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
-					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_ogg_callback', $newtext);
-			}
-			
-			//check for ogg
-			if ($this->fetchconf('handleogv')) {
-					$search = '/<a\s[^>]*href="([^"#\?]+\.ogv)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
-					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_ogv_callback', $newtext);
-			}
-			
-			//check for mp3
-			if ($this->fetchconf('handlemp3')) {
-					$search = '/<a\s[^>]*href="([^"#\?]+\.mp3)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
-					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_mp3_callback', $newtext);
-			}
-		
-			//check for rss
-			if ($this->fetchconf('handlerss')) {
-					$search = '/<a\s[^>]*href="([^"#\?]+\.rss)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
-					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_rss_callback', $newtext);
-			}
-			
-			//check for flv
-			if ($this->fetchconf('handleflv')) {
-					$search = '/<a\s[^>]*href="([^"#\?]+\.flv)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
-					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_flv_callback', $newtext);
-			}
-			*/
 			
            //check for youtube
 			if ($this->fetchconf('handleyoutube')) {
@@ -162,75 +118,6 @@ class filter_videoeasy extends moodle_text_filter {
 		return $this->filter_videoeasy_process($link,'youtube');
 	}
 	
-	/**
-	 * Replace mp4 links with player
-	 *
-	 * @param  $link
-	 * @return string
-	 */
-	private function filter_videoeasy_mp4_callback($link) {
-		return $this->filter_videoeasy_process($link,'mp4');
-	}
-
-	/**
-	 * Replace flv links with player
-	 *
-	 * @param  $link
-	 * @return string
-	 */
-	private function filter_videoeasy_flv_callback($link) {
-		return $this->filter_videoeasy_process($link,'flv');
-	}
-
-	/**
-	 * Replace ogg links with player
-	 *
-	 * @param  $link
-	 * @return string
-	 */
-	private function filter_videoeasy_ogg_callback($link) {
-		return $this->filter_videoeasy_process($link,'ogg');
-	}
-	
-	/**
-	 * Replace ogv links with player
-	 *
-	 * @param  $link
-	 * @return string
-	 */
-	private function filter_videoeasy_ogv_callback($link) {
-		return $this->filter_videoeasy_process($link,'ogv');
-	}
-
-	/**
-	 * Replace webm links with player
-	 *
-	 * @param  $link
-	 * @return string
-	 */
-	private function filter_videoeasy_webm_callback($link) {
-		return $this->filter_videoeasy_process($link,'webm');
-	}
-
-	/**
-	 * Replace mp3 links with player
-	 *
-	 * @param  $link
-	 * @return string
-	 */
-	private function filter_videoeasy_mp3_callback($link) {
-		return $this->filter_videoeasy_process($link,'mp3');
-	}
-
-	/**
-	 * Replace rss links with player
-	 *
-	 * @param  $link
-	 * @return string
-	 */
-	private function filter_videoeasy_rss_callback($link) {
-		return $this->filter_videoeasy_process($link,'rss');
-	}
 	
 	/**
 	 * Replace rss links with player
