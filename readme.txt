@@ -39,7 +39,7 @@ There are fifteen templates available to use. The first six are ready made, thou
 
 SublimeVideo and JW Player require you register with their site to get a personal javascript link. So you will need to do that first then enter it in the requires_js field of the template before you can use them.
 
-Each template has several fields, one the name/key field is really required:
+Each template has several fields, but only the name/key field is required:
 1) required javascript url : The url of the JS file the html5 player requires.
 2) required css url : The url of the CSS file the html5 player requires.
 3) requires jquery : True or False. If your theme already loads JQuery you can always leave this as false. The JQuery URL can be set on the VideoEasy general settings page.
