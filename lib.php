@@ -72,7 +72,7 @@ function filter_videoeasy_fetch_default($conf, $oldpropname, $newdefault){
  * @return array of variable names parsed from template string
  */
 function filter_videoeasy_fetch_extensions(){
-	$extensions = array('mp4','webm','ogg','flv','mp3','rss','youtube');
+	$extensions = array('mp4','webm','ogg','ogv','flv','mp3','rss','youtube');
 	return $extensions;
 }	
 

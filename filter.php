@@ -55,7 +55,22 @@ class filter_videoeasy extends moodle_text_filter {
 			 //$conf = get_config('filter_videoeasy');
 			 $this->adminconfig =get_config('filter_videoeasy');
 					
+			//get handle extensions
+			$exts = filter_videoeasy_fetch_extensions();
+			$handleexts = array();
+			foreach($exts as $ext){
+				if($ext!='youtube' && $this->fetchconf('handle' . $ext)){
+					$handleexts[] = $ext;
+				}
+			}
 			
+			if(!empty($handleexts)){
+				$handleextstring = implode('|',$handleexts);
+				$search = '/<a\s[^>]*href="([^"#\?]+\.(' .  $handleextstring. '))(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
+				$newtext = preg_replace_callback($search, 'self::filter_videoeasy_allexts_callback', $newtext);
+			}
+			
+			/*
 			//check for mp4
 			if ($this->fetchconf('handlemp4')) {
 					$search = '/<a\s[^>]*href="([^"#\?]+\.mp4)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
@@ -72,6 +87,12 @@ class filter_videoeasy extends moodle_text_filter {
 			if ($this->fetchconf('handleogg')) {
 					$search = '/<a\s[^>]*href="([^"#\?]+\.ogg)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
 					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_ogg_callback', $newtext);
+			}
+			
+			//check for ogg
+			if ($this->fetchconf('handleogv')) {
+					$search = '/<a\s[^>]*href="([^"#\?]+\.ogv)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
+					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_ogv_callback', $newtext);
 			}
 			
 			//check for mp3
@@ -91,6 +112,7 @@ class filter_videoeasy extends moodle_text_filter {
 					$search = '/<a\s[^>]*href="([^"#\?]+\.flv)(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
 					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_flv_callback', $newtext);
 			}
+			*/
 			
            //check for youtube
 			if ($this->fetchconf('handleyoutube')) {
@@ -168,6 +190,16 @@ class filter_videoeasy extends moodle_text_filter {
 	private function filter_videoeasy_ogg_callback($link) {
 		return $this->filter_videoeasy_process($link,'ogg');
 	}
+	
+	/**
+	 * Replace ogv links with player
+	 *
+	 * @param  $link
+	 * @return string
+	 */
+	private function filter_videoeasy_ogv_callback($link) {
+		return $this->filter_videoeasy_process($link,'ogv');
+	}
 
 	/**
 	 * Replace webm links with player
@@ -198,6 +230,17 @@ class filter_videoeasy extends moodle_text_filter {
 	private function filter_videoeasy_rss_callback($link) {
 		return $this->filter_videoeasy_process($link,'rss');
 	}
+	
+	/**
+	 * Replace rss links with player
+	 *
+	 * @param  $link
+	 * @return string
+	 */
+	private function filter_videoeasy_allexts_callback($link) {
+		return $this->filter_videoeasy_process($link,$link[2]);
+	}
+
 
 	/**
 	 * Replace mp4 or flv links with player
@@ -221,11 +264,13 @@ class filter_videoeasy extends moodle_text_filter {
 		$uploadjsfile = $conf->{'uploadjs_' . $player};
 		
 		/*
-		* 1 = url, 2=filename?, 3=width,4=height,5=linkedtext
+		* 1 = url, 2=ext, 3=?d=widthxheight, 4=width,5=height,6=linkedtext
 		*
 		*/
 		//echo "player:" . $player;
 		//print_r($link);
+		//echo ("player:" . $player);
+		//echo ("ext:" . $ext);
 		//clean up url
 		$url = $link[1];
 		$url = str_replace('&amp;', '&', $url);
@@ -267,7 +312,7 @@ class filter_videoeasy extends moodle_text_filter {
 			$videourl = $rawurl;
 			$autoposterurljpg = $urlstub . '.jpg';
 			$autoposterurlpng = $urlstub . '.png';
-			$title = $link[5];
+			$title = $link[6];
 		}
 		
 		
@@ -293,11 +338,11 @@ class filter_videoeasy extends moodle_text_filter {
 	
 	
 		//use default widths or explicit width/heights if they were passed in ie http://url.to.video.mp4?d=640x480
-		if (!empty($link[3])) {
-			$proparray['WIDTH'] = $link[3];
-		}
 		if (!empty($link[4])) {
-			$proparray['HEIGHT'] = $link[3];
+			$proparray['WIDTH'] = $link[4];
+		}
+		if (!empty($link[5])) {
+			$proparray['HEIGHT'] = $link[5];
 		}
 
 	
