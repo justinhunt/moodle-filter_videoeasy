@@ -131,6 +131,7 @@ class filter_videoeasy extends moodle_text_filter {
     
     private function fetchconf($prop){
     global $COURSE;
+
     	//I don't know why we need this whole courseconfig business.
     	//we are supposed to be able to just call $this->localconfig / $this->localconfig[$propertyname]
     	//as per here:https://docs.moodle.org/dev/Filters#Local_configuration , but its always empty

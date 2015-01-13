@@ -55,7 +55,7 @@ Presets
 Each template's page contains a drop down with a number of "preset" templates. (template templates ..I guess). The list of presets will grow hopefully as people submit them to me, or I dream them up. Using these you can quickly make new templates, or use as a starting point for your own template. The current presets are:
 Video.js, Sublime Video, JW Player, Flowplayer, MediaElement.js,Youtube Lightbox, YouTube(standard),Multi Source Audio, Multi Source Video, JW Player RSS, and SoundManager 2 
 
-In order to keep VideoEasy small, there are no actual JS players bundled. Flowplayer, Sublime Video etc are all included on the page via CDN hosting sources. In some cases, notably SoundManager 2, it will work better if you have those players installed on your own web server. SoundManager2 has flash components, which are sensitive to crossdomain hosting issues.
+In order to keep VideoEasy small, there are no actual JS players bundled. Flowplayer, Sublime Video etc are all included on the page via CDN hosting sources. In some cases, notably SoundManager 2, it will work better if you have those players installed on your own web server. SoundManager2 has flash components, which are sensitive to crossdomain hosting issues. (NB At the time of writing there is a conflict (jquery?) that prevents mediaelement and flowplayer from loading properly when the youtube lightbox is also present on the page. 20150113)
 
 
 The Video Easy Variables
