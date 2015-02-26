@@ -95,6 +95,7 @@ class admin_setting_videoeasypresets extends admin_setting {
 		$js .="if(!presetindex){return;}";
 		$js .="var presets = " . json_encode($this->presetdata) .";";
 		$js .="var key = document.getElementById('id_s_filter_videoeasy_templatekey_' + $this->templateindex);";
+		$js .="var name = document.getElementById('id_s_filter_videoeasy_templatename_' + $this->templateindex);";
 		$js .="var requirecss = document.getElementById('id_s_filter_videoeasy_templaterequire_css_' + $this->templateindex);";
 		$js .="var requirejs = document.getElementById('id_s_filter_videoeasy_templaterequire_js_' + $this->templateindex);";
 		$js .="var defaults = document.getElementById('id_s_filter_videoeasy_templatedefaults_' + $this->templateindex);";
@@ -105,6 +106,7 @@ class admin_setting_videoeasypresets extends admin_setting {
 
 
 		$js .="key.value=presets[presetindex]['key'];";
+		$js .="name.value=presets[presetindex]['name'];";
 		$js .="requirecss.value=presets[presetindex]['requirecss'];";
 		$js .="requirejs.value=presets[presetindex]['requirejs'];";
 		$js .="defaults.value=presets[presetindex]['defaults'];";
@@ -121,7 +123,7 @@ class admin_setting_videoeasypresets extends admin_setting {
         $usearray = array();
         
         foreach($keys as $key){
-        	$usearray[$key]=$this->presetdata[$key]['key'];
+        	$usearray[$key]=$this->presetdata[$key]['name'];
         }
         $select = html_writer::select($usearray,'filter_videoeasy/presets','','--custom--', array('onchange'=>$jscallback . '(this.value)'));
 	
@@ -144,11 +146,13 @@ class admin_setting_videoeasypresets extends admin_setting {
 	$templatestyles=filter_videoeasy_fetch_template_styles($defaultpresets);
 	$templatedefaults=filter_videoeasy_fetch_template_defaults($defaultpresets);
 	$templatekeys=filter_videoeasy_fetch_template_keys($defaultpresets);
+	$templatenames=filter_videoeasy_fetch_template_names($defaultpresets);
 	
 	foreach($defaultpresets as $preset){
 		$presets = array();
 		$presets['key'] =$templatekeys[$preset];
 		if(!$presets['key']){continue;}
+		$presets['name'] =$templatenames[$preset];
 		$presets['requirecss'] =$templaterequires[$preset]['css'];
 		$presets['requirejs'] =  $templaterequires[$preset]['js'];
 		$presets['jquery'] = $templaterequires[$preset]['jquery'];
@@ -163,7 +167,8 @@ class admin_setting_videoeasypresets extends admin_setting {
 		$presets = array();
 		switch ($preset){
 			case 7:
-				$presets['key'] ='YouTube(standard)';
+				$presets['key'] ='youtubestandard';
+				$presets['name'] ='YouTube(standard)';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '';
 				$presets['jquery'] = 0;
@@ -187,7 +192,8 @@ class admin_setting_videoeasypresets extends admin_setting {
 				break;
 		*/
 			case 8:
-				$presets['key'] ='Multi Source Video';
+				$presets['key'] ='multisourcevideo';
+				$presets['name'] ='Multi Source Video';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '';
 				$presets['jquery'] = 0;
@@ -201,7 +207,8 @@ Your browser does not support the video tag.
 				$presets['style'] = '';
 				break;
 			case 9:
-				$presets['key'] ='Multi Source Audio';
+				$presets['key'] ='multisourceaudio';
+				$presets['name'] ='Multi Source Audio';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '';
 				$presets['jquery'] = 0;
@@ -215,7 +222,8 @@ Your browser does not support the audio element.
 				$presets['style'] = '';
 				break;
 			case 10:
-				$presets['key'] ='JW Player RSS';
+				$presets['key'] ='jwplayerrss';
+				$presets['name'] ='JW Player RSS';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  'http://jwpsrv.com/library/PERSONALCODE.js';
 				$presets['jquery'] = 0;
@@ -234,7 +242,8 @@ listbar: {
 				$presets['style'] = '';
 				break;
 			case 11:
-				$presets['key'] ='SoundManager2';
+				$presets['key'] ='soundmanager2';
+				$presets['name'] ='SoundManager2';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '//cdn.jsdelivr.net/soundmanager2/2.97a.20130512/soundmanager2.js';
 				$presets['jquery'] = 0;
@@ -257,7 +266,8 @@ listbar: {
 				break;
 			case 12:
 			default:
-				$presets['key'] ='None';
+				$presets['key'] ='';
+				$presets['name'] ='None';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '';
 				$presets['jquery'] = 0;

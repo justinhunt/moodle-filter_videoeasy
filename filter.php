@@ -139,25 +139,36 @@ class filter_videoeasy extends moodle_text_filter {
 	 */
 	private function filter_videoeasy_process($link, $ext) {
 	global $CFG, $PAGE;
-	
-	
-		//get our template info
-		$player=$this->fetchconf('useplayer' . $ext);
+		//get template info
 		$conf = get_config('filter_videoeasy');
+		
+		//get our template info
+		$playerkey = $this->fetchconf('useplayer' . $ext);
+		$templateid=0;
+		$templatenumbers = filter_videoeasy_fetch_players();
+		foreach($templatenumbers as $templatenumber){
+			if($conf->{'templatekey_' . $templatenumber}==$playerkey){
+				$templateid=$templatenumber;
+				break;
+			}
+		}
+		if(!$templateid){return;}
+		
+		
 		$defaultposterimage =  $conf->{'defaultposterimage'};
-		$require_js = $conf->{'templaterequire_js_' . $player};
-		$require_css = $conf->{'templaterequire_css_' . $player};
-		$require_jquery = $conf->{'templaterequire_jquery_' . $player};
-		$uploadcssfile = $conf->{'uploadcss_' . $player};
-		$uploadjsfile = $conf->{'uploadjs_' . $player};
+		$require_js = $conf->{'templaterequire_js_' . $templateid};
+		$require_css = $conf->{'templaterequire_css_' . $templateid};
+		$require_jquery = $conf->{'templaterequire_jquery_' . $templateid};
+		$uploadcssfile = $conf->{'uploadcss_' . $templateid};
+		$uploadjsfile = $conf->{'uploadjs_' . $templateid};
 		
 		/*
 		* 1 = url, 2=ext, 3=?d=widthxheight, 4=width,5=height,6=linkedtext
 		*
 		*/
-		//echo "player:" . $player;
+		//echo "player:" . $templateid;
 		//print_r($link);
-		//echo ("player:" . $player);
+		//echo ("player:" . $templateid);
 		//echo ("ext:" . $ext);
 		//clean up url
 		$url = $link[1];
@@ -217,9 +228,10 @@ class filter_videoeasy extends moodle_text_filter {
 			$require_css = $CFG->wwwroot . $require_css;
 		}
 	
-		//get presets
-		$preset=$conf->{'templatepreset_' . $player};
-		$defaults=$conf->{'templatedefaults_' . $player};
+		//get template body and defaults 
+		//at some point template body was called "templatepreset_", and it has never changed. sorry :(
+		$templatebody=$conf->{'templatepreset_' . $templateid};
+		$defaults=$conf->{'templatedefaults_' . $templateid};
 		//make sure we have all the keys and defaults in our proparray
 		$proparray = filter_videoeasy_fetch_emptyproparray();
 		$proparray = array_merge($proparray,filter_videoeasy_parsepropstring($defaults));
@@ -282,9 +294,9 @@ class filter_videoeasy extends moodle_text_filter {
 		*/
 		//replace the specified names with spec values
 		foreach($proparray as $name=>$value){
-			$preset = str_replace('@@' . $name .'@@',$value,$preset);
+			$templatebody = str_replace('@@' . $name .'@@',$value,$templatebody);
 		}
-		//error_log($preset);
+		//error_log($templatebody);
 		
 		//load jquery
 		if($require_jquery){
@@ -298,7 +310,7 @@ class filter_videoeasy extends moodle_text_filter {
 	
 		//get uploaded js
 		if($uploadjsfile){
-			$uploadjsurl = filter_videoeasy_setting_file_url($uploadjsfile,'uploadjs_' . $player);
+			$uploadjsurl = filter_videoeasy_setting_file_url($uploadjsfile,'uploadjs_' . $templateid);
 			$PAGE->requires->js($uploadjsurl);
 		}
 		
@@ -306,21 +318,21 @@ class filter_videoeasy extends moodle_text_filter {
 		//if not too late: load css in header
 		// if too late: inject it there via JS
 		if($uploadcssfile){
-			$uploadcssurl = filter_videoeasy_setting_file_url($uploadcssfile,'uploadcss_' . $player);
+			$uploadcssurl = filter_videoeasy_setting_file_url($uploadcssfile,'uploadcss_' . $templateid);
 		}
 	
 	
 		//prepare additional params our JS will use
-		$proparray['PLAYER'] = $player;
+		$proparray['TEMPLATEID'] = $templateid;
 		$proparray['CSSLINK']=false;
 		$proparray['CSSUPLOAD']=false;
 		$proparray['CSSCUSTOM']=false;
 	
 		//require any styles from the template
 		$customcssurl=false;
-		$customstyle=$conf->{'templatestyle_' . $player};
+		$customstyle=$conf->{'templatestyle_' . $templateid};
 		if($customstyle){
-			$customcssurl =new moodle_url( '/filter/videoeasy/videoeasycss.php?t=' . $player);
+			$customcssurl =new moodle_url( '/filter/videoeasy/videoeasycss.php?t=' . $templateid);
 
 		}
 
@@ -358,7 +370,7 @@ class filter_videoeasy extends moodle_text_filter {
 			);
 		
 		//require any scripts from the template
-		$PAGE->requires->js('/filter/videoeasy/videoeasyjs.php?ext=' . $ext . '&t=' . $player);
+		$PAGE->requires->js('/filter/videoeasy/videoeasyjs.php?ext=' . $ext . '&t=' . $templateid);
 		
 		
 		//setup our JS call
@@ -366,7 +378,7 @@ class filter_videoeasy extends moodle_text_filter {
 	
 
 		//return our expanded template
-		return $preset;
+		return $templatebody;
 	}
 
    

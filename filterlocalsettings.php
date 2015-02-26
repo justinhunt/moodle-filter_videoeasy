@@ -39,6 +39,7 @@ class videoeasy_filter_local_settings_form extends filter_local_settings_form {
 		$playeroptions=array();
 		$oldplayers = filter_videoeasy_fetch_oldplayers();
 		$playeroptions['sitedefault'] = get_string('sitedefault','filter_videoeasy');
+		/*
 		foreach($players as $keyvalue){
 			//player name
 			 if($siteconf && property_exists($siteconf,'templatekey_' . $keyvalue)){
@@ -52,6 +53,20 @@ class videoeasy_filter_local_settings_form extends filter_local_settings_form {
 				}
 			 }
 			$playeroptions[$keyvalue] = $playername;
+		}
+		*/
+		
+		foreach($players as $templateid){
+			//player name
+			$playername='Player ??';
+			 if($siteconf && property_exists($siteconf,'templatename_' . $templateid)){
+				$playername = $siteconf->{'templatename_' . $templateid};
+				$playerkey = $siteconf->{'templatekey_' . $templateid};
+			 }elseif($conf && property_exists($siteconf,'templatekey_' . $templateid)){
+				$playername = $siteconf->{'templatekey_' . $templateid};
+				$playerkey = $templateid;
+			 }
+			$playeroptions[$playerkey] = $playername;
 		}
 		
 		

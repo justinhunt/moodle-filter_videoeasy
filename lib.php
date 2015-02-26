@@ -96,7 +96,7 @@ function filter_videoeasy_fetch_emptyproparray(){
 	$proparray['AUTOID'] = '';
 	$proparray['CSSLINK'] = '';
 	$proparray['CSSUPLOAD'] = '';
-	$proparray['PLAYER'] = '';
+	$proparray['TEMPLATEID'] = '';
 	$proparray['WIDTH'] = '';
 	$proparray['HEIGHT'] = '';
 	$proparray['FILEEXT'] = '';
@@ -327,7 +327,60 @@ splash: true
  * @param array a list of players/templates to fetch the data for. 
  * @return array of array of keys for each template/player
  */
+/**
+ * Return an array of template keys(visible names) for each template index(player)
+ * 
+ * @param array a list of players/templates to fetch the data for. 
+ * @return array of array of keys for each template/player
+ */
 function filter_videoeasy_fetch_template_keys($players){
+	$ret = array();
+	
+	foreach($players as $player){
+		$key = false;
+		switch($player){
+			case 1:
+				$key='videojs';
+				break;
+			
+			case 2:		
+				$key='sublmevideo';
+				break;
+			
+			case 3:	
+				$key='jwplayer';
+				break;
+			
+			case 4:	
+				$key='flowplayer';
+				break;
+			
+			case 5:	
+				$key='mediaelementjs';
+				break;
+			
+			case 6:	
+				$key='youtubelightbox';
+				break;
+
+			default:
+				$key='';
+		}
+		if($key!==false){
+			$ret[$player] = $key;
+		}	
+	}
+	return $ret;
+}
+
+
+/**
+ * Return an array of template keys(visible names) for each template index(player)
+ * 
+ * @param array a list of players/templates to fetch the data for. 
+ * @return array of array of keys for each template/player
+ */
+function filter_videoeasy_fetch_template_names($players){
 	$ret = array();
 	
 	foreach($players as $player){
