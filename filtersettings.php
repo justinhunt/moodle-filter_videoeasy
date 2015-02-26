@@ -53,11 +53,11 @@ if (is_siteadmin()) {
 	//to get the playername and key right
 	$playeroptions=array();
 	$playernames=array();
-	$oldplayers = filter_videoeasy_fetch_oldplayers();
 	foreach($players as $templateid){
 		//player name
 		$defplayername = 'Player: ';
 		$playername=$defplayername;
+		$playerkey = false;
 		 if($conf && property_exists($conf,'templatename_' . $templateid)){
 		 	$playername = $conf->{'templatename_' . $templateid};
 			$playerkey = $conf->{'templatekey_' . $templateid};
@@ -67,11 +67,16 @@ if (is_siteadmin()) {
 			$playerkey = $templateid;
 		 }
 		 if($playername == $defplayername){$playername .= $templateid;}
-		$playeroptions[$playerkey] = $playername;
+		 if($playerkey){
+			$playeroptions[$playerkey] = $playername;
+		 }
 		$playernames[$templateid] = $playername;
 	}
 	
 	//add extensions checkbox
+	if(count($playeroptions) < 1){
+		$playeroptions['']=get_string('none');
+	}
 	foreach($extensions as $ext){
 		switch($ext){
 			case 'youtube': $def_player='playersix';break;
