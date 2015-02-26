@@ -49,12 +49,15 @@ if (is_siteadmin()) {
 	//create player select list
 	//this looks complicated, because we made a big shift in the way we key templates
 	//we are trying to map old numeric keys to new user assigned ones here
+	//also it will look v. confusing on initial install, so we do a bit of work here
+	//to get the playername and key right
 	$playeroptions=array();
 	$playernames=array();
 	$oldplayers = filter_videoeasy_fetch_oldplayers();
 	foreach($players as $templateid){
 		//player name
-		$playername='Player ??';
+		$defplayername = 'Player: ';
+		$playername=$defplayername;
 		 if($conf && property_exists($conf,'templatename_' . $templateid)){
 		 	$playername = $conf->{'templatename_' . $templateid};
 			$playerkey = $conf->{'templatekey_' . $templateid};
@@ -63,6 +66,7 @@ if (is_siteadmin()) {
 		 	$playername = $conf->{'templatekey_' . $templateid};
 			$playerkey = $templateid;
 		 }
+		 if($playername == $defplayername){$playername .= $templateid;}
 		$playeroptions[$playerkey] = $playername;
 		$playernames[$templateid] = $playername;
 	}
