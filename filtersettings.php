@@ -104,6 +104,8 @@ if (is_siteadmin()) {
 	$ADMIN->add('filter_videoeasy_category', $settings_page);
 	
 	//prepare template info
+	//this is mainly just for the default templates. Once the user has saved these will not be used.
+	//however these functions are also called to get the values and data for the presets dropdown.
 	$templaterequires=filter_videoeasy_fetch_template_requires($players);
 	$templatebodys=filter_videoeasy_fetch_template_bodys($players);
 	$templatescripts=filter_videoeasy_fetch_template_scripts($players);
@@ -127,6 +129,7 @@ if (is_siteadmin()) {
 				get_string('templateheading', 'filter_videoeasy', $playername), ''));
 				
 		//presets
+		//this is a custom control, that allows the user to select a preset from a list.
 		$settings_page->add(new admin_setting_videoeasypresets('filter_videoeasy/templatepresets_' . $templateid, 
 				get_string('presets', 'filter_videoeasy'), get_string('presets_desc', 'filter_videoeasy'),$templateid));
 			

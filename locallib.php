@@ -28,7 +28,12 @@ require_once($CFG->libdir . '/adminlib.php');
 require_once($CFG->dirroot . '/filter/videoeasy/lib.php');
 
 /**
- * No setting - just heading and text.
+ * This is a custom admin setting for a dropdown list of presets
+ * that fills other input areas on the settings form
+ * The fact that some templates are defined here, and others elsewhere(lib.php) 
+ * is a bad legacy of the changes the plugin has gone through to date. 
+ * So the way the defaults/presets are stored in code needs a refactor. 
+ * But its just a housekeeping issue.
  *
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */

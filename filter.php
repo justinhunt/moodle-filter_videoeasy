@@ -253,7 +253,7 @@ class filter_videoeasy extends moodle_text_filter {
 		//get default poster
 		//get uploaded js
 		if($defaultposterimage){
-			$defaultposterurl = filter_videoeasy_setting_file_url($defaultposterimage,'defaultposterimage');
+			$defaultposterurl = filter_videoeasy_internal_file_url($defaultposterimage,'defaultposterimage');
 		}else{
 			$defaultposterurl = $CFG->wwwroot . '/filter/videoeasy/defaultposter.jpg';
 		}
@@ -310,7 +310,7 @@ class filter_videoeasy extends moodle_text_filter {
 	
 		//get uploaded js
 		if($uploadjsfile){
-			$uploadjsurl = filter_videoeasy_setting_file_url($uploadjsfile,'uploadjs_' . $templateid);
+			$uploadjsurl = filter_videoeasy_internal_file_url($uploadjsfile,'uploadjs_' . $templateid);
 			$PAGE->requires->js($uploadjsurl);
 		}
 		
@@ -318,7 +318,7 @@ class filter_videoeasy extends moodle_text_filter {
 		//if not too late: load css in header
 		// if too late: inject it there via JS
 		if($uploadcssfile){
-			$uploadcssurl = filter_videoeasy_setting_file_url($uploadcssfile,'uploadcss_' . $templateid);
+			$uploadcssurl = filter_videoeasy_internal_file_url($uploadcssfile,'uploadcss_' . $templateid);
 		}
 	
 	

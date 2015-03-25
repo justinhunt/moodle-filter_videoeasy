@@ -27,7 +27,8 @@ define('FILTER_VIDEOEASY_TEMPLATE_COUNT', 15);
 
 
 /**
- * Return an array of template ids. A legacy of when each had a name really. But we need it.
+ * Return an array of template ids. A legacy of when each had a hard coded name really. 
+ * But we still need an unchanging id for each template, and this is it
  * @return array of template ids
  */
 function filter_videoeasy_fetch_players(){
@@ -183,7 +184,7 @@ function filter_videoeasy_fetch_template_bodys($players){
 		switch($player){
 			case '1':
 			case 'videojs':
-				$presets = '<video id="@@AUTOID@@" class="video-js vjs-default-skin" controls preload="auto" width="@@WIDTH@@" height="@@HEIGHT@@" poster="@@DEFAULTPOSTERURL@@" data-setup=\'{"example_option":true}\'>';
+				$presets = '<video id="@@AUTOID@@" class="video-js vjs-default-skin" controls preload="auto" width="@@WIDTH@@" height="@@HEIGHT@@"   data-setup=\'{"example_option":true}\'>';
  				$presets .='<source src="@@VIDEOURL@@" type="@@AUTOMIME@@" />';
 				$presets .='</video>';
 				break;
@@ -231,7 +232,7 @@ function filter_videoeasy_fetch_template_bodys($players){
 }
 
 /**
- * Return an array of the inline styles for each template index(player)
+ * Return an array of the custom css styles for each template index(player)
  * @param array a list of players/templates to fetch the data for. 
  * @return array of array of inline style for each template/player
  */
@@ -261,7 +262,7 @@ function filter_videoeasy_fetch_template_styles($players){
 }
 		
 /**
- * Return an array of the inline scripts for each template index(player)
+ * Return an array of the custom js scripts for each template index(player)
  * @param array a list of players/templates to fetch the data for. 
  * @return array of array of inline scripts for each template/player
  */
@@ -322,7 +323,7 @@ splash: true
 }
 
 /**
- * Return an array of template keys(visible names) for each template index(player)
+ * Return an array of template keys for each template index(ie player)
  * 
  * @param array a list of players/templates to fetch the data for. 
  * @return array of array of keys for each template/player
@@ -344,7 +345,7 @@ function filter_videoeasy_fetch_template_keys($players){
 				break;
 			
 			case 2:		
-				$key='sublmevideo';
+				$key='sublimevideo';
 				break;
 			
 			case 3:	
@@ -375,7 +376,7 @@ function filter_videoeasy_fetch_template_keys($players){
 
 
 /**
- * Return an array of template keys(visible names) for each template index(player)
+ * Return an array of templateie  names for each template index(player)
  * 
  * @param array a list of players/templates to fetch the data for. 
  * @return array of array of keys for each template/player
@@ -520,7 +521,7 @@ function filter_videoeasy_pluginfile($course, $cm, $context, $filearea, $args, $
 	foreach($players as $player){
     	if($context->contextlevel == CONTEXT_SYSTEM){
     		if($filearea === 'uploadjs_' . $player || $filearea === 'uploadcss_' . $player || $filearea === 'defaultposterimage' ) {
-        		return filter_videoeasy_setting_file_serve($filearea,$args,$forcedownload, $options);
+        		return filter_videoeasy_internal_file_serve($filearea,$args,$forcedownload, $options);
         	}
 		} 
 	}
@@ -529,15 +530,14 @@ function filter_videoeasy_pluginfile($course, $cm, $context, $filearea, $args, $
 
 
 /**
-       * Returns URL to the stored file via pluginfile.php.
-       *
-       * theme revision is used instead of the itemid.
-      *
-       * @param string $setting
-       * @param string $filearea
-       * @return string protocol relative URL or null if not present
-       */
-   function filter_videoeasy_setting_file_url($filepath, $filearea) {
+   * Returns URL to the videoeasyjs or videoeasycss php files, or the defaulposter image 
+   *
+  *
+   * @param string $filepath
+   * @param string $filearea
+   * @return string protocol relative URL or null if not present
+   */
+function filter_videoeasy_internal_file_url($filepath, $filearea) {
           global $CFG;
 
  
@@ -546,15 +546,21 @@ function filter_videoeasy_pluginfile($course, $cm, $context, $filearea, $args, $
          $syscontext = context_system::instance();
   
           $url = moodle_url::make_file_url("$CFG->wwwroot/pluginfile.php", "/$syscontext->id/$component/$filearea/$itemid".$filepath);
-  
-          // Now this is tricky because the we can not hardcode http or https here, lets use the relative link.
-         // Note: unfortunately moodle_url does not support //urls yet.
-        // $url = preg_replace('|^https?://|i', '//', $url->out(false));
          return $url;
      }
 
-
-function filter_videoeasy_setting_file_serve($filearea, $args, $forcedownload, $options) {
+/**
+   * Serves either the videoeasyjs or videoeasycss php files, or the defaulposter image 
+   *
+   * theme revision is used instead of the itemid.
+  *
+   * @param string $filearea
+   * @param array $args the bits that come after the itemid in the url
+   * @param boolean $forcedownload passed straight in from above
+   * @param array $options passed straight in from above
+   * @return string protocol relative URL or null if not present
+   */
+function filter_videoeasy_internal_file_serve($filearea, $args, $forcedownload, $options) {
          global $CFG;
          require_once("$CFG->libdir/filelib.php");
   
