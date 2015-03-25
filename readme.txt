@@ -1,6 +1,6 @@
 VideoEasy Filter
 =========================================
-VideoEasy is a filter that replaces links to video files, with flash or html5 video players. The Video Easy filter uses templates to support multiple video players, and allows the user to add new players or customize existing ones, all from the Video Easy filter settings pages. By default players are already defined, and can be used as is, for:
+VideoEasy is a filter that replaces links to media files, with  html5 players. Primarliy intended for html 5 video, it will also work for audio, youtube or rss links. The Video Easy filter uses templates to support multiple players, and allows the user to add new players or customize existing ones, all from the Video Easy filter settings pages. By default players are already defined, and can be used as is, for:
 Video.js, Sublime Video, JW Player, Flowplayer and MediaElement.js
 
 But preset templates are available for other players, and you are encouraged to use the existing players and presets as examples, and make your own templates.
@@ -14,6 +14,11 @@ Then visit your Moodle server's Site Administration -> Notifications page. Moodl
 
 After installing you will need to enable the videoeasy filter. You can enable the videoeasy filter when you visit:
 Site Administration / plugins / filters / manage filters
+
+Finally you will need to associate a player/template with each of the file extensions, and check the file extensions that VideoEasy should handle.
+Do this at: Site Administration / plugins / filters / VideoEasy / General Settings
+
+(NB Sublime Video and JW Player, require you to register on their sites, and you will be given a license code. You will need to enter that into the template for those players. See "Templates" in this document.)
 
 Configuration
 =========================================
@@ -33,11 +38,15 @@ Local Configuration
 ========================================
 One of the strengths of Video Easy is that it makes use of the under utilized Moodle feature that allows you to configure filters at the course and at the activity level. Using this, for example, it is possible to display videos in a particular page using a different template/player to that used elsewhere. This would make it possible to make a page with 100 videos embedded, behave differently to a page with just a single video.
 
+NB There seem to be conflicts (jquery?) that prevent some player types loading on the same screen at the same time. e.g. mediaelement and flowplayer won't load properly when the youtube lightbox is also present on the page. So when you use local filter settings, be cautions with labels and blocks since these create the possibility of different player types being on the screen at the same time.
+
+The rest of this document gets a bit technical and I don't want to scare non-techies off. So from here its not strictly necessary to read on.  
+
 Templates
 =========================================
 There are fifteen templates available to use. The first six are ready made, though they can be altered.They are: Video.js, Sublime Video, JW Player, Flowplayer, MediaElement.js, and Youtube lightbox.
 
-SublimeVideo and JW Player require you register with their site to get a personal javascript link. So you will need to do that first then enter it in the requires_js field of the template before you can use them.
+SublimeVideo and JW Player require that you register with their site to get a personal javascript link. So you will need to do that first then enter it in the requires_js field of the template before you can use them.
 
 Each template has several fields, but only the name/key field is required:
 1) required javascript url : The url of the JS file the html5 player requires.
@@ -55,12 +64,10 @@ Presets
 Each template's page contains a drop down with a number of "preset" templates. (template templates ..I guess). The list of presets will grow hopefully as people submit them to me, or I dream them up. Using these you can quickly make new templates, or use as a starting point for your own template. The current presets are:
 Video.js, Sublime Video, JW Player, Flowplayer, MediaElement.js,Youtube Lightbox, YouTube(standard),Multi Source Audio, Multi Source Video, JW Player RSS, and SoundManager 2 
 
-In order to keep VideoEasy small, there are no actual JS players bundled. Flowplayer, Sublime Video etc are all included on the page via CDN hosting sources. In some cases, notably SoundManager 2, it will work better if you have those players installed on your own web server. SoundManager2 has flash components, which are sensitive to crossdomain hosting issues. (NB At the time of writing there is a conflict (jquery?) that prevents mediaelement and flowplayer from loading properly when the youtube lightbox is also present on the page. 20150113)
-
+In order to keep VideoEasy small, there are no actual JS players bundled. Flowplayer, Sublime Video etc are all included on the page via CDN hosting sources. In some cases, notably SoundManager 2, it will work better if you have those players installed on your own web server. SoundManager2 has flash components, which are sensitive to crossdomain hosting issues. 
 
 The Video Easy Variables
 =====================================
-
 
 Variables are used to replace placeholders in the template and load scripts. A placeholder for a variable looks like this: @@VARIABLE@@ (variable name surrounded by @@ marks.)
 
@@ -92,6 +99,10 @@ Note that while the template replacement is a simple swap out of the placeholder
  becomes: player{ id: opts['AUTOID']
  
 And a final caution, Video Easy generates a loader script from the template (if required) but this will be cached by Moodle in most cases. Thats a good thing too. But it means you will need to run Moodle "purge all caches" after making changes to anything on the Video Easy filter settings page.
+
+The Future
+===========
+The next important step for VideoEasy is to offer up a form for each template with a field for each of the variables defined there. Given the correct permissions a user could then customize the player behaviour without the CSS and JS complexity. And the settings could be made available at the course and activity level, so that users can have, for example, different sized players on different pages. 
 
 Enjoy
 
