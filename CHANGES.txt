@@ -1,7 +1,7 @@
 Change List
 =========
-Version 201504122401
+Version 2015032401
 Bug fix for < PHP5.5 users
 
-Version 20150412400
+Version 2015032400
 First public release
