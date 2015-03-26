@@ -61,7 +61,8 @@ if (is_siteadmin()) {
 		 if($conf && property_exists($conf,'templatename_' . $templateid)){
 		 	$playername = $conf->{'templatename_' . $templateid};
 			$playerkey = $conf->{'templatekey_' . $templateid};
-			if(empty(trim($playername))){$playername = $playerkey;}
+			$playername = trim($playername);
+			if(empty($playername)){$playername = $playerkey;}
 		 }elseif($conf && property_exists($conf,'templatekey_' . $templateid)){
 		 	$playername = $conf->{'templatekey_' . $templateid};
 			$playerkey = $templateid;
