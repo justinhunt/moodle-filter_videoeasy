@@ -31,6 +31,8 @@ Many player templates will require JQuery. We used to load this as required. And
 To add that, go to: Site Administration -> Appearance -> Additional HTML (within HEAD) ,and add:
 <script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
 
+NB In Moodle 2.9 VideoJS player must be set to use AMD. By default it now is, but if you are upgrading from an earlier version of VideoJS it won't be. Look for "Load via AMD" on the template settings page for VideoJS.
+
 NB You should TURN OFF file handling for any extensions you select here in the Moodle Multi Media Plugins filter, and the PoodLL filter if they are installed.
 Multi Media Plugins filter settings can be found at:
 Site Administration / appearance / media embedding
@@ -55,13 +57,14 @@ SublimeVideo and JW Player require that you register with their site to get a pe
 Each template has several fields, but only the name/key field is required:
 1) required javascript url : The url of the JS file the html5 player requires.
 2) required css url : The url of the CSS file the html5 player requires.
-3) requires jquery : True or False. If your theme already loads JQuery you can always leave this as false. The JQuery URL can be set on the VideoEasy general settings page.
-4) template : The html that goes on the page. Often this is just a div , with a unique id. Sometimes it is html5 video tags.
-5) load script : Any script which the player runs to load an individual player, usually with the unique id of a container div
-6) defaults : Custom variables you may use in the template or load script, or default values for existing variables (ie width and height).
-7) custom css: CSS that you need on the page, that can be edited here on the settings page.
-8) upload css: It is possible to upload a CSS file for inclusion on the page. This is probably in the case that the file is not available online to be be simply linked to. 
-9) upload js: It is possible to upload a JS file for inclusion on the page. This is probably in the case that the file is not available online to be be simply linked to. 
+3) requires jquery : True or False. You should set this to false. JQuery should now be loaded earlier than VideoEasy can. Either by your theme or via Moodle's additional html settings.
+4) load via AMD: Since Moodle 2.9 certain libraries are loaded using Require.js. If the player library supports it, you will need to set this to true. Currently only VideoJS seems to need this.
+5) template : The html that goes on the page. Often this is just a div , with a unique id. Sometimes it is html5 video tags.
+6) load script : Any script which the player runs to load an individual player, usually with the unique id of a container div
+7) defaults : Custom variables you may use in the template or load script, or default values for existing variables (ie width and height).
+8) custom css: CSS that you need on the page, that can be edited here on the settings page.
+9) upload css: It is possible to upload a CSS file for inclusion on the page. This is probably in the case that the file is not available online to be be simply linked to. 
+10) upload js: It is possible to upload a JS file for inclusion on the page. This is probably in the case that the file is not available online to be be simply linked to. 
 
 Presets
 =====================================
