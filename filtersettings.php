@@ -149,6 +149,12 @@ if (is_siteadmin()) {
 				get_string('templatename_desc', 'filter_videoeasy'), 
 				$defvalue, PARAM_RAW));
 				
+		//template amd		
+		 $settings_page->add(new admin_setting_configcheckbox('filter_videoeasy/template_amd_' . $templateid, 
+				get_string('templaterequire_amd', 'filter_videoeasy',$templateid),
+				get_string('templaterequire_amd_desc', 'filter_videoeasy'), 
+				 0));
+				
 		//template JS heading
 		//$defvalue= filter_videoeasy_fetch_default($conf,'templaterequire_js_' . $oldplayers[$templateid], $templaterequires[$templateid]['js']);
 		$defvalue= $templaterequires[$templateid]['js'];

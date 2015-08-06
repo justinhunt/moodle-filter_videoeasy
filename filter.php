@@ -161,6 +161,8 @@ class filter_videoeasy extends moodle_text_filter {
 		$require_jquery = $conf->{'templaterequire_jquery_' . $templateid};
 		$uploadcssfile = $conf->{'uploadcss_' . $templateid};
 		$uploadjsfile = $conf->{'uploadjs_' . $templateid};
+		//are we AMD and Moodle 2.9 or more?
+		$require_amd =  $conf->{'template_amd_' . $templateid} && $CFG->version>=2015051100;
 		
 		/*
 		* 1 = url, 2=ext, 3=?d=widthxheight, 4=width,5=height,6=linkedtext
@@ -297,21 +299,28 @@ class filter_videoeasy extends moodle_text_filter {
 			$templatebody = str_replace('@@' . $name .'@@',$value,$templatebody);
 		}
 		//error_log($templatebody);
-		
-		//load jquery
-		if($require_jquery){
-			$PAGE->requires->js(new moodle_url($scheme . $conf->{'jqueryurl'}));
-		}
 
-		//get any required js
-		if($require_js){
-			$PAGE->requires->js(new moodle_url($require_js));
-		}
-	
-		//get uploaded js
-		if($uploadjsfile){
-			$uploadjsurl = filter_videoeasy_internal_file_url($uploadjsfile,'uploadjs_' . $templateid);
-			$PAGE->requires->js($uploadjsurl);
+		//load jquery
+		if(!$require_amd){
+			if($require_jquery){
+				if(!$PAGE->headerprinted && !$PAGE->requires->is_head_done()){
+				//if(false){
+					$PAGE->requires->jquery();
+				}else{
+					$PAGE->requires->js(new moodle_url($scheme . $conf->{'jqueryurl'}));
+				}
+			}
+
+			//get any required js
+			if($require_js){
+				$PAGE->requires->js(new moodle_url($require_js));
+			}
+		
+			//get uploaded js
+			if($uploadjsfile){
+				$uploadjsurl = filter_videoeasy_internal_file_url($uploadjsfile,'uploadjs_' . $templateid);
+				$PAGE->requires->js($uploadjsurl);
+			}
 		}
 		
 		//load css in header if not too late
@@ -372,10 +381,15 @@ class filter_videoeasy extends moodle_text_filter {
 		//require any scripts from the template
 		$PAGE->requires->js('/filter/videoeasy/videoeasyjs.php?ext=' . $ext . '&t=' . $templateid);
 		
-		
-		//setup our JS call
-		$PAGE->requires->js_init_call('M.filter_videoeasy.loadvideoeasy', array($proparray),false,$jsmodule);
-	
+		//AMD or not, and then load our js for this template on the page
+		if($require_amd){
+			//for AMD
+			$PAGE->requires->js_call_amd('filter_videoeasy/videoeasy_amd','loadvideoeasy', array($proparray));
+			
+		}else{		
+			//for no AMD
+			$PAGE->requires->js_init_call('M.filter_videoeasy.loadvideoeasy', array($proparray),false,$jsmodule);
+		}
 
 		//return our expanded template
 		return $templatebody;

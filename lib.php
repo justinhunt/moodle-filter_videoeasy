@@ -120,13 +120,15 @@ function filter_videoeasy_fetch_template_requires($players){
 			// '<link href="//vjs.zencdn.net/4.10/video-js.css" rel="stylesheet">';
 				$requires['css'] ='//vjs.zencdn.net/4.10/video-js.css';
 				$requires['js'] = '//vjs.zencdn.net/4.10/video.js';
-				$requires['jquery'] = 1;
+				$requires['amd'] = 0;
+				$requires['jquery'] = 0;
 				break;
 			
 			case '2':	
 			case 'sublimevideo':
 				$requires['css'] ='';
 				$requires['js'] = '//cdn.sublimevideo.net/js/PERSONALJSCODE.js';
+				$requires['amd'] = 0;
 				$requires['jquery'] = 0;				
 				break;
 			
@@ -134,6 +136,7 @@ function filter_videoeasy_fetch_template_requires($players){
 			case 'jwplayer':
 				$requires['css'] ='';
 				$requires['js'] = 'http://jwpsrv.com/library/PERSONALJSCODE.js';
+				$requires['amd'] = 0;
 				$requires['jquery'] = 0;
 				break;
 			
@@ -143,27 +146,31 @@ function filter_videoeasy_fetch_template_requires($players){
 				//$requires .= '<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>';
 				$requires['css'] ='//releases.flowplayer.org/5.5.0/skin/minimalist.css';
 				$requires['js'] = '//releases.flowplayer.org/5.5.0/flowplayer.min.js';
-				$requires['jquery'] = 1;
+				$requires['jquery'] = 0;
+				$requires['amd'] = 0;
 				break;
 			
 			case '5':	
 			case 'mediaelement':
 				$requires['css'] ='https://cdnjs.cloudflare.com/ajax/libs/mediaelement/2.13.2/css/mediaelementplayer.min.css';
 				$requires['js'] ='https://cdnjs.cloudflare.com/ajax/libs/mediaelement/2.13.2/js/mediaelement-and-player.min.js';
-				$requires['jquery'] = 1;
+				$requires['jquery'] = 0;
+				$requires['amd'] = 0;
 				break;
 			
 			case '6':	
 			case 'playersix':
 				$requires['css'] ='//cdn.rawgit.com/noelboss/featherlight/1.0.3/release/featherlight.min.css';
 				$requires['js'] ='//cdn.rawgit.com/noelboss/featherlight/1.0.3/release/featherlight.min.js';
-				$requires['jquery'] =1;
+				$requires['jquery'] =0;
+				$requires['amd'] = 0;
 				break;
 
 			default:
 				$requires['css'] ='';
 				$requires['js'] ='';
 				$requires['jquery'] =0;
+				$requires['amd'] = 0;
 		}
 			//update our return value
 			$ret[$player] = $requires;
@@ -215,7 +222,8 @@ function filter_videoeasy_fetch_template_bodys($players){
 			case '6':
 			case 'playersix':
 				$presets='<a href="#" data-featherlight="#@@AUTOID@@">';
-				$presets.='<img src="@@AUTOPOSTERURLJPG@@" width="@@WIDTH@@" height="@@HEIGHT@@"/></a>';				
+				$presets.='<div class="filter_videoeasy_ytl">';
+				$presets.='<img src="@@AUTOPOSTERURLJPG@@" width="@@WIDTH@@" height="@@HEIGHT@@"/></div></a>';				
 				$presets.='<div style="display: none;"><div  id="@@AUTOID@@">';
 				$presets.='<iframe width="@@videowidth@@" height="@@videoheight@@" src="//www.youtube.com/embed/@@FILENAME@@?rel=0" frameborder="0" allowfullscreen>';
 				$presets.='</iframe></div></div>';
@@ -251,6 +259,31 @@ function filter_videoeasy_fetch_template_styles($players){
 			case 'sublimevideo':
 				$styles = '';	
 				break;
+				
+			case '6':
+			case 'playersix':
+				$styles = '.filter_videoeasy_ytl img{display: block;}
+					.filter_videoeasy_ytl { 
+					position: relative; 
+					display: inline-block;
+					}
+					.filter_videoeasy_ytl:after {
+					content: ">";
+					  font-size: 20px;
+					  line-height: 30px;
+					  color: #FFFFFF;
+					  text-align: center;
+					  position: absolute;
+					  top: 40%;
+					  left: 40%;
+					  width: 20%;
+					  height: 32px;
+					  z-index: 2;
+					  background: #FF0000;
+					  border-radius: 8px;
+					  pointer-events: none;
+					}';
+					break;
 				
 			default: $styles='';
 		}

@@ -105,6 +105,7 @@ class admin_setting_videoeasypresets extends admin_setting {
 		$js .="var requirejs = document.getElementById('id_s_filter_videoeasy_templaterequire_js_' + $this->templateindex);";
 		$js .="var defaults = document.getElementById('id_s_filter_videoeasy_templatedefaults_' + $this->templateindex);";
 		$js .="var jquery = document.getElementById('id_s_filter_videoeasy_templaterequire_jquery_' + $this->templateindex);";
+		$js .="var amd = document.getElementById('id_s_filter_videoeasy_template_amd_' + $this->templateindex);";
 		$js .="var body = document.getElementById('id_s_filter_videoeasy_templatepreset_' + $this->templateindex);";
 		$js .="var script = document.getElementById('id_s_filter_videoeasy_templatescript_' + $this->templateindex);";
 		$js .="var style = document.getElementById('id_s_filter_videoeasy_templatestyle_' + $this->templateindex);";
@@ -115,6 +116,7 @@ class admin_setting_videoeasypresets extends admin_setting {
 		$js .="requirecss.value=presets[presetindex]['requirecss'];";
 		$js .="requirejs.value=presets[presetindex]['requirejs'];";
 		$js .="defaults.value=presets[presetindex]['defaults'];";
+		$js .="amd.value=presets[presetindex]['amd'];";
 		$js .="jquery.value=presets[presetindex]['jquery'];";
 		$js .="jquery.checked=presets[presetindex]['jquery'] ? true : false;";
 		$js .="body.value=presets[presetindex]['body'];";
@@ -160,6 +162,7 @@ class admin_setting_videoeasypresets extends admin_setting {
 		$presets['name'] =$templatenames[$preset];
 		$presets['requirecss'] =$templaterequires[$preset]['css'];
 		$presets['requirejs'] =  $templaterequires[$preset]['js'];
+		$presets['amd'] = $templaterequires[$preset]['amd'];
 		$presets['jquery'] = $templaterequires[$preset]['jquery'];
 		$presets['defaults'] = $templatedefaults[$preset];
 		$presets['body'] =$templatebodys[$preset];
@@ -176,6 +179,7 @@ class admin_setting_videoeasypresets extends admin_setting {
 				$presets['name'] ='YouTube(standard)';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '';
+				$presets['amd'] = 1;
 				$presets['jquery'] = 0;
 				$presets['defaults'] = 'WIDTH=600,HEIGHT=400';
 				$presets['body'] ='<iframe width="@@WIDTH@@" height="@@HEIGHT@@" src="//www.youtube.com/embed/@@FILENAME@@" frameborder="0" allowfullscreen></iframe>';
@@ -201,6 +205,7 @@ class admin_setting_videoeasypresets extends admin_setting {
 				$presets['name'] ='Multi Source Video';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '';
+				$presets['amd'] = 1;
 				$presets['jquery'] = 0;
 				$presets['defaults'] = 'WIDTH=640,HEIGHT=480';
 				$presets['body'] ='<video width="@@WIDTH@@" height="@@HEIGHT@@" controls>
@@ -216,6 +221,7 @@ Your browser does not support the video tag.
 				$presets['name'] ='Multi Source Audio';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '';
+				$presets['amd'] = 1;
 				$presets['jquery'] = 0;
 				$presets['defaults'] = '';
 				$presets['body'] ='<audio controls>
@@ -231,6 +237,7 @@ Your browser does not support the audio element.
 				$presets['name'] ='JW Player RSS';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  'http://jwpsrv.com/library/PERSONALCODE.js';
+				$presets['amd'] = 0;
 				$presets['jquery'] = 0;
 				$presets['defaults'] = 'WIDTH=640,HEIGHT=360';
 				$presets['body'] ='<div id="@@AUTOID@@"></div>';
@@ -252,6 +259,7 @@ listbar: {
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '//cdn.jsdelivr.net/soundmanager2/2.97a.20130512/soundmanager2.js';
 				$presets['jquery'] = 0;
+				$presets['amd'] = 0;
 				$presets['defaults'] = '';
 				$presets['body'] ='<a onClick="soundManager.play(\'@@AUTOID@@\')" >@@FILENAME@@</a>';
 				$presets['script'] = 'soundManager.setup({
@@ -276,6 +284,7 @@ listbar: {
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '';
 				$presets['jquery'] = 0;
+				$presets['amd'] = 1;
 				$presets['defaults'] = '';
 				$presets['body'] ='';
 				$presets['script'] = '';

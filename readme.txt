@@ -27,6 +27,10 @@ Site Administration / plugins / filters / Video Easy
 
 On the general settings page you need to check the filetypes you wish the Video Easy filter to handle at the top of the settings page, and select the player template(drop down list) that will handle that file extension.
 
+Many player templates will require JQuery. We used to load this as required. And you still can. (The checkbox for that is still on each template page.) But that is now unchecked by default. Please do not use it. It will be removed in a subsequent version. Instead you should use a theme that loads JQuery already (Essential, BCU are two), or add a call to load JQuery to the Moodle site header.
+To add that, go to: Site Administration -> Appearance -> Additional HTML (within HEAD) ,and add:
+<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+
 NB You should TURN OFF file handling for any extensions you select here in the Moodle Multi Media Plugins filter, and the PoodLL filter if they are installed.
 Multi Media Plugins filter settings can be found at:
 Site Administration / appearance / media embedding

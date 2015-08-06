@@ -1,0 +1,78 @@
+/* jshint ignore:start */
+define(['jquery','core/log'], function($, log) {
+
+  "use strict"; // jshint ;_;
+
+  log.debug('Filter videoeasy initialising');
+
+  return {
+	  
+	  	allopts: {},
+		
+		extscripts: {},
+		
+		csslinks: Array(),
+		
+		jslinks: Array(),
+		
+		appendjspath: function(jslink, theprefix){
+			 require.config({
+				paths: {
+					theprefix: jslink
+				}});
+		},
+		
+		injectcss: function(csslink){
+			var link = document.createElement("link");
+			link.href = csslink;
+			if(csslink.toLowerCase().lastIndexOf('.html')==csslink.length-5){
+				link.rel = 'import';
+			}else{
+				link.type = "text/css";
+				link.rel = "stylesheet";	
+			}
+			document.getElementsByTagName("head")[0].appendChild(link);	
+		},
+		
+		// load all videoeasy stuff and stash all our variables
+		loadvideoeasy: function(opts) {
+			log.debug(opts);
+
+			
+			//load our css in head if required
+			//only do it once per extension though
+			if(opts['CSSLINK']){
+				if (this.csslinks.indexOf(opts['CSSLINK'])<0){
+					this.csslinks.push(opts['CSSLINK']);
+					this.injectcss(opts['CSSLINK']);
+				}
+			}
+			//load our css in head if required
+			//only do it once per extension though
+			if(opts['CSSUPLOAD']){
+				if (this.csslinks.indexOf(opts['CSSUPLOAD'])<0){
+					this.csslinks.push(opts['CSSUPLOAD']);
+					this.injectcss(opts['CSSUPLOAD']);
+				}
+			}
+			
+			//load our css in head if required
+			//only do it once per extension though
+			if(opts['CSSCUSTOM']){
+				if (this.csslinks.indexOf(opts['CSSCUSTOM'])<0){
+					this.csslinks.push(opts['CSSCUSTOM']);
+					this.injectcss(opts['CSSCUSTOM']);
+				}
+			}
+
+			//here require, then load the template scripts and js
+			require(['filter_videoeasy_d' + opts['TEMPLATEID']],function(d){
+				d(opts);
+			});
+
+			
+		}//end of function
+
+	}
+});
+/* jshint ignore:end */
