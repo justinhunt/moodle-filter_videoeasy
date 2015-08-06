@@ -120,7 +120,7 @@ function filter_videoeasy_fetch_template_requires($players){
 			// '<link href="//vjs.zencdn.net/4.10/video-js.css" rel="stylesheet">';
 				$requires['css'] ='//vjs.zencdn.net/4.10/video-js.css';
 				$requires['js'] = '//vjs.zencdn.net/4.10/video.js';
-				$requires['amd'] = 0;
+				$requires['amd'] = 1;
 				$requires['jquery'] = 0;
 				break;
 			
