@@ -32,7 +32,7 @@ define('FILTER_VIDEOEASY_TEMPLATE_COUNT', 15);
  * @return array of template ids
  */
 function filter_videoeasy_fetch_players(){
-	//$players = array('videojs','sublimevideo','jwplayer','flowplayer','mediaelement','playersix','playerseven','playereight','playernine','playerten','playereleven','playertwelve','playerthirteen','playerfourteen','playerfifteen');
+	//$players = array('videojs','jplayervideo','jwplayer','flowplayer','mediaelement','playersix','playerseven','playereight','playernine','playerten','playereleven','playertwelve','playerthirteen','playerfourteen','playerfifteen');
 	$players = array();
 	for ($i=1;$i<=FILTER_VIDEOEASY_TEMPLATE_COUNT;$i++){
 		$players[]=$i;
@@ -46,7 +46,7 @@ function filter_videoeasy_fetch_players(){
  * @return array of player names
  */
 function filter_videoeasy_fetch_oldplayers(){
-	$oldplayers = array('videojs','sublimevideo','jwplayer','flowplayer','mediaelement','playersix','playerseven','playereight','playernine','playerten','playereleven','playertwelve','playerthirteen','playerfourteen','playerfifteen');
+	$oldplayers = array('videojs','jplayervideo','jwplayer','flowplayer','mediaelement','playersix','playerseven','playereight','playernine','playerten','playereleven','playertwelve','playerthirteen','playerfourteen','playerfifteen');
 	$players = array();
 	for ($i=1;$i<=FILTER_VIDEOEASY_TEMPLATE_COUNT;$i++){
 		$players[$i]=$oldplayers[$i-1];
@@ -72,9 +72,21 @@ function filter_videoeasy_fetch_default($conf, $oldpropname, $newdefault){
  * Return an array of extensions we might handle
  * @return array of variable names parsed from template string
  */
-function filter_videoeasy_fetch_extensions(){
-	$extensions = array('mp4','webm','ogg','ogv','flv','mp3','rss','youtube');
-	return $extensions;
+function filter_videoeasy_fetch_extensions($adminconfig = false){
+	if(!$adminconfig){
+		$adminconfig = get_config('filter_videoeasy');
+	}
+	$default_extensions = filter_videoeasy_fetch_default_extensions();
+	$have_custom_extensions = $adminconfig && isset($adminconfig->extensions) && !empty($adminconfig->extensions);
+	return $have_custom_extensions ? explode(',',$adminconfig->extensions) : $default_extensions;
+}	
+
+/**
+ * Return an array of extensions we might handle
+ * @return array of variable names parsed from template string
+ */
+function filter_videoeasy_fetch_default_extensions(){
+	return array('mp4','webm','ogg','ogv','flv','mp3','rss','youtube','gif');
 }	
 
 /**
@@ -125,10 +137,10 @@ function filter_videoeasy_fetch_template_requires($players){
 				break;
 			
 			case '2':	
-			case 'sublimevideo':
-				$requires['css'] ='';
-				$requires['js'] = '//cdn.sublimevideo.net/js/PERSONALJSCODE.js';
-				$requires['amd'] = 0;
+			case 'jplayervideo':
+				$requires['css'] ='//cdnjs.cloudflare.com/ajax/libs/jplayer/2.9.2/skin/pink.flag/css/jplayer.pink.flag.min.css';
+				$requires['js'] = '//cdnjs.cloudflare.com/ajax/libs/jplayer/2.9.2/jplayer/jquery.jplayer.min.js';
+				$requires['amd'] = 1;
 				$requires['jquery'] = 0;				
 				break;
 			
@@ -197,10 +209,50 @@ function filter_videoeasy_fetch_template_bodys($players){
 				break;
 			
 			case '2':
-			case 'sublimevideo':
-				$presets = '<video id="@@AUTOID@@" class="sublime" width="@@WIDTH@@" height="@@HEIGHT@@" poster="@@DEFAULTPOSTERURL@@" data-uid="@@TITLE@@" title="@@TITLE@@" preload="none">';
-  				$presets .= '<source src="@@VIDEOURL@@" type="@@AUTOMIME@@"/>';
-				$presets .='</video>';	
+			case 'jplayervideo':
+				$presets = '<div id="@@AUTOID@@_container" class="jp-video " role="application" aria-label="media player">
+  <div class="jp-type-single">
+    <div id="@@AUTOID@@" class="jp-jplayer"></div>
+    <div class="jp-gui">
+      <div class="jp-video-play">
+        <button class="jp-video-play-icon" role="button" tabindex="0">play</button>
+      </div>
+      <div class="jp-interface">
+        <div class="jp-progress">
+          <div class="jp-seek-bar">
+            <div class="jp-play-bar"></div>
+          </div>
+        </div>
+        <div class="jp-current-time" role="timer" aria-label="time">&nbsp;</div>
+        <div class="jp-duration" role="timer" aria-label="duration">&nbsp;</div>
+        <div class="jp-details">
+          <div class="jp-title" aria-label="title">&nbsp;</div>
+        </div>
+        <div class="jp-controls-holder">
+          <div class="jp-volume-controls">
+            <button class="jp-mute" role="button" tabindex="0">mute</button>
+            <button class="jp-volume-max" role="button" tabindex="0">max volume</button>
+            <div class="jp-volume-bar">
+              <div class="jp-volume-bar-value"></div>
+            </div>
+          </div>
+          <div class="jp-controls">
+            <button class="jp-play" role="button" tabindex="0">play</button>
+            <button class="jp-stop" role="button" tabindex="0">stop</button>
+          </div>
+          <div class="jp-toggles">
+            <button class="jp-repeat" role="button" tabindex="0">repeat</button>
+            <button class="jp-full-screen" role="button" tabindex="0">full screen</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="jp-no-solution">
+      <span>Update Required</span>
+      To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
+    </div>
+  </div>
+</div>';	
 				break;
 			
 			case '3':	
@@ -256,7 +308,7 @@ function filter_videoeasy_fetch_template_styles($players){
 				break;
 			
 			case '2':	
-			case 'sublimevideo':
+			case 'jplayervideo':
 				$styles = '';	
 				break;
 				
@@ -311,8 +363,29 @@ function filter_videoeasy_fetch_template_scripts($players){
 				break;
 			
 			case '2':	
-			case 'sublimevideo':
-				$scripts = '';	
+			case 'jplayervideo':
+				$scripts = '$("#" + @@AUTOID@@).jPlayer(
+   {
+        ready: function () 
+         {
+          $(this).jPlayer("setMedia", 
+             {
+               title: @@TITLE@@,
+               m4v: @@VIDEOURL@@,
+               poster: @@DEFAULTPOSTERURL@@
+              }
+           );
+        },
+        cssSelectorAncestor: "#" + @@AUTOID@@ + "_container",
+        swfPath: "https://cdnjs.cloudflare.com/ajax/libs/jplayer/2.9.2/jplayer/jquery.jplayer.swf",
+        supplied: "m4v",
+        useStateClassSkin: true,
+        autoBlur: false,
+        smoothPlayBar: true,
+        keyEnabled: true,
+        remainingDuration: true,
+        toggleDuration: true
+ });';	
 				break;
 			
 			case '3':	
@@ -378,7 +451,7 @@ function filter_videoeasy_fetch_template_keys($players){
 				break;
 			
 			case 2:		
-				$key='sublimevideo';
+				$key='jplayervideo';
 				break;
 			
 			case 3:	
@@ -426,8 +499,8 @@ function filter_videoeasy_fetch_template_names($players){
 				break;
 			
 			case '2':	
-			case 'sublimevideo':	
-				$key='Sublime Video';
+			case 'jplayervideo':	
+				$key='JPlayer (Video)';
 				break;
 			
 			case '3':	
@@ -478,8 +551,8 @@ function filter_videoeasy_fetch_template_defaults($players){
 				break;
 				
 			case "2":
-			case 'sublimevideo':	
-				$defaults='WIDTH=640,HEIGHT=480';
+			case 'jplayervideo':	
+				$defaults='';
 				break;
 			
 			case "3":	

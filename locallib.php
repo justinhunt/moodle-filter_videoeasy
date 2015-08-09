@@ -117,6 +117,7 @@ class admin_setting_videoeasypresets extends admin_setting {
 		$js .="requirejs.value=presets[presetindex]['requirejs'];";
 		$js .="defaults.value=presets[presetindex]['defaults'];";
 		$js .="amd.value=presets[presetindex]['amd'];";
+		$js .="amd.checked=presets[presetindex]['amd'] ? true : false;";
 		$js .="jquery.value=presets[presetindex]['jquery'];";
 		$js .="jquery.checked=presets[presetindex]['jquery'] ? true : false;";
 		$js .="body.value=presets[presetindex]['body'];";

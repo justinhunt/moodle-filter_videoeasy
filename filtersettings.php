@@ -89,6 +89,13 @@ if (is_siteadmin()) {
 		$settings_page->add(new admin_setting_configselect('filter_videoeasy/useplayer' . $ext, get_string('useplayer', 'filter_videoeasy', strtoupper($ext)),  get_string('useplayerdesc', 'filter_videoeasy'), $def_player, $playeroptions));
 	}
 	
+	//add extensions csv
+	$defaultexts = implode(',',filter_videoeasy_fetch_default_extensions()); 
+	$settings_page->add(new admin_setting_configtext('filter_videoeasy/extensions', 
+				get_string('extensions', 'filter_videoeasy'),
+				get_string('extensions_desc', 'filter_videoeasy'), 
+				 $defaultexts, PARAM_RAW,70));
+	
 	//add jquery path 
 	$settings_page->add(new admin_setting_configtext('filter_videoeasy/jqueryurl', 
 				get_string('jqueryurl', 'filter_videoeasy'),

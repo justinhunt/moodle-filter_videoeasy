@@ -103,7 +103,7 @@ class filter_videoeasy extends moodle_text_filter {
 		if($this->courseconfig && isset($this->courseconfig[$prop]) && $this->courseconfig[$prop] != 'sitedefault') {
 			return $this->courseconfig[$prop];
 		}else{
-			return $this->adminconfig->{$prop};
+			return isset($this->adminconfig->{$prop}) ? $this->adminconfig->{$prop} : false;
 		}
 	}
 	
