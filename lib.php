@@ -86,7 +86,7 @@ function filter_videoeasy_fetch_extensions($adminconfig = false){
  * @return array of variable names parsed from template string
  */
 function filter_videoeasy_fetch_default_extensions(){
-	return array('mp4','webm','ogg','ogv','flv','mp3','rss','youtube','gif');
+	return array('mp4','webm','ogg','ogv','flv','mp3','rss','youtube');
 }	
 
 /**

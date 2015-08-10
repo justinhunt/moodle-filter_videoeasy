@@ -1,7 +1,7 @@
 VideoEasy Filter
 =========================================
 VideoEasy is a filter that replaces links to media files, with  html5 players. Primarliy intended for html 5 video, it will also work for audio, youtube or rss links. The Video Easy filter uses templates to support multiple players, and allows the user to add new players or customize existing ones, all from the Video Easy filter settings pages. By default players are already defined, and can be used as is, for:
-Video.js, Sublime Video, JW Player, Flowplayer and MediaElement.js
+Video.js, JPlayer, JW Player, Flowplayer and MediaElement.js
 
 But preset templates are available for other players, and you are encouraged to use the existing players and presets as examples, and make your own templates.
 
@@ -44,7 +44,7 @@ Local Configuration
 ========================================
 One of the strengths of Video Easy is that it makes use of the under utilized Moodle feature that allows you to configure filters at the course and at the activity level. Using this, for example, it is possible to display videos in a particular page using a different template/player to that used elsewhere. This would make it possible to make a page with 100 videos embedded, behave differently to a page with just a single video.
 
-NB There seem to be conflicts (jquery?) that prevent some player types loading on the same screen at the same time. e.g. mediaelement and flowplayer won't load properly when the youtube lightbox is also present on the page. So when you use local filter settings, be cautions with labels and blocks since these create the possibility of different player types being on the screen at the same time.
+NB There seem to be conflicts (jquery?) that prevent some player types loading on the same screen at the same time. JWPlayer tried to turn all video tags into JWPlayers and the non AMD players/templates (e.g youtube lightbox and mediaelement.js) an conflict with each other. So when you use local filter settings, be cautious with labels and blocks since these create the possibility of different player types being on the screen at the same time.
 
 The rest of this document gets a bit technical and I don't want to scare non-techies off. So from here its not strictly necessary to read on.  
 
@@ -52,7 +52,7 @@ Templates
 =========================================
 There are fifteen templates available to use. The first six are ready made, though they can be altered.They are: Video.js, Sublime Video, JW Player, Flowplayer, MediaElement.js, and Youtube lightbox.
 
-SublimeVideo and JW Player require that you register with their site to get a personal javascript link. So you will need to do that first then enter it in the requires_js field of the template before you can use them.
+JW Player requires that you register with their site to get a personal javascript link. So you will need to do that first then enter it in the requires_js field of the template before you can use them.
 
 Each template has several fields, but only the name/key field is required:
 1) required javascript url : The url of the JS file the html5 player requires.
@@ -96,6 +96,7 @@ CSSLINK = used internally to load a CSS file if needed.
 PLAYER = the type of player (videojs, flowplayer ...etc)
 WIDTH = the width of video
 HEIGHT = the height of video
+FILEEXT = The file extension of the video file
 
 Note that while the template replacement is a simple swap out of the placeholder text, the loader script replacement is a little different. The loader script replacement will remove surrounding quotes as well as the placeholder, and put a JS variable in their place.
  eg
@@ -106,6 +107,14 @@ Note that while the template replacement is a simple swap out of the placeholder
  becomes: player{ id: opts['AUTOID']
  
 And a final caution, Video Easy generates a loader script from the template (if required) but this will be cached by Moodle in most cases. Thats a good thing too. But it means you will need to run Moodle "purge all caches" after making changes to anything on the Video Easy filter settings page.
+
+What happened to Sublime Video?
+==========
+They got bought out, and everyone had to transition off. So I removed the preset, because it was meaningless.
+
+What is AMD?
+==========
+AMD is a javascript loading system. It helps manage the order in which dependant libraries and loaded, and to prevent jquery conflicts. Moodle started to use it in version 2.9, so any AMD settings are ignored in earlier Moodle versions. Even if you don't use a 3rd party javascript library (eg a JQuery Plugin), AMD is still a good choice and it will load JQuery for you. If you do use a 3rd party library your choice to use AMD, will depend on whether the library supports it or not. Its hard to know that, but errors related to Require JS in the browser console, that are not preceded by other template related JS errors, are a sign that you have chosen the wrong AMD option.
 
 The Future
 ===========
