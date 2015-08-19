@@ -27,6 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once(dirname(__FILE__).'/lib.php');
+require_once(dirname(__FILE__).'/locallib.php'); 
 
 class filter_videoeasy extends moodle_text_filter {
 	protected $adminconfig=null;
@@ -378,15 +379,23 @@ class filter_videoeasy extends moodle_text_filter {
 				'requires' => array('json')
 			);
 		
-		//require any scripts from the template
-		$PAGE->requires->js('/filter/videoeasy/videoeasyjs.php?ext=' . $ext . '&t=' . $templateid);
+		
 		
 		//AMD or not, and then load our js for this template on the page
 		if($require_amd){
+			$generator = new filter_videoeasy_template_script_generator($templateid,$ext);
+			$template_amd_script = $generator->get_template_script();
+		
+			//load define for this template. Later it will be called from loadgenerico
+			$PAGE->requires->js_amd_inline($template_amd_script);
+			
 			//for AMD
 			$PAGE->requires->js_call_amd('filter_videoeasy/videoeasy_amd','loadvideoeasy', array($proparray));
 			
 		}else{		
+			//require any scripts from the template
+			$PAGE->requires->js('/filter/videoeasy/videoeasyjs.php?ext=' . $ext . '&t=' . $templateid);
+		
 			//for no AMD
 			$PAGE->requires->js_init_call('M.filter_videoeasy.loadvideoeasy', array($proparray),false,$jsmodule);
 		}

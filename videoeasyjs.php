@@ -27,6 +27,7 @@
 //define('AJAX_SCRIPT', true);
 require_once(dirname(dirname(dirname(__FILE__))).'/config.php');
 require_once(dirname(__FILE__).'/lib.php');
+require_once(dirname(__FILE__).'/locallib.php');
 
 $ext = required_param('ext',PARAM_TEXT);
 $templateid = optional_param('t','',PARAM_TEXT);
@@ -36,81 +37,7 @@ if(empty($templateid)){
 	$templateid=$conf->{'useplayer' . $ext};
 }
 
-//are we AMD and Moodle 2.9 or more?
-$require_amd = $conf->{'template_amd_' . $templateid} && $CFG->version>=2015051100;
-
-//get presets
-$thescript=$conf->{'templatescript_' . $templateid};
-$defaults=$conf->{'templatedefaults_' . $templateid};
-//merge defaults with blank proparray  to get all fields
-$defaultsarray = filter_videoeasy_parsepropstring($defaults);
-$proparray=array_merge(filter_videoeasy_fetch_emptyproparray(), $defaultsarray);
-
-
-//these props are in the opts array in the allopts[] array on the page
-//since we are writing the JS we write the opts['name'] into the js, but 
-//have to remove quotes from template eg "@@VAR@@" => opts['var'] //NB no quotes.
-//thats worth knowing for the admin who writed the JS load code for the template.
-foreach($proparray as $propname=>$propvalue){
-	//case: single quotes
-	$thescript = str_replace("'@@" . $propname ."@@'",'opts["' . $propname . '"]',$thescript);
-	//case: double quotes
-	$thescript = str_replace('"@@' . $propname .'@@"',"opts['" . $propname . "']",$thescript);
-	//case: no quotes
-	$thescript = str_replace('@@' . $propname .'@@',"opts['" . $propname . "']",$thescript);
-}
-
-if($require_amd){
-
-	//figure out if this is https or http. We don't want to scare the browser
-	$scheme='http:';
-	if(strpos(strtolower($CFG->wwwroot),'https')===0){$scheme='https:';}
-
-
-	//this is for loading as dependencies the uploaded or linked files
-	//massage the js URL depending on schemes and rel. links etc. Then insert it
-		$requiredjs = $conf->{'templaterequire_js_' . $templateid};
-		if($requiredjs){
-			if(strpos($requiredjs,'//')===0){
-				$requiredjs = $scheme . $requiredjs;
-			}elseif(strpos($requiredjs,'/')===0){
-				$requiredjs = $CFG->wwwroot . $requiredjs;
-			}
-			//remove .js from end
-			//$requiredjs = substr($requiredjs, 0, -3);
-		}
-	
-		//if we have an uploaded JS file, then lets include that
-		$uploadjsfile = $conf->{'uploadjs_' . $templateid};
-		if($uploadjsfile){
-			$uploadjs = filter_videoeasy_setting_file_url($uploadjsfile,'uploadjs_' . $templateid);
-		}
-
-	//Create the dependency stuff in the output js
-	$requires = array("'" . 'jquery' . "'");
-	$params = array('$');
-
-	if($requiredjs){
-		$requires[] =  "'" . $requiredjs . "'";
-		$params[] = "recjs" . $templateid;
-	
-	}elseif($uploadjsfile){
-		$requires[] =  "'" . $uploadjs . "'";
-		//$requires[] ="'uploadjs" . $templateid . "'";
-		$params[] = "uploadjs" . $templateid;
-	
-	}
-
-	$thefunction = "define('filter_videoeasy_d" . $templateid . "',[" . implode(',',$requires) . "], function(" . implode(',',$params) . "){ ";
-	$thefunction .= "return function(opts){" . $thescript. "}; });";
-
-//If not AMD
-}else{
-
-	$thefunction = "if(typeof filter_videoeasy_extfunctions == 'undefined'){filter_videoeasy_extfunctions={};}";
-	$thefunction .= "filter_videoeasy_extfunctions['" . $ext . "']= function(opts) {" . $thescript. "};";
-
-}
-//$thefunction = "function filter_videoeasy_doscripts(){ " . $thescript . "}";
+$generator = new filter_videoeasy_template_script_generator($templateid,$ext);
+$template_script = $generator->get_template_script();
 header('Content-Type: application/javascript');
-echo $thefunction;
+echo $template_script;
