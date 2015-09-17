@@ -114,13 +114,13 @@ class filter_videoeasy_template_script_generator {
 			}
 
 			$thefunction = "define('filter_videoeasy_d" . $templateid . "',[" . implode(',',$requires) . "], function(" . implode(',',$params) . "){ ";
-			$thefunction .= "return function(opts){" . $thescript. "}; });";
+			$thefunction .= "return function(opts){" . $thescript. " \r\n}; });";
 
 		//If not AMD
 		}else{
 
 			$thefunction = "if(typeof filter_videoeasy_extfunctions == 'undefined'){filter_videoeasy_extfunctions={};}";
-			$thefunction .= "filter_videoeasy_extfunctions['" . $ext . "']= function(opts) {" . $thescript. "};";
+			$thefunction .= "filter_videoeasy_extfunctions['" . $ext . "']= function(opts) {" . $thescript. " \r\n};";
 
 		}
     	return $thefunction;

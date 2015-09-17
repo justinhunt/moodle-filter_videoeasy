@@ -113,6 +113,8 @@ function filter_videoeasy_fetch_emptyproparray(){
 	$proparray['WIDTH'] = '';
 	$proparray['HEIGHT'] = '';
 	$proparray['FILEEXT'] = '';
+	$proparray['COURSEID'] = '';
+	$proparray['COURSECONTEXTID'] = '';
 	return $proparray;
 }
 
