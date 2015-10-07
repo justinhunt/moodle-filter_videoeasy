@@ -68,7 +68,7 @@ class filter_videoeasy extends moodle_text_filter {
 			if(!empty($handleexts)){
 				$handleextstring = implode('|',$handleexts);
 				//$oldsearch = '/<a\s[^>]*href="([^"#\?]+\.(' .  $handleextstring. '))(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
-				$search='/<a\s[^>]*href="([^"#\?]+\.(' .  $handleextstring. '))(.*)?"[^>]*>([^>]*)<\/a>/is';
+				$search='/<a\s[^>]*href="([^"#\?]+\.(' .  $handleextstring. '))(.*?)"[^>]*>([^>]*)<\/a>/is';
 				$newtext = preg_replace_callback($search, 'self::filter_videoeasy_allexts_callback', $newtext);
 			}
 			
