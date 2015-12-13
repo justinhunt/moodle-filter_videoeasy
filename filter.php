@@ -404,13 +404,20 @@ class filter_videoeasy extends moodle_text_filter {
 		if($require_amd){
 			$generator = new filter_videoeasy_template_script_generator($templateid,$ext);
 			$template_amd_script = $generator->get_template_script();
-		
+
+			//props can't be passed in at much length , Moodle complains about too many
+			//so we do this ... lets hope it don't break things
+			$jsonstring = json_encode($proparray);
+			$props_html = \html_writer::tag('input', '', array('id' => 'filter_videoeasy_amdopts_' . $proparray['AUTOID'], 'type' => 'hidden', 'value' => $jsonstring));
+			$templatebody = $props_html . $templatebody;
+
 			//load define for this template. Later it will be called from loadgenerico
 			$PAGE->requires->js_amd_inline($template_amd_script);
 			
 			//for AMD
-			$PAGE->requires->js_call_amd('filter_videoeasy/videoeasy_amd','loadvideoeasy', array($proparray));
-			
+			$PAGE->requires->js_call_amd('filter_videoeasy/videoeasy_amd','loadvideoeasy', array(array('AUTOID'=>$proparray['AUTOID'])));
+
+
 		}else{		
 			//require any scripts from the template
 			$PAGE->requires->js('/filter/videoeasy/videoeasyjs.php?ext=' . $ext . '&t=' . $templateid);
@@ -420,6 +427,7 @@ class filter_videoeasy extends moodle_text_filter {
 		}
 
 		//return our expanded template
+
 		return $templatebody;
 	}
 

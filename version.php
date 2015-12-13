@@ -30,3 +30,4 @@ $plugin->requires  = 2013111800;        // Requires this Moodle version
 $plugin->component = 'filter_videoeasy'; // Full name of the plugin (used for diagnostics)
 $plugin->maturity  = MATURITY_STABLE;
 $plugin->release   = '1.1.4(Build 2015120401)';
+

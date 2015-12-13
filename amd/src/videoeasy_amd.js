@@ -36,8 +36,16 @@ define(['jquery','core/log'], function($, log) {
 		
 		// load all videoeasy stuff and stash all our variables
 		loadvideoeasy: function(opts) {
-			log.debug(opts);
 
+
+			//pick up opts from html
+			var theid = '#filter_videoeasy_amdopts_' + opts['AUTOID'];
+			var optscontrol = $(theid).get(0);
+			if(optscontrol){
+				opts = JSON.parse(optscontrol.value);
+				//remove the hidden form element, in case it is really part of a form
+				$(theid).remove();
+			}
 			
 			//load our css in head if required
 			//only do it once per extension though
