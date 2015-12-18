@@ -1,5 +1,10 @@
 Change List
 =========
+
+Version 2015120401
+Added support for passing AMD params via HTML
+
+
 Version 2015032401
 Bug fix for < PHP5.5 users
 
