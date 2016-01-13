@@ -102,14 +102,17 @@ class filter_videoeasy_template_script_generator {
 			$requires = array("'" . 'jquery' . "'");
 			$params = array('$');
 
+			//current key
+			$currentkey = $conf->{'templatekey_' . $templateid};
+
 			if($requiredjs){
 				$requires[] =  "'" . $requiredjs . "'";
-				$params[] = "recjs" . $templateid;
+				$params[] = "requiredjs_" . $currentkey;
 	
 			}elseif($uploadjsfile){
 				$requires[] =  "'" . $uploadjs . "'";
 				//$requires[] ="'uploadjs" . $templateid . "'";
-				$params[] = "uploadjs" . $templateid;
+				$params[] = "uploadjs_" . $currentkey;
 	
 			}
 
@@ -187,60 +190,41 @@ class admin_setting_videoeasypresets extends admin_setting {
         return '';
     }
 
-    /**
-     * Returns an HTML string
-     * @return string Returns an HTML string
-     */
-    public function output_html($data, $query='') {
-        global $OUTPUT;
-     
-        //make our js
-        $jscallback = 'filter_videoeasy_fillfields_' . $this->templateindex ;
-		$js ="<script>";
-		$js .="function $jscallback(presetindex){";
-		$js .="if(!presetindex){return;}";
-		$js .="var presets = " . json_encode($this->presetdata) .";";
-		$js .="var key = document.getElementById('id_s_filter_videoeasy_templatekey_' + $this->templateindex);";
-		$js .="var name = document.getElementById('id_s_filter_videoeasy_templatename_' + $this->templateindex);";
-		$js .="var requirecss = document.getElementById('id_s_filter_videoeasy_templaterequire_css_' + $this->templateindex);";
-		$js .="var requirejs = document.getElementById('id_s_filter_videoeasy_templaterequire_js_' + $this->templateindex);";
-		$js .="var defaults = document.getElementById('id_s_filter_videoeasy_templatedefaults_' + $this->templateindex);";
-		$js .="var jquery = document.getElementById('id_s_filter_videoeasy_templaterequire_jquery_' + $this->templateindex);";
-		$js .="var amd = document.getElementById('id_s_filter_videoeasy_template_amd_' + $this->templateindex);";
-		$js .="var body = document.getElementById('id_s_filter_videoeasy_templatepreset_' + $this->templateindex);";
-		$js .="var script = document.getElementById('id_s_filter_videoeasy_templatescript_' + $this->templateindex);";
-		$js .="var style = document.getElementById('id_s_filter_videoeasy_templatestyle_' + $this->templateindex);";
+
+	/**
+	 * Returns an HTML string
+	 * @return string Returns an HTML string
+	 */
+	public function output_html($data, $query='') {
+		global $PAGE;
+
+		//build our select form
+		$keys = array_keys($this->presetdata);
+		$usearray = array();
+
+		foreach($keys as $key){
+			$usearray[$key]=$this->presetdata[$key]['key'];
+		}
+
+		$presetsjson = json_encode($this->presetdata);
+		$presetscontrol = html_writer::tag('input', '', array('id' => 'id_s_filter_videoeasy_presetdata_' . $this->templateindex, 'type' => 'hidden', 'value' => $presetsjson));
 
 
-		$js .="key.value=presets[presetindex]['key'];";
-		$js .="name.value=presets[presetindex]['name'];";
-		$js .="requirecss.value=presets[presetindex]['requirecss'];";
-		$js .="requirejs.value=presets[presetindex]['requirejs'];";
-		$js .="defaults.value=presets[presetindex]['defaults'];";
-		$js .="amd.value=presets[presetindex]['amd'];";
-		$js .="amd.checked=presets[presetindex]['amd'] ? true : false;";
-		$js .="jquery.value=presets[presetindex]['jquery'];";
-		$js .="jquery.checked=presets[presetindex]['jquery'] ? true : false;";
-		$js .="body.value=presets[presetindex]['body'];";
-		$js .="script.value=presets[presetindex]['script'];";
-		$js .="style.value=presets[presetindex]['style'];";
-		$js .="}";
-		$js .="</script>";
-		
-        //build our select form
-        $keys = array_keys($this->presetdata);
-        $usearray = array();
-        
-        foreach($keys as $key){
-        	$usearray[$key]=$this->presetdata[$key]['name'];
-        }
-        $select = html_writer::select($usearray,'filter_videoeasy/presets','','--custom--', array('onchange'=>$jscallback . '(this.value)'));
-	
+		//Add javascript handler for presets
+		$PAGE->requires->js_call_amd('filter_videoeasy/videoeasy_presets_amd',
+			'init',array(array('templateindex'=>$this->templateindex)));
+
+		$select = html_writer::select($usearray,'filter_videoeasy/presets','','--custom--');
+
+		$dragdropsquare = html_writer::tag('div',get_string('bundle','filter_videoeasy'),array('id' => 'id_s_filter_videoeasy_dragdropsquare_' . $this->templateindex,
+			'class' => 'filter_videoeasy_dragdropsquare'));
+
 		return format_admin_setting($this, $this->visiblename,
-        '<div class="form-text defaultsnext">'. $js . $select . '</div>',
-        $this->information, true, '','', $query);
+			$dragdropsquare . '<div class="form-text defaultsnext">'. $presetscontrol . $select .  '</div>',
+			$this->information, true, '','', $query);
 
-    }
+	}
+
 	
 	protected function fetch_presets(){
 

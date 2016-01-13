@@ -80,9 +80,12 @@ $string['uploadcss'] = 'Upload CSS';
 $string['uploadcss_desc'] = 'You can upload one CSS file which will be loaded for your template. Only one.';
 $string['defaultposterimage']='Default poster image';
 $string['defaultposterimage_desc']='The standard default poster image is just a grey box. Here you can upload a custom image that better suits your site. A default poster image will only be shown if the player template specifies it.';
-$string['presets'] = 'Autofill template with a Preset';
-$string['presets_desc'] = 'VideoEasy comes with some default presets you can use out of the box, or to help you get started with your own template. Choose one of those here, or just create your own template from scratch.';
 $string['templatestyle'] = 'Custom CSS (template {$a})';
 $string['templatestyle_desc'] = 'Enter any custom CSS that your template uses here. Template variables will not work here. Just plain old css.';
 $string['extensions'] = 'File Extensions';
 $string['extensions_desc'] = 'A CSV (comma separated value) list of file extensions this filter can parse.';
+
+$string['presets'] = 'Autofill template with a Preset';
+$string['presets_desc'] = 'VideoEasy comes with some default presets you can use out of the box, or to help you get started with your own template. Choose one of those here, or just create your own template from scratch. You can export a template as a bundle by clicking on the green box above. You can import a bundle by dragging it onto the green box.';
+
+$string['bundle'] = 'Bundle';

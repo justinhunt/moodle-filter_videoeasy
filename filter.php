@@ -175,6 +175,7 @@ class filter_videoeasy extends moodle_text_filter {
 		//echo ("player:" . $templateid);
 		//echo ("ext:" . $ext);
 		//clean up url
+
 		$url = $link[1];
 		$url = str_replace('&amp;', '&', $url);
 		$rawurl = $url;
@@ -247,6 +248,8 @@ class filter_videoeasy extends moodle_text_filter {
 			$params = array();
 			parse_str($paramstring, $params);
 			$proparray = array_merge($proparray,$params);
+		}else{
+			$paramstring="";
 		}
 	
 		//use default widths or explicit width/heights if they were passed in ie http://url.to.video.mp4?d=640x480
@@ -290,6 +293,8 @@ class filter_videoeasy extends moodle_text_filter {
 		$proparray['AUTOPNGFILENAME'] = $autopngfilename;
 		$proparray['AUTOJPGFILENAME'] = $autojpgfilename;
 		$proparray['VIDEOURL'] = $videourl;
+		$proparray['RAWVIDEOURL'] =  !empty($paramstring) ? $videourl + '?' + $paramstring : $videourl;
+		$proparray['RAWURLPARAMS'] = $paramstring;
 		$proparray['AUTOPOSTERURLJPG'] = $autoposterurljpg;
 		$proparray['AUTOPOSTERURLPNG'] = $autoposterurlpng;
 		$proparray['TITLE'] = $title;

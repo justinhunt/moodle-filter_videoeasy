@@ -1,6 +1,11 @@
 Change List
 =========
 
+Version 2016011101
+Added support for preset bundles import/export
+Added RAWVIDEOURL and RAWPARAMS variables
+Changed handles of loaded dependencies from recjs[template number] e.g recjs1 , recjs2 etc to requirejs_[templatekey] e.g requiredjs_flowplayer
+
 Version 2015120401
 Added support for passing AMD params via HTML
 
