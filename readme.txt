@@ -5,6 +5,8 @@ Video.js, JPlayer, JW Player, Flowplayer and MediaElement.js
 
 But preset templates are available for other players, and you are encouraged to use the existing players and presets as examples, and make your own templates.
 
+This release is only good for Moodle 2.9 and above. If you have an older version of Moodle please visit: https://moodle.org/plugins/filter_videoeasy for a videeasy version for your site.
+
 Installation
 =========================================
 If you are uploading videoeasy, first expand the zip file and upload the videoeasy folder into:

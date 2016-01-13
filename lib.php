@@ -101,6 +101,8 @@ function filter_videoeasy_fetch_emptyproparray(){
 	$proparray['AUTOPNGFILENAME'] = '';
 	$proparray['AUTOJPGFILENAME'] = '';
 	$proparray['VIDEOURL'] = '';
+	$proparray['RAWVIDEOURL'] = '';
+	$proparray['RAWPARAMS'] = '';
 	$proparray['URLSTUB'] = '';
 	$proparray['AUTOPOSTERURLJPG'] = '';
 	$proparray['AUTOPOSTERURLPNG'] = '';
@@ -158,10 +160,10 @@ function filter_videoeasy_fetch_template_requires($players){
 			case 'flowplayer':
 				//<script src="//releases.flowplayer.org/5.5.0/flowplayer.min.js"></script>';
 				//$requires .= '<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>';
-				$requires['css'] ='//releases.flowplayer.org/5.5.0/skin/minimalist.css';
-				$requires['js'] = '//releases.flowplayer.org/5.5.0/flowplayer.min.js';
+				$requires['css'] ='//releases.flowplayer.org/6.0.4/skin/functional.css';
+				$requires['js'] = '//releases.flowplayer.org/6.0.4/flowplayer.min.js';
 				$requires['jquery'] = 0;
-				$requires['amd'] = 0;
+				$requires['amd'] = 1;
 				break;
 			
 			case '5':	
@@ -403,16 +405,17 @@ aspectratio: "4:3"
 			
 			case '4':	
 			case 'flowplayer':
-				$scripts='$(function () {$("#" + "@@AUTOID@@").flowplayer({
+				$scripts='var container = $("#" + @@AUTOID@@);
+if(container.length<1){return;}
+requiredjs_flowplayer(container[0],{
 playlist: [
  [
   { mp4:     "@@VIDEOURL@@" }
  ]
 ],
-ratio: 3/4,  
-splash: true  
-}); 
-});';
+ratio: 3/4,
+splash: true
+}); ';
 				break;
 			
 			case '5':	
