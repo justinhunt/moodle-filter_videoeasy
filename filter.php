@@ -258,8 +258,7 @@ class filter_videoeasy extends moodle_text_filter {
 			if(count($dimensions)==2){
 				list($proparray['WIDTH'],$proparray['HEIGHT'])=$dimensions;
 			}
-		} 
-
+		}
 	
 		//I liked this better, but jquery was odd about it.
 		//$autoid = $urlstub . '_' . time() . (string)rand(100,32767) ;
@@ -293,8 +292,8 @@ class filter_videoeasy extends moodle_text_filter {
 		$proparray['AUTOPNGFILENAME'] = $autopngfilename;
 		$proparray['AUTOJPGFILENAME'] = $autojpgfilename;
 		$proparray['VIDEOURL'] = $videourl;
-		$proparray['RAWVIDEOURL'] =  !empty($paramstring) ? $videourl + '?' + $paramstring : $videourl;
-		$proparray['RAWURLPARAMS'] = $paramstring;
+		$proparray['RAWVIDEOURL'] =  !empty($paramstring) ?  $videourl . '?' . $paramstring : $videourl;
+		$proparray['RAWPARAMS'] = $paramstring;
 		$proparray['AUTOPOSTERURLJPG'] = $autoposterurljpg;
 		$proparray['AUTOPOSTERURLPNG'] = $autoposterurlpng;
 		$proparray['TITLE'] = $title;
