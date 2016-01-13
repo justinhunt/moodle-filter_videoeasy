@@ -156,12 +156,19 @@ if (is_siteadmin()) {
 				get_string('templatename_desc', 'filter_videoeasy'), 
 				$defvalue, PARAM_RAW));
 				
-		//template amd		
-		 $settings_page->add(new admin_setting_configcheckbox('filter_videoeasy/template_amd_' . $templateid, 
+		//template amd
+		$yesno = array('0'=>get_string('no'),'1'=>get_string('yes'));
+		$settings_page->add(new admin_setting_configselect('filter_videoeasy/template_amd_' . $templateid,
+			get_string('templaterequire_amd', 'filter_videoeasy',$templateid),
+			get_string('templaterequire_amd_desc', 'filter_videoeasy'),
+			0,$yesno));
+		/*
+		$settings_page->add(new admin_setting_configcheckbox('filter_videoeasy/template_amd_' . $templateid,
 				get_string('templaterequire_amd', 'filter_videoeasy',$templateid),
 				get_string('templaterequire_amd_desc', 'filter_videoeasy'), 
 				 0));
-				
+		*/
+
 		//template JS heading
 		//$defvalue= filter_videoeasy_fetch_default($conf,'templaterequire_js_' . $oldplayers[$templateid], $templaterequires[$templateid]['js']);
 		$defvalue= $templaterequires[$templateid]['js'];
@@ -178,13 +185,21 @@ if (is_siteadmin()) {
 				 $defvalue), PARAM_RAW,50);
 		
 		//template jquery heading
-		//$defvalue= filter_videoeasy_fetch_default($conf,'templaterequire_jquery_' . $oldplayers[$templateid], $templaterequires[$templateid]['jquery']);
+
 		$defvalue=  $templaterequires[$templateid]['jquery'];
-		 $settings_page->add(new admin_setting_configcheckbox('filter_videoeasy/templaterequire_jquery_' . $templateid, 
+		 $settings_page->add(new admin_setting_configselect('filter_videoeasy/templaterequire_jquery_' . $templateid,
 				$playername  . get_string('templaterequirejquery', 'filter_videoeasy'),
 				get_string('templaterequirejquery_desc', 'filter_videoeasy'), 
-				 $defvalue));		 
-				 
+				 $defvalue,$yesno));
+
+        /*
+		$settings_page->add(new admin_setting_configcheckbox('filter_videoeasy/templaterequire_jquery_' . $templateid,
+			$playername  . get_string('templaterequirejquery', 'filter_videoeasy'),
+			get_string('templaterequirejquery_desc', 'filter_videoeasy'),
+			$defvalue));
+		*/
+
+
 		//template body
 		//$defvalue= filter_videoeasy_fetch_default($conf,'templatepreset_' .$oldplayers[$templateid], $templatebodys[$templateid]);
 		$defvalue= $templatebodys[$templateid];
