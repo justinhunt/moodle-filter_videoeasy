@@ -95,7 +95,7 @@ class filter_videoeasy_template_script_generator {
 				//if we have an uploaded JS file, then lets include that
 				$uploadjsfile = $conf->{'uploadjs_' . $templateid};
 				if($uploadjsfile){
-					$uploadjs = filter_videoeasy_setting_file_url($uploadjsfile,'uploadjs_' . $templateid);
+					$uploadjs = filter_videoeasy_internal_file_url($uploadjsfile,'uploadjs_' . $templateid);
 				}
 
 			//Create the dependency stuff in the output js

@@ -1,6 +1,9 @@
 Change List
 =========
 
+Version 2016011102
+Fixed bug where uploaded JS and CSS files would not be served correctly, and the filter would fail
+
 Version 2016011101
 Added support for preset bundles import/export
 Added RAWVIDEOURL and RAWPARAMS variables
