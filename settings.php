@@ -176,7 +176,15 @@ if (is_siteadmin()) {
 				$playername  . get_string('templaterequirejs', 'filter_videoeasy') ,
 				get_string('templaterequirejs_desc', 'filter_videoeasy'), 
 				 $defvalue), PARAM_RAW,50);		
-				
+
+		//template requiredja_shim
+		$defvalue= '';
+		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/templaterequire_js_shim_' . $templateid , 
+				get_string('templaterequirejsshim', 'filter_videoeasy',$templateid),
+				get_string('templaterequirejsshim_desc', 'filter_videoeasy'), 
+				$defvalue, PARAM_RAW));
+
+				 
 		//template css heading
 		$defvalue= $templaterequires[$templateid]['css'];
 		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/templaterequire_css_' . $templateid , 
@@ -228,6 +236,14 @@ if (is_siteadmin()) {
 		$title = $playername . ' ' .  get_string('uploadjs', 'filter_videoeasy') ;
 		$description = get_string('uploadjs_desc', 'filter_videoeasy');
 		$settings_page->add(new admin_setting_configstoredfile($name, $title, $description, 'uploadjs_' . $templateid));
+		
+		//template uploadjs_shim
+		$defvalue= '';
+		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/uploadjs_shim_' . $templateid , 
+				get_string('templateuploadjsshim', 'filter_videoeasy',$templateid),
+				get_string('templateuploadjsshim_desc', 'filter_videoeasy'), 
+				$defvalue, PARAM_RAW));
+		
 		
 		//template body css
 		 $settings_page->add(new admin_setting_configtextarea('filter_videoeasy/templatestyle_' . $templateid,

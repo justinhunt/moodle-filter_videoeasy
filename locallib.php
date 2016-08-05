@@ -82,6 +82,7 @@ class filter_videoeasy_template_script_generator {
 			//this is for loading as dependencies the uploaded or linked files
 			//massage the js URL depending on schemes and rel. links etc. Then insert it
 				$requiredjs = $conf->{'templaterequire_js_' . $templateid};
+				$requiredjs_shim =trim($conf->{'templaterequire_js_shim_' . $templateid});
 				if($requiredjs){
 					if(strpos($requiredjs,'//')===0){
 						$requiredjs = $scheme . $requiredjs;
@@ -94,6 +95,7 @@ class filter_videoeasy_template_script_generator {
 	
 				//if we have an uploaded JS file, then lets include that
 				$uploadjsfile = $conf->{'uploadjs_' . $templateid};
+				$uploadjs_shim =trim($conf->{'uploadjs_shim_' . $templateid});
 				if($uploadjsfile){
 					$uploadjs = filter_videoeasy_internal_file_url($uploadjsfile,'uploadjs_' . $templateid);
 				}
@@ -106,17 +108,56 @@ class filter_videoeasy_template_script_generator {
 			$currentkey = $conf->{'templatekey_' . $templateid};
 
 			if($requiredjs){
-				$requires[] =  "'" . $requiredjs . "'";
-				$params[] = "requiredjs_" . $currentkey;
-	
+				if($requiredjs_shim!=''){
+					$shimkeys[] = $currentkey . '-requiredjs'; 
+					$shimpaths[]="'" . $requiredjs . "'";
+					$shimexports[]=$requiredjs_shim;
+					$requires[] = $currentkey . '-requiredjs';
+					$params[]=$requiredjs_shim;
+				}else{
+					$requires[] =  "'" . $requiredjs . "'";
+					$params[] = "requiredjs_" . $currentkey;
+				}
 			}elseif($uploadjsfile){
-				$requires[] =  "'" . $uploadjs . "'";
-				//$requires[] ="'uploadjs" . $templateid . "'";
-				$params[] = "uploadjs_" . $currentkey;
-	
+				if($uploadjs_shim!=''){
+					$shimkeys[] = $currentkey . '-uploadjs';
+					$shimpaths[]="'" . $uploadjs . "'";					
+					$shimexports[]=$uploadjs_shim;
+					$requires[] = $currentkey . '-uploadjs';
+					$params[]=$uploadjs_shim;
+				}else{
+					$requires[] =  "'" . $uploadjs . "'";
+					$params[] = "uploadjs_" . $currentkey;
+				}
 			}
+			
+			//if we have a shim, lets do that
+			$theshim = '';
+			$theshimtemplate =
+				"define([], function() {
+					window.requirejs.config(@@@THESHIMCONFIG@);//end of window.requirejs.config
+				}); \r\n";
 
-			$thefunction = "define('filter_videoeasy_d" . $templateid . "',[" . implode(',',$requires) . "], function(" . implode(',',$params) . "){ ";
+			if(!empty($shimkeys)){
+				$paths = new stdClass();
+				$shim = new stdClass();
+				
+				for($i=0;$i<count($shimkeys);$i++){
+					$paths->{$shimkeys[$i]} = $shimpaths[$i];
+					$exports = new stdClass();
+					$exports->exports = $shimexports[$i];
+					$shim->{$shimkeys[$i]} = $exports;
+				}
+				$theshimobject = new stdClass();
+				$theshimobject->paths=$paths;
+				$theshimobject->shim =$shim;
+				$theshimconfig=json_encode($theshimobject);
+				$theshim = str_replace('@@THESHIMCONFIG@@', $theshimconfig,$theshimtemplate);
+			}
+			
+			
+			$thefunction = $theshim;
+			$thefunction .= "define('filter_videoeasy_d" . $templateid . "',[" . implode(',',$requires) . "], function(" . implode(',',$params) . "){ ";
 			$thefunction .= "return function(opts){" . $thescript. " \r\n}; });";
 
 		//If not AMD

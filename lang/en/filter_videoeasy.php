@@ -89,3 +89,8 @@ $string['presets'] = 'Autofill template with a Preset';
 $string['presets_desc'] = 'VideoEasy comes with some default presets you can use out of the box, or to help you get started with your own template. Choose one of those here, or just create your own template from scratch. You can export a template as a bundle by clicking on the green box above. You can import a bundle by dragging it onto the green box.';
 
 $string['bundle'] = 'Bundle';
+
+$string['templateuploadjsshim'] = ' Upload Shim export';
+$string['templateuploadjsshim_desc'] = ' Leave blank unless you know what shimming is';
+$string['templaterequirejsshim'] = ' Require Shim export';
+$string['templaterequirejsshim_desc'] = ' Leave blank unless you know what shimming is';
