@@ -89,8 +89,6 @@ class filter_videoeasy_template_script_generator {
 					}elseif(strpos($requiredjs,'/')===0){
 						$requiredjs = $CFG->wwwroot . $requiredjs;
 					}
-					//remove .js from end
-					//$requiredjs = substr($requiredjs, 0, -3);
 				}
 	
 				//if we have an uploaded JS file, then lets include that
@@ -100,27 +98,45 @@ class filter_videoeasy_template_script_generator {
 					$uploadjs = filter_videoeasy_internal_file_url($uploadjsfile,'uploadjs_' . $templateid);
 				}
 
-			//Create the dependency stuff in the output js
-			$requires = array("'" . 'jquery' . "'");
-			$params = array('$');
-
+			//These arrays will be used to build the final amd function dependencies and exports
+			$requires = array();
+			$params = array();
+			
 			//current key
 			$currentkey = $conf->{'templatekey_' . $templateid};
 
+			//if we have a url based required js
+			//either load it, or shim and load it
 			if($requiredjs){
 				if($requiredjs_shim!=''){
 					$shimkeys[] = $currentkey . '-requiredjs'; 
-					$shimpaths[]="'" . $requiredjs . "'";
+					
+					//remove .js from end of js filepath if its there
+					if(strrpos($requiredjs,'.js')==(strlen($requiredjs) -3)){
+						$requiredjs = substr($requiredjs, 0, -3);
+					}
+					
+					$shimpaths[]= $requiredjs;
 					$shimexports[]=$requiredjs_shim;
-					$requires[] = $currentkey . '-requiredjs';
+					$requires[] = "'" . $currentkey . '-requiredjs' . "'";
 					$params[]=$requiredjs_shim;
 				}else{
 					$requires[] =  "'" . $requiredjs . "'";
 					$params[] = "requiredjs_" . $currentkey;
 				}
-			}elseif($uploadjsfile){
+			}
+			
+			//if we have an uploadedjs library
+			//either load it, or shim and load it			
+			if($uploadjsfile){
 				if($uploadjs_shim!=''){
 					$shimkeys[] = $currentkey . '-uploadjs';
+					
+					//remove .js from end of js filepath if its there
+					if(strrpos($uploadjs,'.js')==(strlen($uploadjs) -3)){
+						$uploadjs = substr($uploadjs, 0, -3);
+					}
+					
 					$shimpaths[]="'" . $uploadjs . "'";					
 					$shimexports[]=$uploadjs_shim;
 					$requires[] = $currentkey . '-uploadjs';
@@ -133,26 +149,49 @@ class filter_videoeasy_template_script_generator {
 			
 			//if we have a shim, lets do that
 			$theshim = '';
-			$theshimtemplate =
-				"define([], function() {
-					window.requirejs.config(@@@THESHIMCONFIG@);//end of window.requirejs.config
-				}); \r\n";
-
+			$theshimtemplate = "requirejs.config(@@THESHIMCONFIG@@);";
 			if(!empty($shimkeys)){
 				$paths = new stdClass();
 				$shim = new stdClass();
 				
+				//Add a path to  a separetely loaded jquery for shimmed libraries
+				$paths->{$currentkey . '-jquery'} = 'https://code.jquery.com/jquery-1.11.2.min'; 
+				$shimconfig = new stdClass();
+				$shimconfig->exports = '$';
+				$shim->{$currentkey . '-jquery'}=$shimconfig;
+				
 				for($i=0;$i<count($shimkeys);$i++){
 					$paths->{$shimkeys[$i]} = $shimpaths[$i];
-					$exports = new stdClass();
-					$exports->exports = $shimexports[$i];
-					$shim->{$shimkeys[$i]} = $exports;
+					$shimconfig = new stdClass();
+					$shimconfig->exports = $shimexports[$i];
+					$shimconfig->deps = array($currentkey . '-jquery');
+					$shim->{$shimkeys[$i]} = $shimconfig;
 				}
+				
+				//buuld the actual function that will set up our shim
+				//we use php object -> json to kep it simple.
+				//But its still not simple
 				$theshimobject = new stdClass();
 				$theshimobject->paths=$paths;
 				$theshimobject->shim =$shim;
-				$theshimconfig=json_encode($theshimobject);
+				$theshimconfig=json_encode($theshimobject,JSON_UNESCAPED_SLASHES);
 				$theshim = str_replace('@@THESHIMCONFIG@@', $theshimconfig,$theshimtemplate);
+			}
+			
+			
+			//load a different jquery based on path if we are shimming
+			//this is because, sigh, Moodle used no conflict for jquery, but
+			//shimmed plugins rely on jquiery n global scope
+			//see: http://www.requirejs.org/docs/jquery.html#noconflictmap
+			//so we add a separate load of jquery with name '[currentkey]-jquery' and export it as '$', and don't use the 
+			//already set up 'jquery' path.
+			//we add jquery to beginning using unshift, but thats not really necessary I think
+			if(!empty($shimkeys)){
+				array_unshift($requires,"'" . $currentkey . '-jquery' . "'");
+				array_unshift($params,'$');
+			}else{
+				array_unshift($requires,"'" . 'jquery' . "'");
+				array_unshift($params,'$');
 			}
 			
 			
