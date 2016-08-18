@@ -102,9 +102,14 @@ class filter_videoeasy_template_script_generator {
 			$requires = array();
 			$params = array();
 			
-			//current key
+			//these arrays are used for shimming
+			$shimkeys= array();
+			$shimpaths= array();
+			$shimexports= array();
+			
+			//key of the current video easy template
 			$currentkey = $conf->{'templatekey_' . $templateid};
-
+			
 			//if we have a url based required js
 			//either load it, or shim and load it
 			if($requiredjs){
@@ -147,25 +152,61 @@ class filter_videoeasy_template_script_generator {
 				}
 			}
 			
-			//if we have a shim, lets do that
-			$theshim = '';
+			//if we have a shim, lets build the javascript for that
+			//actually we build a php object first, and then we will json_encode it
+			$theshim = $this->build_shim_function($currentkey, $shimkeys, $shimpaths, $shimexports);
+			
+			
+			//load a different jquery based on path if we are shimming
+			//this is because, sigh, Moodle used no conflict for jquery, but
+			//shimmed plugins rely on jquery n global scope
+			//see: http://www.requirejs.org/docs/jquery.html#noconflictmap
+			//so we add a separate load of jquery with name '[currentkey]-jquery' and export it as '$', and don't use the 
+			//already set up (by mooodle and AMD) 'jquery' path.
+			//we add jquery to beginning of requires and params using unshift. But the end would be find too
+			if(!empty($shimkeys)){
+				array_unshift($requires,"'" . $currentkey . '-jquery' . "'");
+				array_unshift($params,'$');
+			}else{
+				array_unshift($requires,"'" . 'jquery' . "'");
+				array_unshift($params,'$');
+			}
+			
+			//Assemble the final javascript to pass to browser
+			$thefunction = "define('filter_videoeasy_d" . $templateid . "',[" . implode(',',$requires) . "], function(" . implode(',',$params) . "){ ";
+			$thefunction .= "return function(opts){" . $thescript. " \r\n}; });";
+			$return_js = $theshim . $thefunction;
+			
+		//If not AMD return regular JS
+		}else{
+		
+			$return_js = "if(typeof filter_videoeasy_extfunctions == 'undefined'){filter_videoeasy_extfunctions={};}";
+			$return_js .= "filter_videoeasy_extfunctions['" . $ext . "']= function(opts) {" . $thescript. " \r\n};";
+		}
+    	return $return_js;
+    }//end of function
+	
+	protected function build_shim_function($currentkey, $shimkeys, $shimpaths, $shimexports){
+			global $CFG;
+			
+			$theshim="";
 			$theshimtemplate = "requirejs.config(@@THESHIMCONFIG@@);";
 			if(!empty($shimkeys)){
 				$paths = new stdClass();
 				$shim = new stdClass();
 				
 				//Add a path to  a separetely loaded jquery for shimmed libraries
-				$paths->{$currentkey . '-jquery'} = 'https://code.jquery.com/jquery-1.11.2.min'; 
-				$shimconfig = new stdClass();
-				$shimconfig->exports = '$';
-				$shim->{$currentkey . '-jquery'}=$shimconfig;
+				$paths->{$currentkey . '-jquery'} = $CFG->wwwroot  . '/filter/videoeasy/jquery/jquery-1.12.4.min'; 
+				$jquery_shimconfig = new stdClass();
+				$jquery_shimconfig->exports = '$';
+				$shim->{$currentkey . '-jquery'}=$jquery_shimconfig;
 				
 				for($i=0;$i<count($shimkeys);$i++){
 					$paths->{$shimkeys[$i]} = $shimpaths[$i];
-					$shimconfig = new stdClass();
-					$shimconfig->exports = $shimexports[$i];
-					$shimconfig->deps = array($currentkey . '-jquery');
-					$shim->{$shimkeys[$i]} = $shimconfig;
+					$oneshimconfig = new stdClass();
+					$oneshimconfig->exports = $shimexports[$i];
+					$oneshimconfig->deps = array($currentkey . '-jquery');
+					$shim->{$shimkeys[$i]} = $oneshimconfig;
 				}
 				
 				//buuld the actual function that will set up our shim
@@ -177,37 +218,8 @@ class filter_videoeasy_template_script_generator {
 				$theshimconfig=json_encode($theshimobject,JSON_UNESCAPED_SLASHES);
 				$theshim = str_replace('@@THESHIMCONFIG@@', $theshimconfig,$theshimtemplate);
 			}
-			
-			
-			//load a different jquery based on path if we are shimming
-			//this is because, sigh, Moodle used no conflict for jquery, but
-			//shimmed plugins rely on jquiery n global scope
-			//see: http://www.requirejs.org/docs/jquery.html#noconflictmap
-			//so we add a separate load of jquery with name '[currentkey]-jquery' and export it as '$', and don't use the 
-			//already set up 'jquery' path.
-			//we add jquery to beginning using unshift, but thats not really necessary I think
-			if(!empty($shimkeys)){
-				array_unshift($requires,"'" . $currentkey . '-jquery' . "'");
-				array_unshift($params,'$');
-			}else{
-				array_unshift($requires,"'" . 'jquery' . "'");
-				array_unshift($params,'$');
-			}
-			
-			
-			$thefunction = $theshim;
-			$thefunction .= "define('filter_videoeasy_d" . $templateid . "',[" . implode(',',$requires) . "], function(" . implode(',',$params) . "){ ";
-			$thefunction .= "return function(opts){" . $thescript. " \r\n}; });";
-
-		//If not AMD
-		}else{
-
-			$thefunction = "if(typeof filter_videoeasy_extfunctions == 'undefined'){filter_videoeasy_extfunctions={};}";
-			$thefunction .= "filter_videoeasy_extfunctions['" . $ext . "']= function(opts) {" . $thescript. " \r\n};";
-
-		}
-    	return $thefunction;
-    }//end of function
+		return $theshim;
+	}
 }//end of class
 
 
@@ -316,6 +328,7 @@ class admin_setting_videoeasypresets extends admin_setting {
 	$templaterequires=filter_videoeasy_fetch_template_requires($defaultpresets);
 	$templatebodys=filter_videoeasy_fetch_template_bodys($defaultpresets);
 	$templatescripts=filter_videoeasy_fetch_template_scripts($defaultpresets);
+	$templateshims=filter_videoeasy_fetch_template_shims($defaultpresets);
 	$templatestyles=filter_videoeasy_fetch_template_styles($defaultpresets);
 	$templatedefaults=filter_videoeasy_fetch_template_defaults($defaultpresets);
 	$templatekeys=filter_videoeasy_fetch_template_keys($defaultpresets);
@@ -328,6 +341,7 @@ class admin_setting_videoeasypresets extends admin_setting {
 		$presets['name'] =$templatenames[$preset];
 		$presets['requirecss'] =$templaterequires[$preset]['css'];
 		$presets['requirejs'] =  $templaterequires[$preset]['js'];
+		$presets['shim'] =  $templateshims[$preset];
 		$presets['amd'] = $templaterequires[$preset]['amd'];
 		$presets['jquery'] = $templaterequires[$preset]['jquery'];
 		$presets['defaults'] = $templatedefaults[$preset];
@@ -345,6 +359,7 @@ class admin_setting_videoeasypresets extends admin_setting {
 				$presets['name'] ='YouTube(standard)';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '';
+				$presets['shim'] =  '';
 				$presets['amd'] = 1;
 				$presets['jquery'] = 0;
 				$presets['defaults'] = 'WIDTH=600,HEIGHT=400';
@@ -371,6 +386,7 @@ class admin_setting_videoeasypresets extends admin_setting {
 				$presets['name'] ='Multi Source Video';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '';
+				$presets['shim'] =  '';
 				$presets['amd'] = 1;
 				$presets['jquery'] = 0;
 				$presets['defaults'] = 'WIDTH=640,HEIGHT=480';
@@ -387,6 +403,7 @@ Your browser does not support the video tag.
 				$presets['name'] ='Multi Source Audio';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '';
+				$presets['shim'] =  '';
 				$presets['amd'] = 1;
 				$presets['jquery'] = 0;
 				$presets['defaults'] = '';
@@ -403,6 +420,7 @@ Your browser does not support the audio element.
 				$presets['name'] ='JW Player RSS';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  'http://jwpsrv.com/library/PERSONALCODE.js';
+				$presets['shim'] =  '';
 				$presets['amd'] = 0;
 				$presets['jquery'] = 0;
 				$presets['defaults'] = 'WIDTH=640,HEIGHT=360';
@@ -424,6 +442,7 @@ listbar: {
 				$presets['name'] ='SoundManager2';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '//cdn.jsdelivr.net/soundmanager2/2.97a.20130512/soundmanager2.js';
+				$presets['shim'] =  '';
 				$presets['jquery'] = 0;
 				$presets['amd'] = 0;
 				$presets['defaults'] = '';
@@ -449,6 +468,7 @@ listbar: {
 				$presets['name'] ='None';
 				$presets['requirecss'] ='';
 				$presets['requirejs'] =  '';
+				$presets['shim'] =  '';
 				$presets['jquery'] = 0;
 				$presets['amd'] = 1;
 				$presets['defaults'] = '';

@@ -349,6 +349,29 @@ function filter_videoeasy_fetch_template_styles($players){
 	}
 	return $ret;
 }
+
+/**
+ * Return an array of the shim exports for each template index(player)
+ * @param array a list of players/templates to fetch the data for. 
+ * @return array of array of shim exports for each template/player
+ */
+
+function filter_videoeasy_fetch_template_shims($players){
+	$ret = array();
+	foreach($players as $player){
+		switch($player){
+			case '1': $shim="";break;
+			case '2': $shim="";break;
+			case '3': $shim="";break;
+			case '4': $shim="";break;
+			case '5': $shim="";break;
+			case '6': $shim="";break;
+			default:  $shim="";
+		}
+		$ret[$player] = $shim;
+	}
+	return $ret;
+}
 		
 /**
  * Return an array of the custom js scripts for each template index(player)
