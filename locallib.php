@@ -317,171 +317,60 @@ class admin_setting_videoeasypresets extends admin_setting {
 
 	}
 
-	
-	protected function fetch_presets(){
+	 protected function parse_preset_template(\SplFileInfo $fileinfo){
+		$file=$fileinfo->openFile("r");
+		$content = "";
+		while(!$file->eof()){
+			$content .= $file->fgets();
+		}
+		$preset_object = json_decode($content);
+		if($preset_object && is_object($preset_object)){
+			return get_object_vars($preset_object);
+		}else{
+			return false;
+		}
+	}//end of parse preset template
 
-	$ret = array();
-	$defaultpresets = array(1,2,3,4,5,6);//filter_videoeasy_fetch_players();
-	$additionalpresets = array(7,8,9,10,11,12);
+
+	protected function fetch_presets(){          
+		global $CFG;
+		$ret = array();
+		$dir = new \DirectoryIterator($CFG->dirroot . '/filter/videoeasy/presets');
+		foreach($dir as $fileinfo){
+			if(!$fileinfo->isDot()){
+			  $preset = $this->parse_preset_template($fileinfo);
+			  if($preset){
+				$ret[]=$preset;
+			  }
+			}
+		}
+	   return $ret;
+	}//end of fetch presets function
 	
-	//prepare template info
-	$templaterequires=filter_videoeasy_fetch_template_requires($defaultpresets);
-	$templatebodys=filter_videoeasy_fetch_template_bodys($defaultpresets);
-	$templatescripts=filter_videoeasy_fetch_template_scripts($defaultpresets);
-	$templateshims=filter_videoeasy_fetch_template_shims($defaultpresets);
-	$templatestyles=filter_videoeasy_fetch_template_styles($defaultpresets);
-	$templatedefaults=filter_videoeasy_fetch_template_defaults($defaultpresets);
-	$templatekeys=filter_videoeasy_fetch_template_keys($defaultpresets);
-	$templatenames=filter_videoeasy_fetch_template_names($defaultpresets);
-	
-	foreach($defaultpresets as $preset){
-		$presets = array();
-		$presets['key'] =$templatekeys[$preset];
-		if(!$presets['key']){continue;}
-		$presets['name'] =$templatenames[$preset];
-		$presets['requirecss'] =$templaterequires[$preset]['css'];
-		$presets['requirejs'] =  $templaterequires[$preset]['js'];
-		$presets['shim'] =  $templateshims[$preset];
-		$presets['amd'] = $templaterequires[$preset]['amd'];
-		$presets['jquery'] = $templaterequires[$preset]['jquery'];
-		$presets['defaults'] = $templatedefaults[$preset];
-		$presets['body'] =$templatebodys[$preset];
-		$presets['script'] = $templatescripts[$preset];
-		$presets['style'] = $templatestyles[$preset];		
-	  //update our return value
-	    $ret[$preset] = $presets;
-	}//end of for each
-	foreach($additionalpresets as $preset){
-		$presets = array();
-		switch ($preset){
-			case 7:
-				$presets['key'] ='youtubestandard';
-				$presets['name'] ='YouTube(standard)';
-				$presets['requirecss'] ='';
-				$presets['requirejs'] =  '';
-				$presets['shim'] =  '';
-				$presets['amd'] = 1;
-				$presets['jquery'] = 0;
-				$presets['defaults'] = 'WIDTH=600,HEIGHT=400';
-				$presets['body'] ='<iframe width="@@WIDTH@@" height="@@HEIGHT@@" src="//www.youtube.com/embed/@@FILENAME@@" frameborder="0" allowfullscreen></iframe>';
-				$presets['script'] = '';
-				$presets['style'] = '';
-				break;
-		/*
-			case 8:
-				$presets['key'] ='YouTube(Mediaelement.js)';
-				$presets['requirecss'] ='https://cdnjs.cloudflare.com/ajax/libs/mediaelement/2.13.2/css/mediaelementplayer.min.css';
-				$presets['requirejs'] ='https://cdnjs.cloudflare.com/ajax/libs/mediaelement/2.13.2/js/mediaelement-and-player.min.js';
-				$presets['jquery'] = 1;
-				$presets['defaults'] = 'WIDTH=640,HEIGHT=480';
-				$presets['body'] ='<video width="@@WIDTH@@" height="@@HEIGHT@@" id="@@AUTOID@@" preload="none">
-    <source type="video/youtube" src="http://www.youtube.com/watch?v=@@FILENAME@@" />
-</video>';
-				$presets['script'] = '';
-				$presets['style'] = '';
-				break;
-		*/
-			case 8:
-				$presets['key'] ='multisourcevideo';
-				$presets['name'] ='Multi Source Video';
-				$presets['requirecss'] ='';
-				$presets['requirejs'] =  '';
-				$presets['shim'] =  '';
-				$presets['amd'] = 1;
-				$presets['jquery'] = 0;
-				$presets['defaults'] = 'WIDTH=640,HEIGHT=480';
-				$presets['body'] ='<video width="@@WIDTH@@" height="@@HEIGHT@@" controls>
-  <source src="@@VIDEOURL@@" type="video/mp4">
-  <source src="@@URLSTUB@@.ogg" type="video/ogg">
-Your browser does not support the video tag.
-</video>';
-				$presets['script'] = '';
-				$presets['style'] = '';
-				break;
-			case 9:
-				$presets['key'] ='multisourceaudio';
-				$presets['name'] ='Multi Source Audio';
-				$presets['requirecss'] ='';
-				$presets['requirejs'] =  '';
-				$presets['shim'] =  '';
-				$presets['amd'] = 1;
-				$presets['jquery'] = 0;
-				$presets['defaults'] = '';
-				$presets['body'] ='<audio controls>
-  <source src="@@VIDEOURL@@" type="audio/mpeg">
-  <source src="@@URLSTUB@@.ogg" type="audio/ogg">
-Your browser does not support the audio element.
-</audio>';
-				$presets['script'] = '';
-				$presets['style'] = '';
-				break;
-			case 10:
-				$presets['key'] ='jwplayerrss';
-				$presets['name'] ='JW Player RSS';
-				$presets['requirecss'] ='';
-				$presets['requirejs'] =  'http://jwpsrv.com/library/PERSONALCODE.js';
-				$presets['shim'] =  '';
-				$presets['amd'] = 0;
-				$presets['jquery'] = 0;
-				$presets['defaults'] = 'WIDTH=640,HEIGHT=360';
-				$presets['body'] ='<div id="@@AUTOID@@"></div>';
-				$presets['script'] = 'jwplayer("@@AUTOID@@").setup({
-playlist: "@@videourl@@"",
-width: "@@WIDTH@@",
-height: "@@HEIGHT@@",
-listbar: {
-        position: "right",
-        size: 240,
-        layout: "basic"
-      }
-});';
-				$presets['style'] = '';
-				break;
-			case 11:
-				$presets['key'] ='soundmanager2';
-				$presets['name'] ='SoundManager2';
-				$presets['requirecss'] ='';
-				$presets['requirejs'] =  '//cdn.jsdelivr.net/soundmanager2/2.97a.20130512/soundmanager2.js';
-				$presets['shim'] =  '';
-				$presets['jquery'] = 0;
-				$presets['amd'] = 0;
-				$presets['defaults'] = '';
-				$presets['body'] ='<a onClick="soundManager.play(\'@@AUTOID@@\')" >@@FILENAME@@</a>';
-				$presets['script'] = 'soundManager.setup({
-  url: "//cdn.jsdelivr.net/soundmanager2/2.97a.20130512/soundmanager2_flash9.swf",
-  flashVersion: 9, // optional: shiny features (default = 8)
-  // preferFlash: true;
-  preferFlash: false,
-  onready: function() {
-   var mySound = soundManager.createSound({
-      id: @@AUTOID@@, // optional: provide your own unique id
-      url: @@VIDEOURL@@,
-       autoPlay: false
-    });
-  }
-});';
-				$presets['style'] = '';
-				break;
-			case 12:
-			default:
-				$presets['key'] ='';
-				$presets['name'] ='None';
-				$presets['requirecss'] ='';
-				$presets['requirejs'] =  '';
-				$presets['shim'] =  '';
-				$presets['jquery'] = 0;
-				$presets['amd'] = 1;
-				$presets['defaults'] = '';
-				$presets['body'] ='';
-				$presets['script'] = '';
-				$presets['style'] = '';
-			
-		}//end of switch		
-	  //update our return value
-	    $ret[$preset] = $presets;
-	
-	}//end of for each
-	return $ret;
-	
-}
+	public static function set_preset_to_config($preset, $templateindex){
+		$fields = array();
+		$fields['name']='templatename';
+		$fields['key']='templatekey';
+		$fields['instructions']='templateinstructions';
+		$fields['body']='template';
+		$fields['bodyend']='templateend';
+		$fields['requirecss']='templaterequire_css';
+		$fields['requirejs']='templaterequire_js';
+		$fields['shim']='templaterequire_js_shim';
+		$fields['defaults']='templatedefaults';
+		$fields['amd']='template_amd';
+		$fields['script']='templatescript';
+		$fields['style']='templatestyle';
+		$fields['dataset']='dataset';
+		$fields['datavars']='datavars';
+		
+		foreach($fields as $fieldkey=>$fieldname){
+			if(array_key_exists($fieldkey,$preset)){
+				$fieldvalue=$preset[$fieldkey];
+			}else{
+				$fieldvalue='';
+			}
+			set_config($fieldname . '_' . $templateindex, $fieldvalue, 'filter_videoeasy');
+		}
+	}//End of set_preset_to_config
 }//end of class
