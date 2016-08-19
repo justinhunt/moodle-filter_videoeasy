@@ -111,17 +111,6 @@ if (is_siteadmin()) {
 	//add page to category
 	$ADMIN->add('filter_videoeasy_category', $settings_page);
 	
-	//prepare template info
-	//this is mainly just for the default templates. Once the user has saved these will not be used.
-	//however these functions are also called to get the values and data for the presets dropdown.
-	$templaterequires=filter_videoeasy_fetch_template_requires($players);
-	$templatebodys=filter_videoeasy_fetch_template_bodys($players);
-	$templatescripts=filter_videoeasy_fetch_template_scripts($players);
-	$templatestyles=filter_videoeasy_fetch_template_styles($players);
-	$templatedefaults=filter_videoeasy_fetch_template_defaults($players);
-	$templatekeys=filter_videoeasy_fetch_template_keys($players);
-	$templatenames=filter_videoeasy_fetch_template_names($players);
-	
 	
 	//add 10 templates
 	foreach($players as $templateid){
@@ -143,35 +132,30 @@ if (is_siteadmin()) {
 			
 				
 		//template key
-		$defvalue= $templatekeys[$templateid];
+		$defvalue= '';
 		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/templatekey_' . $templateid , 
 				get_string('templatekey', 'filter_videoeasy',$templateid),
 				get_string('templatekey_desc', 'filter_videoeasy'), 
 				$defvalue, PARAM_TEXT));
 				
 		//template name
-		$defvalue=  $templatenames[$templateid];
+		$defvalue= '';
 		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/templatename_' . $templateid , 
 				get_string('templatename', 'filter_videoeasy',$templateid),
 				get_string('templatename_desc', 'filter_videoeasy'), 
 				$defvalue, PARAM_RAW));
 				
 		//template amd
+		$defvalue= 0;
 		$yesno = array('0'=>get_string('no'),'1'=>get_string('yes'));
 		$settings_page->add(new admin_setting_configselect('filter_videoeasy/template_amd_' . $templateid,
 			get_string('templaterequire_amd', 'filter_videoeasy',$templateid),
 			get_string('templaterequire_amd_desc', 'filter_videoeasy'),
-			0,$yesno));
-		/*
-		$settings_page->add(new admin_setting_configcheckbox('filter_videoeasy/template_amd_' . $templateid,
-				get_string('templaterequire_amd', 'filter_videoeasy',$templateid),
-				get_string('templaterequire_amd_desc', 'filter_videoeasy'), 
-				 0));
-		*/
+			$defvalue,$yesno));
+		
 
 		//template JS heading
-		//$defvalue= filter_videoeasy_fetch_default($conf,'templaterequire_js_' . $oldplayers[$templateid], $templaterequires[$templateid]['js']);
-		$defvalue= $templaterequires[$templateid]['js'];
+		$defvalue= '';
 		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/templaterequire_js_' . $templateid , 
 				$playername  . get_string('templaterequirejs', 'filter_videoeasy') ,
 				get_string('templaterequirejs_desc', 'filter_videoeasy'), 
@@ -186,46 +170,35 @@ if (is_siteadmin()) {
 
 				 
 		//template css heading
-		$defvalue= $templaterequires[$templateid]['css'];
+		$defvalue= '';
 		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/templaterequire_css_' . $templateid , 
 				$playername  . get_string('templaterequirecss', 'filter_videoeasy'),
 				get_string('templaterequirecss_desc', 'filter_videoeasy'), 
 				 $defvalue), PARAM_RAW,50);
 		
 		//template jquery heading
-
-		$defvalue=  $templaterequires[$templateid]['jquery'];
+		$defvalue= 0;
 		 $settings_page->add(new admin_setting_configselect('filter_videoeasy/templaterequire_jquery_' . $templateid,
 				$playername  . get_string('templaterequirejquery', 'filter_videoeasy'),
 				get_string('templaterequirejquery_desc', 'filter_videoeasy'), 
 				 $defvalue,$yesno));
 
-        /*
-		$settings_page->add(new admin_setting_configcheckbox('filter_videoeasy/templaterequire_jquery_' . $templateid,
-			$playername  . get_string('templaterequirejquery', 'filter_videoeasy'),
-			get_string('templaterequirejquery_desc', 'filter_videoeasy'),
-			$defvalue));
-		*/
-
 
 		//template body
-		//$defvalue= filter_videoeasy_fetch_default($conf,'templatepreset_' .$oldplayers[$templateid], $templatebodys[$templateid]);
-		$defvalue= $templatebodys[$templateid];
+		$defvalue= '';
 		 $settings_page->add(new admin_setting_configtextarea('filter_videoeasy/templatepreset_' . $templateid,
 					$playername  . get_string('template', 'filter_videoeasy'),
 					get_string('template_desc', 'filter_videoeasy'),$defvalue));
 
 		//template body script
-		//$defvalue= filter_videoeasy_fetch_default($conf,'templatescript_' . $oldplayers[$templateid],$templatescripts[$templateid]);
-		$defvalue= $templatescripts[$templateid];
+		$defvalue= '';
 		 $settings_page->add(new admin_setting_configtextarea('filter_videoeasy/templatescript_' . $templateid,
 					$playername  . get_string('templatescript', 'filter_videoeasy'),
 					get_string('templatescript_desc', 'filter_videoeasy'),$defvalue));
 
 
 		//template defaults	
-		// $defvalue= filter_videoeasy_fetch_default($conf,'templatedefaults_' . $oldplayers[$templateid],$templatedefaults[$templateid]);	
-		$defvalue= $templatedefaults[$templateid];			
+		$defvalue= '';
 		 $settings_page->add(new admin_setting_configtextarea('filter_videoeasy/templatedefaults_' . $templateid,
 					$playername  . get_string('templatedefaults', 'filter_videoeasy'),
 					get_string('templatedefaults_desc', 'filter_videoeasy'),$defvalue));
@@ -246,10 +219,11 @@ if (is_siteadmin()) {
 		
 		
 		//template body css
+		$defvalue= '';
 		 $settings_page->add(new admin_setting_configtextarea('filter_videoeasy/templatestyle_' . $templateid,
 					get_string('templatestyle', 'filter_videoeasy',$templateid),
 					get_string('templatestyle_desc', 'filter_videoeasy'),
-					$templatestyles[$templateid],PARAM_RAW));
+					$defvalue,PARAM_RAW));
 		
 		//additional CSS (upload)
 		$name = 'filter_videoeasy/uploadcss_' . $templateid;
