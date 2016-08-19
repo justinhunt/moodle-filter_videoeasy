@@ -9,7 +9,7 @@ define(['jquery','core/log'], function($, log) {
 
 	  presetdata: false,
 	  
-	  dataitems: ['key', 'name','amd','requirejs','shim', 'requirecss',  'jquery',
+	  dataitems: ['key', 'name','amd','requirejs','shim', 'requirecss', 
 			   'body', 'script','defaults', 'style'],
 
 	  fetchcontrols: function(templateindex) {
@@ -20,7 +20,6 @@ define(['jquery','core/log'], function($, log) {
 		  controls.requirejs = document.getElementById('id_s_filter_videoeasy_templaterequire_js_' + templateindex);
 		  controls.shim = document.getElementById('id_s_filter_videoeasy_templaterequire_js_shim_' + templateindex);
 		  controls.requirecss = document.getElementById('id_s_filter_videoeasy_templaterequire_css_' + templateindex);
-		  controls.jquery = document.getElementById('id_s_filter_videoeasy_templaterequire_jquery_' + templateindex);
 		  controls.body = document.getElementById('id_s_filter_videoeasy_templatepreset_' + templateindex);
 		  controls.script = document.getElementById('id_s_filter_videoeasy_templatescript_' + templateindex);
 		  controls.defaults = document.getElementById('id_s_filter_videoeasy_templatedefaults_' + templateindex);

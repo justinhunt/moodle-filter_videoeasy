@@ -159,8 +159,7 @@ class filter_videoeasy extends moodle_text_filter {
 		
 		$defaultposterimage =  $conf->{'defaultposterimage'};
 		$require_js = $conf->{'templaterequire_js_' . $templateid};
-		$require_css = $conf->{'templaterequire_css_' . $templateid};
-		$require_jquery = $conf->{'templaterequire_jquery_' . $templateid};
+		$require_css = $conf->{'templaterequire_css_' . $templateid}; 
 		$uploadcssfile = $conf->{'uploadcss_' . $templateid};
 		$uploadjsfile = $conf->{'uploadjs_' . $templateid};
 		//are we AMD and Moodle 2.9 or more?
@@ -326,14 +325,6 @@ class filter_videoeasy extends moodle_text_filter {
 
 		//load jquery
 		if(!$require_amd){
-			if($require_jquery){
-				if(!$PAGE->headerprinted && !$PAGE->requires->is_head_done()){
-				//if(false){
-					$PAGE->requires->jquery();
-				}else{
-					$PAGE->requires->js(new moodle_url($scheme . $conf->{'jqueryurl'}));
-				}
-			}
 
 			//get any required js
 			if($require_js){

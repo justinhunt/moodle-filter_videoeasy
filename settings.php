@@ -95,12 +95,6 @@ if (is_siteadmin()) {
 				get_string('extensions', 'filter_videoeasy'),
 				get_string('extensions_desc', 'filter_videoeasy'), 
 				 $defaultexts, PARAM_RAW,70));
-	
-	//add jquery path 
-	$settings_page->add(new admin_setting_configtext('filter_videoeasy/jqueryurl', 
-				get_string('jqueryurl', 'filter_videoeasy'),
-				get_string('jqueryurl_desc', 'filter_videoeasy'), 
-				 '//code.jquery.com/jquery-1.11.2.min.js', PARAM_RAW,50));
 				 
 	//add upload area for default poster image
 	$name = 'filter_videoeasy/defaultposterimage';
@@ -175,13 +169,6 @@ if (is_siteadmin()) {
 				$playername  . get_string('templaterequirecss', 'filter_videoeasy'),
 				get_string('templaterequirecss_desc', 'filter_videoeasy'), 
 				 $defvalue), PARAM_RAW,50);
-		
-		//template jquery heading
-		$defvalue= 0;
-		 $settings_page->add(new admin_setting_configselect('filter_videoeasy/templaterequire_jquery_' . $templateid,
-				$playername  . get_string('templaterequirejquery', 'filter_videoeasy'),
-				get_string('templaterequirejquery_desc', 'filter_videoeasy'), 
-				 $defvalue,$yesno));
 
 
 		//template body
