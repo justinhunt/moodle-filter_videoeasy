@@ -1,7 +1,8 @@
 Change List
 =========
 Version 2016082001
-Added shimming and loading of presets from bundle files in videoeasy dir. Also removed the ablity to declare a jquery dependency. You should use shimming instead
+Added shimming and loading of presets from bundle files in videoeasy dir. 
+Also removed the ablity to declare a jquery dependency. You should use shimming instead
 
 Version 2016011102
 Fixed bug where uploaded JS and CSS files would not be served correctly, and the filter would fail

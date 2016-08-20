@@ -1,0 +1,1 @@
+{"key":"audiojs","name":"Audio JS","amd":"1","requirejs":"//cdnjs.cloudflare.com/ajax/libs/audiojs/1.0.1/audio.min.js","shim":"audiojs","requirecss":"","body":"<audio id=\"@@AUTOID@@\" src=\"@@VIDEOURL@@\"></audio>","script":"var theaudio =$('#' + @@AUTOID@@);\nif(theaudio.length>0){\n   audiojs.create(theaudio.get(0));\n}","defaults":"","style":""}

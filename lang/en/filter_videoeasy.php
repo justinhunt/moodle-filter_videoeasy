@@ -36,13 +36,13 @@ $string['template_desc'] = 'Put the template here, define variables by surroundi
 $string['templatescript'] = ' load script';
 $string['templatescript_desc'] = 'Put the load script (if any) here, define variables by surrounding them with @@ marks at either end. eg @@variable@@';
 $string['templaterequirejs'] = ' javascript URL';
-$string['templaterequirejs_desc'] = 'Almost all the players require script tags in the page header. Just put the URL here.';
+$string['templaterequirejs_desc'] = 'This is the URL of any required javascript library. Try to start with // .';
 $string['templaterequirecss'] = ' CSS URL';
-$string['templaterequirecss_desc'] = 'Some players require CSS tags in the page header. Just put the URL here.';
+$string['templaterequirecss_desc'] = 'This is the URL of any required CSS file. Try to start with // .';
 $string['templatename'] = 'Template Name';
 $string['templatename_desc'] = 'The name of this template.';
 $string['templatekey'] = 'Template Key';
-$string['templatekey_desc'] = 'The id that identifies this template. Must be unique on the site. Users never see this. If you change it you will need to reallocate the template/player to the appropriate file extension. Try not to change it.';
+$string['templatekey_desc'] = 'The id that identifies this template. Must be unique on the site. Users never see this. If you change it you will need to reallocate the template/player to the appropriate file extension. Try not to change it. Use alphanumeric characters only (no spaces)';
 $string['templatedefaults'] = ' defaults';
 $string['templatedefaults_desc'] = 'Default values for custom variables in the template/script. Usually just width, and height. Enter comma delimited sets of name=value pairs. eg width=800,height=900,feeling=joy';
 $string['useplayer'] = '{$a} Player';
