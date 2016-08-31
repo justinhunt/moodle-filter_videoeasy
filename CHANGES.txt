@@ -1,5 +1,9 @@
 Change List
 =========
+Version 2016082002
+Fixed a problem on new installs where an error occurred adding a default template
+
+
 Version 2016082001
 Added shimming and loading of presets from bundle files in videoeasy dir. 
 Also removed the ablity to declare a jquery dependency. You should use shimming instead
