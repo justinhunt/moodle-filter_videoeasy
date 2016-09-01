@@ -332,7 +332,7 @@ class admin_setting_videoeasypresets extends admin_setting {
 	}//end of parse preset template
 
 
-	protected function fetch_presets(){          
+	public function fetch_presets(){          
 		global $CFG;
 		$ret = array();
 		$dir = new \DirectoryIterator($CFG->dirroot . '/filter/videoeasy/presets');
