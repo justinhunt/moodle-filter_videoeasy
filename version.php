@@ -25,9 +25,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2016082003;        // The current plugin version (Date: YYYYMMDDXX)
+$plugin->version   = 2016082004;        // The current plugin version (Date: YYYYMMDDXX)
 $plugin->requires  = 2015051100;        // Requires this Moodle version
 $plugin->component = 'filter_videoeasy'; // Full name of the plugin (used for diagnostics)
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->release   = '1.1.7(Build 2016082003)';
+$plugin->release   = '1.1.7(Build 2016082004)';
 
