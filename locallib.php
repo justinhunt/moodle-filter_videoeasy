@@ -352,7 +352,7 @@ class admin_setting_videoeasypresets extends admin_setting {
 		$fields['name']='templatename';
 		$fields['key']='templatekey';
 		$fields['instructions']='templateinstructions';
-		$fields['body']='template';
+		$fields['body']='templatepreset';
 		$fields['bodyend']='templateend';
 		$fields['requirecss']='templaterequire_css';
 		$fields['requirejs']='templaterequire_js';
