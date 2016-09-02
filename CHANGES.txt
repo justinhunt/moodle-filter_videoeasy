@@ -1,5 +1,8 @@
 Change List
 =========
+Version 2016082005
+Fixed a bug killing shim for uploaded js file
+
 Version 2016082004
 Fixed another problem on new installs where an error occurred adding a default template
 

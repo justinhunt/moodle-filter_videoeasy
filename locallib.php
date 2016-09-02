@@ -144,7 +144,7 @@ class filter_videoeasy_template_script_generator {
 					
 					$shimpaths[]="'" . $uploadjs . "'";					
 					$shimexports[]=$uploadjs_shim;
-					$requires[] = $currentkey . '-uploadjs';
+					$requires[] ="'" .  $currentkey . '-uploadjs' . "'";
 					$params[]=$uploadjs_shim;
 				}else{
 					$requires[] =  "'" . $uploadjs . "'";
