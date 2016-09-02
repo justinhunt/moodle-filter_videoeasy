@@ -142,7 +142,7 @@ class filter_videoeasy_template_script_generator {
 						$uploadjs = substr($uploadjs, 0, -3);
 					}
 					
-					$shimpaths[]="'" . $uploadjs . "'";					
+					$shimpaths[]=$uploadjs;					
 					$shimexports[]=$uploadjs_shim;
 					$requires[] ="'" .  $currentkey . '-uploadjs' . "'";
 					$params[]=$uploadjs_shim;
