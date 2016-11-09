@@ -155,7 +155,7 @@ if (is_siteadmin()) {
 				get_string('templaterequirejs_desc', 'filter_videoeasy'), 
 				 $defvalue), PARAM_RAW,50);		
 
-		//template requiredja_shim
+		//template requiredjs_shim
 		$defvalue= '';
 		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/templaterequire_js_shim_' . $templateid , 
 				get_string('templaterequirejsshim', 'filter_videoeasy',$templateid),
@@ -217,6 +217,14 @@ if (is_siteadmin()) {
 		$title =$playername . ' ' . get_string('uploadcss', 'filter_videoeasy');
 		$description = get_string('uploadcss_desc', 'filter_videoeasy');
 		$settings_page->add(new admin_setting_configstoredfile($name, $title, $description, 'uploadcss_' . $templateid));
+		
+		//alternative content
+		$defvalue= '';
+		 $settings_page->add(new admin_setting_configtextarea('filter_videoeasy/templatealternate_' . $templateid,
+					get_string('templatealternate', 'filter_videoeasy',$templateid),
+					get_string('templatealternate_desc', 'filter_videoeasy'),
+					$defvalue,PARAM_RAW));
+		
 
 					
 		//add page to category

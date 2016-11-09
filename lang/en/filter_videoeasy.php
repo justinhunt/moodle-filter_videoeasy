@@ -86,7 +86,10 @@ $string['presets_desc'] = 'VideoEasy comes with some default presets you can use
 
 $string['bundle'] = 'Bundle';
 
-$string['templateuploadjsshim'] = ' Upload Shim export';
+$string['templateuploadjsshim'] = 'Upload Shim export';
 $string['templateuploadjsshim_desc'] = ' Leave blank unless you know what shimming is';
-$string['templaterequirejsshim'] = ' Require Shim export';
+$string['templaterequirejsshim'] = 'Require Shim export';
 $string['templaterequirejsshim_desc'] = ' Leave blank unless you know what shimming is';
+
+$string['templatealternate'] = 'Alternate content';
+$string['templatealternate_desc'] = 'Content that can be used when the custom and uploaded CSS and javascript content is not available. Currently this is used when the template is processed by a webservice, probably for content on the mobile app';

@@ -97,6 +97,7 @@ function filter_videoeasy_fetch_emptyproparray(){
 	$proparray=array();
 	$proparray['AUTOMIME'] = '';
 	$proparray['FILENAME'] = '';
+	$proparray['FILENAMESTUB'] = '';
 	$proparray['FILETITLE'] = '';
 	$proparray['AUTOPNGFILENAME'] = '';
 	$proparray['AUTOJPGFILENAME'] = '';

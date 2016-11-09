@@ -1,5 +1,8 @@
 Change List
 =========
+Version 2016082006
+Added property FILENAMESTUB
+
 Version 2016082005
 Fixed a bug killing shim for uploaded js file
 

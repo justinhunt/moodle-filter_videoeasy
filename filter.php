@@ -141,6 +141,12 @@ class filter_videoeasy extends moodle_text_filter {
 	 */
 	private function filter_videoeasy_process($link, $ext) {
 	global $CFG, $PAGE, $COURSE;
+		
+		//we use this to see if its a web service calling this, 
+		//in which case we return the alternate content
+		$is_webservice = strpos($PAGE->url,'/webservice/pluginfile.php') > 0;
+
+	
 		//get template info
 		$conf = get_config('filter_videoeasy');
 		
@@ -162,18 +168,12 @@ class filter_videoeasy extends moodle_text_filter {
 		$require_css = $conf->{'templaterequire_css_' . $templateid}; 
 		$uploadcssfile = $conf->{'uploadcss_' . $templateid};
 		$uploadjsfile = $conf->{'uploadjs_' . $templateid};
+		$alternate_content = $conf->{'templatealternate_' . $templateid};
+		
 		//are we AMD and Moodle 2.9 or more?
 		$require_amd =  $conf->{'template_amd_' . $templateid} && $CFG->version>=2015051100;
 		
-		/*
-		* Old Search Params 1 = url, 2=ext, 3=?d=widthxheight, 4=width,5=height,6=linkedtext
-		*  Old Search Params 1 = url, 2=ext, 3=d=widthxheight&prop=value, 4=linkedtext
-		*/
-		//echo "player:" . $templateid;
-//		print_r($link);
-		//echo ("player:" . $templateid);
-		//echo ("ext:" . $ext);
-		//clean up url
+
 
 		$url = $link[1];
 		$url = str_replace('&amp;', '&', $url);
@@ -183,6 +183,7 @@ class filter_videoeasy extends moodle_text_filter {
 		
 		if($ext=="youtube"){
 			$filename = $link[1];
+			$filenamestub = $filename;
 			$url="https://www.youtube.com/watch?v=" . $filename;
 			$videourl="https://www.youtube.com/watch?v=" . $filename;
 			$autojpgfilename ="hqdefault.jpg";
@@ -207,10 +208,10 @@ class filter_videoeasy extends moodle_text_filter {
 			}
 	
 			$filename = basename($bits['path']);
+			$filenamestub = substr($filename,0,strpos($filename,'.' . $ext));
 			$filetitle = str_replace('.' . $ext,'',$filename);
-			$autopngfilename = str_replace('.' . $ext,'.png',$filename);
-			$autojpgfilename = str_replace('.' . $ext,'.jpg',$filename);
-
+			$autopngfilename = $filenamestub . '.png';
+			$autojpgfilename = $filenamestub . '.jpg';
 			$videourl = $rawurl;
 			$autoposterurljpg = $urlstub . '.jpg';
 			$autoposterurlpng = $urlstub . '.png';
@@ -286,6 +287,7 @@ class filter_videoeasy extends moodle_text_filter {
 		$proparray['AUTOMIME'] = $automime;
 		$proparray['URLSTUB'] = $urlstub;
 		$proparray['FILENAME'] = $filename;
+		$proparray['FILENAMESTUB'] = $filenamestub;
 		$proparray['FILETITLE'] = $filetitle;
 		$proparray['DEFAULTPOSTERURL'] = $defaultposterurl;
 		$proparray['AUTOPNGFILENAME'] = $autopngfilename;
@@ -307,16 +309,15 @@ class filter_videoeasy extends moodle_text_filter {
 		
 		
 		
-		
-	
-		//might need this if cant load into header, but need to.
-		//$scripttag="<script src='@@REQUIREJS@@'></script>";
-	
-		/*
-		foreach($proparray as $key=>$value){
-			echo $key . ': ' . $value . '<br />';
+		//now we are ready to process
+		//if we are on a mobile device we just return alternate content
+		if($is_webservice && !empty($alternate_content)){
+			foreach($proparray as $name=>$value){
+				$alternate_content = str_replace('@@' . $name .'@@',$value,$alternate_content);
+			}
+			return $alternate_content;		
 		}
-		*/
+		
 		//replace the specified names with spec values
 		foreach($proparray as $name=>$value){
 			$templatebody = str_replace('@@' . $name .'@@',$value,$templatebody);
