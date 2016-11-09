@@ -310,7 +310,7 @@ class filter_videoeasy extends moodle_text_filter {
 		
 		
 		//now we are ready to process
-		//if we are on a mobile device we just return alternate content
+		//if we are on a mobile app we just return alternate content
 		if($is_webservice && !empty($alternate_content)){
 			foreach($proparray as $name=>$value){
 				$alternate_content = str_replace('@@' . $name .'@@',$value,$alternate_content);
