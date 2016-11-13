@@ -1,5 +1,8 @@
 Change List
 =========
+Version 2016110902
+Fixed broken support for importing/exporting bundles containing "alternate content" fields
+
 Version 2016110901
 Added "alternate content" field for falling back to on mobile app
 

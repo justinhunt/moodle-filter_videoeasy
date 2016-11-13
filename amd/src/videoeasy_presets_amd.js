@@ -10,7 +10,7 @@ define(['jquery','core/log'], function($, log) {
 	  presetdata: false,
 	  
 	  dataitems: ['key', 'name','amd','requirejs','shim', 'requirecss', 
-			   'body', 'script','defaults', 'style'],
+			   'body', 'script','defaults', 'style','alternate'],
 
 	  fetchcontrols: function(templateindex) {
 	  	  var controls = {};
@@ -24,6 +24,7 @@ define(['jquery','core/log'], function($, log) {
 		  controls.script = document.getElementById('id_s_filter_videoeasy_templatescript_' + templateindex);
 		  controls.defaults = document.getElementById('id_s_filter_videoeasy_templatedefaults_' + templateindex);
 		  controls.style = document.getElementById('id_s_filter_videoeasy_templatestyle_' + templateindex);
+		  controls.alternate = document.getElementById('id_s_filter_videoeasy_templatealternate_' + templateindex);
 		  controls.presetdata = document.getElementById('id_s_filter_videoeasy_presetdata_' + templateindex);
 		  return controls;
 	  },
