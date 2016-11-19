@@ -144,7 +144,7 @@ class filter_videoeasy extends moodle_text_filter {
 		
 		//we use this to see if its a web service calling this, 
 		//in which case we return the alternate content
-		$is_webservice = strpos($PAGE->url,'/webservice/pluginfile.php') > 0;
+		$is_webservice = strpos($PAGE->url,$CFG->wwwroot .'/webservice/') === 0;
 
 	
 		//get template info
