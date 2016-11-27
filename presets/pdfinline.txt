@@ -1,0 +1,1 @@
+{"key":"pdfinline","name":"pdf inline","amd":"0","requirejs":"","shim":"","requirecss":"","body":"<iframe src=\"@@VIDEOURL@@\" width=\"600\" height=\"800\"></iframe>","script":"","defaults":"","style":"","alternate":""}
