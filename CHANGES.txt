@@ -1,5 +1,9 @@
 Change List
 =========
+Version 2016120901
+-added support for "player" parameter to the URL so that the player can be specified via the 
+video url. e.g <a href="blah/blah.mp4?player=flowplayer">blah.mp4</a>
+
 Version 2016112801
 -fixed a bug where html from template processed but not sent to page, and js looking for it
 

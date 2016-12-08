@@ -145,13 +145,29 @@ class filter_videoeasy extends moodle_text_filter {
 		//we use this to see if its a web service calling this, 
 		//in which case we return the alternate content
 		$is_webservice = strpos($PAGE->url,$CFG->wwwroot .'/webservice/') === 0;
-
 	
 		//get template info
 		$conf = get_config('filter_videoeasy');
 		
+		//Get params from url, one of these could be "player"
+		//thats why we need to parse this now.
+		$params = array();
+		$paramstring="";
+		if(!empty($link[3])){
+			//drop the first char if it is ?, whch it probably is
+			$paramstring =  ltrim ($link[3], '?');
+			$paramstring = str_replace('&amp;', '&', $paramstring);
+			//this will fill $params with parsed props from param string	
+			parse_str($paramstring, $params);	
+		}
+		
 		//get our template info
-		$playerkey = $this->fetchconf('useplayer' . $ext);
+		//if we have a &player=xxx url param, use that. Otherwise we use filter settings
+		if(!empty($params) && array_key_exists('player',$params)){
+			$playerkey = $params['player'];
+		}else{
+			$playerkey = $this->fetchconf('useplayer' . $ext);
+		}
 		$templateid=0;
 		$templatenumbers = filter_videoeasy_fetch_players();
 		foreach($templatenumbers as $templatenumber){
@@ -241,15 +257,8 @@ class filter_videoeasy extends moodle_text_filter {
 		$proparray = array_merge($proparray,filter_videoeasy_parsepropstring($defaults));
 	
 		//Add any params from url
-		if(!empty($link[3])){
-			//drop the first char if it is ?, whch it probably is
-			$paramstring =  ltrim ($link[3], '?');
-			$paramstring = str_replace('&amp;', '&', $paramstring);
-			$params = array();
-			parse_str($paramstring, $params);
+		if(!empty($params)){
 			$proparray = array_merge($proparray,$params);
-		}else{
-			$paramstring="";
 		}
 	
 		//use default widths or explicit width/heights if they were passed in ie http://url.to.video.mp4?d=640x480
