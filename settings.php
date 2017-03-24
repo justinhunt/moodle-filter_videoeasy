@@ -43,8 +43,8 @@ if (is_siteadmin()) {
 			get_string('extensionheading', 'filter_videoeasy'), ''));
 	
 	//get the players we use and the extensions we handle
-	$players = filter_videoeasy_fetch_players();
-	$extensions = filter_videoeasy_fetch_extensions();
+	$players = \filter_videoeasy\videoeasy_utils::fetch_players();
+	$extensions = \filter_videoeasy\videoeasy_utils::fetch_extensions();
 	
 	//create player select list
 	//this looks complicated, because we made a big shift in the way we key templates
@@ -90,7 +90,7 @@ if (is_siteadmin()) {
 	}
 	
 	//add extensions csv
-	$defaultexts = implode(',',filter_videoeasy_fetch_default_extensions()); 
+	$defaultexts = implode(',',\filter_videoeasy\videoeasy_utils::fetch_default_extensions());
 	$settings_page->add(new admin_setting_configtext('filter_videoeasy/extensions', 
 				get_string('extensions', 'filter_videoeasy'),
 				get_string('extensions_desc', 'filter_videoeasy'), 
@@ -121,7 +121,7 @@ if (is_siteadmin()) {
 				
 		//presets
 		//this is a custom control, that allows the user to select a preset from a list.
-		$settings_page->add(new admin_setting_videoeasypresets('filter_videoeasy/templatepresets_' . $templateid, 
+		$settings_page->add(new \filter_videoeasy\videoeasy_presets('filter_videoeasy/templatepresets_' . $templateid,
 				get_string('presets', 'filter_videoeasy'), get_string('presets_desc', 'filter_videoeasy'),$templateid));
 			
 				
@@ -138,7 +138,14 @@ if (is_siteadmin()) {
 				get_string('templatename', 'filter_videoeasy',$templateid),
 				get_string('templatename_desc', 'filter_videoeasy'), 
 				$defvalue, PARAM_RAW));
-				
+
+        //template version
+        $defvalue= '';
+        $settings_page->add(new admin_setting_configtext('filter_videoeasy/templateversion_' . $templateid ,
+            get_string('templateversion', 'filter_videoeasy',$templateid),
+            get_string('templateversion_desc', 'filter_videoeasy'),
+            $defvalue, PARAM_TEXT));
+
 		//template amd
 		$defvalue= 0;
 		$yesno = array('0'=>get_string('no'),'1'=>get_string('yes'));

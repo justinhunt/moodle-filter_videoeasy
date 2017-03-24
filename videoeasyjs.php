@@ -37,7 +37,7 @@ if(empty($templateid)){
 	$templateid=$conf->{'useplayer' . $ext};
 }
 
-$generator = new filter_videoeasy_template_script_generator($templateid,$ext);
+$generator = new \filter_videoeasy\template_script_generator($templateid,$ext);
 $template_script = $generator->get_template_script();
 header('Content-Type: application/javascript');
 echo $template_script;
