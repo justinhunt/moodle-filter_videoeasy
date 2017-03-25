@@ -1,6 +1,6 @@
 Change List
 =========
-Version  2017032401
+Version  2017032405
 -added better display of templates in navigation so that Boost doesn't completely mess it up
 -added revision flag for automating cache refresh courtesy of agrowe
 -fixed display of template names in dropdown
