@@ -27,7 +27,7 @@
 defined('MOODLE_INTERNAL') || die();
 
 require_once(dirname(__FILE__).'/lib.php');
-require_once(dirname(__FILE__).'/locallib.php'); 
+
 
 class filter_videoeasy extends moodle_text_filter {
 	protected $adminconfig=null;
