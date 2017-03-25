@@ -30,7 +30,8 @@ defined('MOODLE_INTERNAL') || die;
 *
 */
 function filter_videoeasy_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload, array $options = array()) {
-	$players = \filter_videoeasy\videoeasy_utils::fetch_players();
+    $conf = get_config('filter_generico');
+    $players = \filter_videoeasy\videoeasy_utils::fetch_players($conf);
 	foreach($players as $player){
     	if($context->contextlevel == CONTEXT_SYSTEM){
     		if($filearea === 'uploadjs_' . $player || $filearea === 'uploadcss_' . $player || $filearea === 'defaultposterimage' ) {

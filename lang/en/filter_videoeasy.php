@@ -96,3 +96,8 @@ $string['templaterequirejsshim_desc'] = ' Leave blank unless you know what shimm
 $string['templatealternate'] = 'Alternate content'; 
 $string['templatealternate_desc'] = 'Content that can be used when the custom and uploaded CSS and javascript content is not available. Currently this is used when the template is processed by a webservice, probably for content on the mobile app';
 $string['templates'] = 'Templates';
+$string['templateinstructions'] =  'Instructions (template {$a})';
+$string['templateinstructions_desc'] = 'Use this area for any instructions or description of the template. It is only shown here and on the templates list table.';
+
+$string['templatecount'] = 'Template Count';
+$string['templatecount_desc'] = 'The number of templates you can have. Default is 15.';

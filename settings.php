@@ -26,10 +26,11 @@ $settings = null;
 defined('MOODLE_INTERNAL') || die;
 if (is_siteadmin()) {
 	require_once($CFG->dirroot . '/filter/videoeasy/lib.php');
-	require_once($CFG->dirroot . '/filter/videoeasy/locallib.php');
 
 	//add folder in property tree for settings pages
-	 $ADMIN->add('filtersettings', new admin_category('filter_videoeasy_category', 'Video Easy'));
+    $videoeasy_category_name='videoeasy_category';
+    $videoeasy_category = new admin_category($videoeasy_category_name, 'Video Easy');
+    $ADMIN->add('filtersettings', $videoeasy_category);
 	 $conf = get_config('filter_videoeasy');
 	 
 	 //template settings Page Settings 
@@ -37,13 +38,18 @@ if (is_siteadmin()) {
 	 //page, we will arrive here. Else the link will show there, but it will error out if clicked.
    //	$settings_page = new admin_settingpage('filter_videoeasy_templatepage_handlers',get_string('templatepageheading_handlers', 'filter_videoeasy'));
 	$settings_page = new admin_settingpage('filtersettingvideoeasy',get_string('templatepageheading_handlers', 'filter_videoeasy'));
+
+    $settings_page->add(new admin_setting_configtext('filter_videoeasy/templatecount',
+        get_string('templatecount', 'filter_videoeasy'),
+        get_string('templatecount_desc', 'filter_videoeasy'),
+        \filter_videoeasy\videoeasy_utils::FILTER_VIDEOEASY_TEMPLATE_COUNT, PARAM_INT,20));
 	
 	//heading of template
 	$settings_page->add(new admin_setting_heading('filter_videoeasy/extensionheading', 
 			get_string('extensionheading', 'filter_videoeasy'), ''));
 	
 	//get the players we use and the extensions we handle
-	$players = \filter_videoeasy\videoeasy_utils::fetch_players();
+	$players = \filter_videoeasy\videoeasy_utils::fetch_players($conf);
 	$extensions = \filter_videoeasy\videoeasy_utils::fetch_extensions();
 	
 	//create player select list
@@ -103,9 +109,9 @@ if (is_siteadmin()) {
 	$settings_page->add(new admin_setting_configstoredfile($name, $title, $description, 'defaultposterimage'));
 	
 	//add page to category
-	$ADMIN->add('filter_videoeasy_category', $settings_page);
-	
-	
+	$ADMIN->add($videoeasy_category_name, $settings_page);
+
+
 	//add 10 templates
 	foreach($players as $templateid){
 
@@ -113,7 +119,7 @@ if (is_siteadmin()) {
 		$playername=$playernames[$templateid];
 		
 		 //template settings Page Settings 
-		$settings_page = new admin_settingpage('filter_videoeasy_templatepage_' . $templateid,get_string('templatepageheading', 'filter_videoeasy',$playername));
+		$settings_page = new admin_settingpage('filter_videoeasy_templatepage_' . $templateid,get_string('templatepageheading', 'filter_videoeasy',$playername),'moodle/site:config',true);
 		
 		//heading of template
 		$settings_page->add(new admin_setting_heading('filter_videoeasy/templateheading_' . $templateid, 
@@ -121,7 +127,7 @@ if (is_siteadmin()) {
 				
 		//presets
 		//this is a custom control, that allows the user to select a preset from a list.
-		$settings_page->add(new \filter_videoeasy\videoeasy_presets('filter_videoeasy/templatepresets_' . $templateid,
+		$settings_page->add(new \filter_videoeasy\presets_control('filter_videoeasy/templatepresets_' . $templateid,
 				get_string('presets', 'filter_videoeasy'), get_string('presets_desc', 'filter_videoeasy'),$templateid));
 			
 				
@@ -145,6 +151,13 @@ if (is_siteadmin()) {
             get_string('templateversion', 'filter_videoeasy',$templateid),
             get_string('templateversion_desc', 'filter_videoeasy'),
             $defvalue, PARAM_TEXT));
+
+        //template instructions
+        $defvalue= '';
+        $settings_page->add(new admin_setting_configtextarea('filter_videoeasy/templateinstructions_' . $templateid,
+            get_string('templateinstructions', 'filter_videoeasy',$templateid),
+            get_string('templateinstructions_desc', 'filter_videoeasy'),
+            $defvalue,PARAM_RAW));
 
 		//template amd
 		$defvalue= 0;
@@ -235,10 +248,15 @@ if (is_siteadmin()) {
 					get_string('templatealternate', 'filter_videoeasy',$templateid),
 					get_string('templatealternate_desc', 'filter_videoeasy'),
 					$defvalue,PARAM_RAW));
-		
 
-					
 		//add page to category
-		$ADMIN->add('filter_videoeasy_category', $settings_page);
+		$ADMIN->add($videoeasy_category_name, $settings_page);
 	}
+
+    //Templates Launch Page
+    $templatetable_settings = new admin_settingpage('filter_videoeasy_templatetable',get_string('templates', 'filter_videoeasy'));
+    $templatetable_item =  new \filter_videoeasy\template_table('filter_videoeasy/template_table',
+        get_string('templates', 'filter_videoeasy'), '');
+    $templatetable_settings->add($templatetable_item);
+    $ADMIN->add($videoeasy_category_name, $templatetable_settings);
 }

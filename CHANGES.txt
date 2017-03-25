@@ -1,5 +1,12 @@
 Change List
 =========
+Version  2017032401
+-added better display of templates in navigation so that Boost doesn't completely mess it up
+-added revision flag for automating cache refresh courtesy of agrowe
+-fixed display of template names in dropdown
+-added an instruction/description field to each template
+-added version field for each template
+
 Version 2016120901
 -added support for "player" parameter to the URL so that the player can be specified via the 
 video url. e.g <a href="blah/blah.mp4?player=flowplayer">blah.mp4</a>

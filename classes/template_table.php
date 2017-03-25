@@ -137,9 +137,19 @@ class template_table extends \admin_setting {
             for($tindex=1;$tindex<=$templatecount;$tindex++) {
 
                   //template display name
-                 if($conf && property_exists($conf,'templatekey_' . $tindex)){
-                     $template_title  = $conf->{'templatekey_' . $tindex};
-                     if(empty($template_title )){ $template_title =$tindex;}
+                 if($conf && property_exists($conf,'templatename_' . $tindex)) {
+                     $template_title = $conf->{'templatename_' . $tindex};
+                     if (empty($template_title)) {
+                         if(property_exists($conf,'templatekey_' . $tindex)){
+                             $template_title = $conf->{'templatekey_' . $tindex};
+                         }
+                         if (empty($template_title)) {
+                             $template_title = $tindex;
+                         }
+                     }
+                 }elseif($conf && property_exists($conf,'templatekey_' . $tindex)){
+                         $template_title  = $conf->{'templatekey_' . $tindex};
+                         if(empty($template_title )){ $template_title =$tindex;}
                  }else{
                      $template_title  = $tindex;
                  }

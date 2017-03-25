@@ -18,10 +18,18 @@ class videoeasy_utils
      * But we still need an unchanging id for each template, and this is it
      * @return array of template ids
      */
-    public static function fetch_players(){
+    public static function fetch_players($conf){
 
         $players = array();
-        for ($i=1;$i<=self::FILTER_VIDEOEASY_TEMPLATE_COUNT;$i++){
+
+        //Add the template pages
+        if($conf && property_exists($conf,'templatecount')){
+            $templatecount = $conf->templatecount;
+        }else{
+            $templatecount =  self::FILTER_VIDEOEASY_TEMPLATE_COUNT;
+        }
+
+        for ($i=1;$i<=$templatecount;$i++){
             $players[]=$i;
         }
         return $players;

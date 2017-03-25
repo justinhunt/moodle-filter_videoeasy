@@ -1,1 +1,1 @@
-{"key":"pdfinline","name":"pdf inline","amd":"0","requirejs":"","shim":"","requirecss":"","body":"<iframe src=\"@@VIDEOURL@@\" width=\"600\" height=\"800\"></iframe>","script":"","defaults":"","style":"","alternate":""}
+{"key":"pdfinline","version":"1.0.0","name":"pdf inline","instructions":"This will embed the linked pdf file in an iframe in the page.","amd":"0","requirejs":"","shim":"","requirecss":"","body":"<iframe src=\"@@VIDEOURL@@\" width=\"600\" height=\"800\"></iframe>","script":"","defaults":"","style":"","alternate":""}

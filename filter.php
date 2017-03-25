@@ -169,7 +169,7 @@ class filter_videoeasy extends moodle_text_filter {
 			$playerkey = $this->fetchconf('useplayer' . $ext);
 		}
 		$templateid=0;
-		$templatenumbers = \filter_videoeasy\videoeasy_utils::fetch_players();
+		$templatenumbers = \filter_videoeasy\videoeasy_utils::fetch_players($conf);
 		foreach($templatenumbers as $templatenumber){
 			if($conf->{'templatekey_' . $templatenumber}==$playerkey){
 				$templateid=$templatenumber;
