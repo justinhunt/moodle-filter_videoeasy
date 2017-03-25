@@ -40,3 +40,12 @@ function filter_videoeasy_pluginfile($course, $cm, $context, $filearea, $args, $
 	}
 	send_file_not_found();
 }
+
+/**
+ * called back on customcss or custom js update, to bump the rev flag
+ * this is appended to the customcss url (and sometimes js) so will force a cache refresh
+ *
+ */
+function filter_videoeasy_update_revision() {
+    set_config('revision', time(), 'filter_videoeasy');
+}

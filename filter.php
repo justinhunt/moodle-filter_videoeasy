@@ -347,15 +347,21 @@ class filter_videoeasy extends moodle_text_filter {
 				$PAGE->requires->js($uploadjsurl);
 			}
 		}
-		
-		//load css in header if not too late
+
 		//if not too late: load css in header
 		// if too late: inject it there via JS
 		if($uploadcssfile){
 			$uploadcssurl = \filter_videoeasy\videoeasy_utils::internal_file_url($uploadcssfile,'uploadcss_' . $templateid);
 		}
-	
-	
+
+
+        //set up our revision flag for forcing cache refreshes etc
+        if (!empty($conf->revision)) {
+            $revision = $conf->revision;
+        } else {
+            $revision = '0';
+        }
+
 		//prepare additional params our JS will use
 		$proparray['TEMPLATEID'] = $templateid;
 		$proparray['CSSLINK']=false;
@@ -366,7 +372,7 @@ class filter_videoeasy extends moodle_text_filter {
 		$customcssurl=false;
 		$customstyle=$conf->{'templatestyle_' . $templateid};
 		if($customstyle){
-			$customcssurl =new moodle_url( '/filter/videoeasy/videoeasycss.php?t=' . $templateid);
+			$customcssurl =new moodle_url('/filter/videoeasy/videoeasycss.php',array('t'=>$templateid,'rev'=>$revision));
 
 		}
 
@@ -425,7 +431,8 @@ class filter_videoeasy extends moodle_text_filter {
 
 		}else{		
 			//require any scripts from the template
-			$PAGE->requires->js('/filter/videoeasy/videoeasyjs.php?ext=' . $ext . '&t=' . $templateid);
+            $customjsurl=new moodle_url('/filter/videoeasy/videoeasyjs.php',array('ext'=>$ext,'t'=>$templateid,'rev'=>$revision));
+			$PAGE->requires->js($customjsurl);
 		
 			//for no AMD
 			$PAGE->requires->js_init_call('M.filter_videoeasy.loadvideoeasy', array($proparray),false,$jsmodule);

@@ -186,9 +186,11 @@ if (is_siteadmin()) {
 
 		//template body script
 		$defvalue= '';
-		 $settings_page->add(new admin_setting_configtextarea('filter_videoeasy/templatescript_' . $templateid,
+        $setting = new admin_setting_configtextarea('filter_videoeasy/templatescript_' . $templateid,
 					$playername  . get_string('templatescript', 'filter_videoeasy'),
-					get_string('templatescript_desc', 'filter_videoeasy'),$defvalue));
+					get_string('templatescript_desc', 'filter_videoeasy'),$defvalue);
+        $setting->set_updatedcallback('filter_videoeasy_update_revision');
+        $settings_page->add($setting);
 
 
 		//template defaults	
@@ -214,10 +216,12 @@ if (is_siteadmin()) {
 		
 		//template body css
 		$defvalue= '';
-		 $settings_page->add(new admin_setting_configtextarea('filter_videoeasy/templatestyle_' . $templateid,
+        $setting=new admin_setting_configtextarea('filter_videoeasy/templatestyle_' . $templateid,
 					get_string('templatestyle', 'filter_videoeasy',$templateid),
 					get_string('templatestyle_desc', 'filter_videoeasy'),
-					$defvalue,PARAM_RAW));
+					$defvalue,PARAM_RAW);
+        $setting->set_updatedcallback('filter_videoeasy_update_revision');
+        $settings_page->add($setting);
 		
 		//additional CSS (upload)
 		$name = 'filter_videoeasy/uploadcss_' . $templateid;
