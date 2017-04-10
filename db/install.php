@@ -24,7 +24,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-require_once($CFG->dirroot . '/filter/videoeasy/locallib.php');
+//require_once($CFG->dirroot . '/filter/videoeasy/locallib.php');
+
 /**
  * Install the plugin.
  */
