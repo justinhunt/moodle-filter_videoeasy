@@ -30,7 +30,7 @@ defined('MOODLE_INTERNAL') || die();
  * Install the plugin.
  */
 function xmldb_filter_videoeasy_install() {
-	$admin_presets = new \filter_videoeasy\videoeasy_presets('filter_videoeasy/templatepresets_0',
+	$admin_presets = new \filter_videoeasy\presets_control('filter_videoeasy/templatepresets_0',
 				'presets', '',0);
     $presets = $admin_presets->fetch_presets();
 	$forinstall = array('fff');
