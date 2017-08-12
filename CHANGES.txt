@@ -1,5 +1,9 @@
 Change List
 =========
+
+Version 2017081100
+-removed edit column from template table. Edit template by clicking on name
+
 Version 2017041000
 -fixed bug that would kill an install
 
