@@ -1,5 +1,7 @@
 Change List
 =========
+Version 1.2.0(Build 2018041000)
+-Implemented new Moodle Privacy API
 
 Version 2017081100
 -removed edit column from template table. Edit template by clicking on name
