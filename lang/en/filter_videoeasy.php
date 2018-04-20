@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['filtername'] = 'Video Easy';
 $string['pluginname'] = 'Video Easy';
+$string['privacy:metadata'] = 'The VideoEasy filter plugin does not store any personal data.';
 $string['filterdescription'] = 'Convert video links strings into players';
 $string['extensionheading'] = 'File Extension Handlers';
 $string['templateheading'] = 'Settings for {$a}';
