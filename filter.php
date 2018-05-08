@@ -144,7 +144,10 @@ class filter_videoeasy extends moodle_text_filter {
 		
 		//we use this to see if its a web service calling this, 
 		//in which case we return the alternate content
-		$is_webservice = strpos($PAGE->url,$CFG->wwwroot .'/webservice/') === 0;
+		$is_webservice = false;
+		if(property_exists($PAGE, 'url')){
+			$is_webservice = strpos($PAGE->url,$CFG->wwwroot .'/webservice/') === 0;
+		}
 	
 		//get template info
 		$conf = get_config('filter_videoeasy');
@@ -214,7 +217,7 @@ class filter_videoeasy extends moodle_text_filter {
 			$bits = parse_url($rawurl);
 			if(!array_key_exists('scheme',$bits)){
 				//add scheme to url if there was none
-				if(strpos($PAGE->url->out(),'https:')===0){
+				if(property_exists($PAGE, 'url') && strpos($PAGE->url->out(),'https:')===0){
 					$scheme='https:';
 				}else{
 					$scheme='http:';
