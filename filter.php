@@ -144,8 +144,9 @@ class filter_videoeasy extends moodle_text_filter {
 		
 		//we use this to see if its a web service calling this, 
 		//in which case we return the alternate content
+        $climode = defined('CLI_SCRIPT') && CLI_SCRIPT;
 		$is_webservice = false;
-		if(property_exists($PAGE, 'url')){
+		if(!$climode){
 			$is_webservice = strpos($PAGE->url,$CFG->wwwroot .'/webservice/') === 0;
 		}
 	
