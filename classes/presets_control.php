@@ -97,7 +97,7 @@ class presets_control extends \admin_setting
 
     }
 
-    protected function parse_preset_template(\SplFileInfo $fileinfo){
+    protected static function parse_preset_template(\SplFileInfo $fileinfo){
         $file=$fileinfo->openFile("r");
         $content = "";
         while(!$file->eof()){
@@ -112,13 +112,13 @@ class presets_control extends \admin_setting
     }//end of parse preset template
 
 
-    public function fetch_presets(){
+    public static function fetch_presets(){
         global $CFG;
         $ret = array();
         $dir = new \DirectoryIterator($CFG->dirroot . '/filter/videoeasy/presets');
         foreach($dir as $fileinfo){
             if(!$fileinfo->isDot()){
-                $preset = $this->parse_preset_template($fileinfo);
+                $preset = self::parse_preset_template($fileinfo);
                 if($preset){
                     $ret[]=$preset;
                 }
@@ -155,4 +155,45 @@ class presets_control extends \admin_setting
             set_config($fieldname . '_' . $templateindex, $fieldvalue, 'filter_videoeasy');
         }
     }//End of set_preset_to_config
+
+    public static function template_has_update($templateindex){
+        $presets = self::fetch_presets();
+        foreach($presets as $preset) {
+            if(get_config('filter_videoeasy', 'templatekey_' . $templateindex)==$preset['key']) {
+                $template_version = get_config('filter_videoeasy', 'templateversion_' . $templateindex);
+                $preset_version = $preset['version'];
+                if (version_compare($preset_version, $template_version) > 0) {
+                    return $preset_version;
+                }//end of version compare
+            }//end of if keys match
+        }//end of presets loop
+        return false;
+    }
+
+    public static function update_all_templates(){
+        $templatecount = get_config('filter_videoeasy','templatecount');
+        $updatecount=0;
+        for($x=1;$x<$templatecount+1;$x++){
+            $updated=self::update_template($x);
+            if($updated){$updatecount++;}
+        }//end of templatecount loop
+        return $updatecount;
+    }//end of function
+
+    public static function update_template($templateindex){
+        $updated=false;
+        $presets = self::fetch_presets();
+        foreach($presets as $preset) {
+            if(get_config('filter_videoeasy', 'templatekey_' . $templateindex)==$preset['key']) {
+                $template_version = get_config('filter_videoeasy', 'templateversion_' . $templateindex);
+                $preset_version = $preset['version'];
+                if (version_compare($preset_version, $template_version) > 0) {
+                    self::set_preset_to_config($preset, $templateindex);
+                    $updated =true;
+                }//end of version compare
+                return $updated;
+            }//end of if keys match
+        }//end of presets loop
+        return false;
+    }//end of function
 }

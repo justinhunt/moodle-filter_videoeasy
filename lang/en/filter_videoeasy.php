@@ -28,6 +28,7 @@ defined('MOODLE_INTERNAL') || die();
 
 $string['filtername'] = 'Video Easy';
 $string['pluginname'] = 'Video Easy';
+$string['videoeasytemplatesadmin'] = 'VideoEasy Templates Admin';
 $string['privacy:metadata'] = 'The VideoEasy filter plugin does not store any personal data.';
 $string['filterdescription'] = 'Convert video links strings into players';
 $string['extensionheading'] = 'File Extension Handlers';
@@ -71,7 +72,13 @@ $string['player_playerfourteen'] = "Player 14";
 $string['player_playerfifteen'] = "Player 15";
 $string['templatepageheading'] = 'Template: {$a}';
 $string['templatepageheading_handlers'] = 'General Settings';
+
+$string['templateupdated'] = '{$a} Poodll Templates Updated.';
+$string['updateall'] = 'Update all templates';
+$string['updatetoversion'] = 'Update to version: {$a}';
 $string['uploadjs'] = 'Upload JS';
+$string['cleartemplate'] = 'Clear template';
+
 $string['uploadjs_desc'] = 'You can upload one js library file which will be loaded for your template. Only one.';
 $string['templaterequire_amd'] = 'Load via AMD';
 $string['templaterequire_amd_desc'] = 'AMD is a javascript loading mechanism. If you upload or link to javascript libraries in your template, you might have to uncheck this. It only applies if on Moodle 2.9 or greater';

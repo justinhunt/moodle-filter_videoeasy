@@ -112,151 +112,15 @@ if (is_siteadmin()) {
 	$ADMIN->add($videoeasy_category_name, $settings_page);
 
 
-	//add 10 templates
-	foreach($players as $templateid){
+    $videoeasytemplatesadmin_settings = new admin_externalpage('videoeasytemplatesadmin', get_string('templates', 'filter_videoeasy'),
+        $CFG->wwwroot . '/filter/videoeasy/videoeasytemplatesadmin.php' );
 
-		//player name
-		$playername=$playernames[$templateid];
-		
-		 //template settings Page Settings 
-		$settings_page = new admin_settingpage('filter_videoeasy_templatepage_' . $templateid,get_string('templatepageheading', 'filter_videoeasy',$playername),'moodle/site:config',true);
-		
-		//heading of template
-		$settings_page->add(new admin_setting_heading('filter_videoeasy/templateheading_' . $templateid, 
-				get_string('templateheading', 'filter_videoeasy', $playername), ''));
-				
-		//presets
-		//this is a custom control, that allows the user to select a preset from a list.
-		$settings_page->add(new \filter_videoeasy\presets_control('filter_videoeasy/templatepresets_' . $templateid,
-				get_string('presets', 'filter_videoeasy'), get_string('presets_desc', 'filter_videoeasy'),$templateid));
-			
-				
-		//template key
-		$defvalue= '';
-		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/templatekey_' . $templateid , 
-				get_string('templatekey', 'filter_videoeasy',$templateid),
-				get_string('templatekey_desc', 'filter_videoeasy'), 
-				$defvalue, PARAM_TEXT));
-				
-		//template name
-		$defvalue= '';
-		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/templatename_' . $templateid , 
-				get_string('templatename', 'filter_videoeasy',$templateid),
-				get_string('templatename_desc', 'filter_videoeasy'), 
-				$defvalue, PARAM_RAW));
+    $ADMIN->add($videoeasy_category_name, $videoeasytemplatesadmin_settings);
 
-        //template version
-        $defvalue= '';
-        $settings_page->add(new admin_setting_configtext('filter_videoeasy/templateversion_' . $templateid ,
-            get_string('templateversion', 'filter_videoeasy',$templateid),
-            get_string('templateversion_desc', 'filter_videoeasy'),
-            $defvalue, PARAM_TEXT));
+    //Templates
+    $template_pages = \filter_videoeasy\settingstools::fetch_template_pages($conf);
+    foreach ($template_pages as $template_page) {
+        $ADMIN->add($videoeasy_category_name, $template_page);
+    }
 
-        //template instructions
-        $defvalue= '';
-        $settings_page->add(new admin_setting_configtextarea('filter_videoeasy/templateinstructions_' . $templateid,
-            get_string('templateinstructions', 'filter_videoeasy',$templateid),
-            get_string('templateinstructions_desc', 'filter_videoeasy'),
-            $defvalue,PARAM_RAW));
-
-		//template amd
-		$defvalue= 0;
-		$yesno = array('0'=>get_string('no'),'1'=>get_string('yes'));
-		$settings_page->add(new admin_setting_configselect('filter_videoeasy/template_amd_' . $templateid,
-			get_string('templaterequire_amd', 'filter_videoeasy',$templateid),
-			get_string('templaterequire_amd_desc', 'filter_videoeasy'),
-			$defvalue,$yesno));
-		
-
-		//template JS heading
-		$defvalue= '';
-		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/templaterequire_js_' . $templateid , 
-				$playername  . get_string('templaterequirejs', 'filter_videoeasy') ,
-				get_string('templaterequirejs_desc', 'filter_videoeasy'), 
-				 $defvalue), PARAM_RAW,50);		
-
-		//template requiredjs_shim
-		$defvalue= '';
-		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/templaterequire_js_shim_' . $templateid , 
-				get_string('templaterequirejsshim', 'filter_videoeasy',$templateid),
-				get_string('templaterequirejsshim_desc', 'filter_videoeasy'), 
-				$defvalue, PARAM_RAW));
-
-				 
-		//template css heading
-		$defvalue= '';
-		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/templaterequire_css_' . $templateid , 
-				$playername  . get_string('templaterequirecss', 'filter_videoeasy'),
-				get_string('templaterequirecss_desc', 'filter_videoeasy'), 
-				 $defvalue), PARAM_RAW,50);
-
-
-		//template body
-		$defvalue= '';
-		 $settings_page->add(new admin_setting_configtextarea('filter_videoeasy/templatepreset_' . $templateid,
-					$playername  . get_string('template', 'filter_videoeasy'),
-					get_string('template_desc', 'filter_videoeasy'),$defvalue));
-
-		//template body script
-		$defvalue= '';
-        $setting = new admin_setting_configtextarea('filter_videoeasy/templatescript_' . $templateid,
-					$playername  . get_string('templatescript', 'filter_videoeasy'),
-					get_string('templatescript_desc', 'filter_videoeasy'),$defvalue);
-        $setting->set_updatedcallback('filter_videoeasy_update_revision');
-        $settings_page->add($setting);
-
-
-		//template defaults	
-		$defvalue= '';
-		 $settings_page->add(new admin_setting_configtextarea('filter_videoeasy/templatedefaults_' . $templateid,
-					$playername  . get_string('templatedefaults', 'filter_videoeasy'),
-					get_string('templatedefaults_desc', 'filter_videoeasy'),$defvalue));
-
-		//additional JS (upload)
-		//see here: for integrating this https://moodle.org/mod/forum/discuss.php?d=227249
-		$name = 'filter_videoeasy/uploadjs_' . $templateid;
-		$title = $playername . ' ' .  get_string('uploadjs', 'filter_videoeasy') ;
-		$description = get_string('uploadjs_desc', 'filter_videoeasy');
-		$settings_page->add(new admin_setting_configstoredfile($name, $title, $description, 'uploadjs_' . $templateid));
-		
-		//template uploadjs_shim
-		$defvalue= '';
-		 $settings_page->add(new admin_setting_configtext('filter_videoeasy/uploadjs_shim_' . $templateid , 
-				get_string('templateuploadjsshim', 'filter_videoeasy',$templateid),
-				get_string('templateuploadjsshim_desc', 'filter_videoeasy'), 
-				$defvalue, PARAM_RAW));
-		
-		
-		//template body css
-		$defvalue= '';
-        $setting=new admin_setting_configtextarea('filter_videoeasy/templatestyle_' . $templateid,
-					get_string('templatestyle', 'filter_videoeasy',$templateid),
-					get_string('templatestyle_desc', 'filter_videoeasy'),
-					$defvalue,PARAM_RAW);
-        $setting->set_updatedcallback('filter_videoeasy_update_revision');
-        $settings_page->add($setting);
-		
-		//additional CSS (upload)
-		$name = 'filter_videoeasy/uploadcss_' . $templateid;
-		$title =$playername . ' ' . get_string('uploadcss', 'filter_videoeasy');
-		$description = get_string('uploadcss_desc', 'filter_videoeasy');
-		$settings_page->add(new admin_setting_configstoredfile($name, $title, $description, 'uploadcss_' . $templateid));
-		
-		//alternative content
-		$defvalue= '';
-		 $settings_page->add(new admin_setting_configtextarea('filter_videoeasy/templatealternate_' . $templateid,
-					get_string('templatealternate', 'filter_videoeasy',$templateid),
-					get_string('templatealternate_desc', 'filter_videoeasy'),
-					$defvalue,PARAM_RAW));
-
-		//add page to category
-		$ADMIN->add($videoeasy_category_name, $settings_page);
-	}
-
-    //Templates Launch Page
-    $templatetable_settings = new admin_settingpage('filter_videoeasy_templatetable',get_string('templates', 'filter_videoeasy'));
-    $templatetable_item =  new \filter_videoeasy\template_table('filter_videoeasy/template_table',
-        get_string('templates', 'filter_videoeasy'), '');
-    $templatetable_settings->add($templatetable_item);
-    $ADMIN->add($videoeasy_category_name, $templatetable_settings);
 }
