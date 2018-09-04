@@ -85,6 +85,7 @@ if (is_siteadmin()) {
 		$playeroptions['']=get_string('none');
 	}
 	foreach($extensions as $ext){
+        $ext = trim($ext);
 		switch($ext){
 			case 'youtube': $def_player='playersix';break;
 			case 'rss': $def_player='jwplayer';break;

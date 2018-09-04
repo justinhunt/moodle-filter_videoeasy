@@ -73,7 +73,7 @@ class videoeasy_filter_local_settings_form extends filter_local_settings_form {
 		
 		//add extensions checkbox and dropdown list
 		foreach($extensions as $ext){
-			
+            $ext = trim($ext);
 			//extension checkbox	
 			$elname = 'handle' . $ext;	
 			$mform->addElement('advcheckbox', $elname, 

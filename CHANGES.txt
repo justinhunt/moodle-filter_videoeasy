@@ -1,5 +1,8 @@
 Change List
 =========
+Version 1.2.03(Build 2018090300)
+-Fixed issue with spaces in custom extensions field
+
 Version 1.2.02(Build 2018081001)
 -added two new presets
 -fixerd buggy templates (elton audio, Flowplayer first frame, media element audio)
