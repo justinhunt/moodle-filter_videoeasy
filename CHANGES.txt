@@ -1,5 +1,8 @@
 Change List
 =========
+Version 1.2.04(Build 2018120500)
+-Fixed issue when directories in presets folder
+
 Version 1.2.03(Build 2018090300)
 -Fixed issue with spaces in custom extensions field
 

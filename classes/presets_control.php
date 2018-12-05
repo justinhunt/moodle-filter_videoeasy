@@ -117,7 +117,7 @@ class presets_control extends \admin_setting
         $ret = array();
         $dir = new \DirectoryIterator($CFG->dirroot . '/filter/videoeasy/presets');
         foreach($dir as $fileinfo){
-            if(!$fileinfo->isDot()){
+            if(!$fileinfo->isDot() && !$fileinfo->isDir()){
                 $preset = self::parse_preset_template($fileinfo);
                 if($preset){
                     $ret[]=$preset;
