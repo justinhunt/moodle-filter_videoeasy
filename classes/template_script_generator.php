@@ -152,7 +152,9 @@ class template_script_generator
                 array_unshift($params,'$');
             }else{
                 array_unshift($requires,"'" . 'jquery' . "'");
+                array_unshift($requires,"'" . 'jqueryui' . "'");
                 array_unshift($params,'$');
+                array_unshift($params,'jqui');
             }
 
             //Assemble the final javascript to pass to browser
