@@ -73,7 +73,12 @@ class videoeasy_utils
         }
         $default_extensions = self::fetch_default_extensions();
         $have_custom_extensions = $adminconfig && isset($adminconfig->extensions) && !empty($adminconfig->extensions);
-        return $have_custom_extensions ? explode(',',$adminconfig->extensions) : $default_extensions;
+        if( $have_custom_extensions){
+            $custom_extensions= preg_replace("/[^A-Za-z0-9,]/", '', $adminconfig->extensions);
+            return explode(',',$custom_extensions);
+        }else{
+            return $default_extensions;
+        }
     }
 
     /**
