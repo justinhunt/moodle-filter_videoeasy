@@ -16,7 +16,7 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * Filter for expanding videoeasy templates 
+ * Filter for expanding videoeasy templates
  *
  * @package    filter
  * @subpackage videoeasy
@@ -47,15 +47,15 @@ class filter_videoeasy extends moodle_text_filter {
 				return $text;
 			}
 			$newtext = $text;
-		
+
 			//No links .. bail
 			$havelinks = !(stripos($text, '</a>') ===false);
 			if(!$havelinks){return $text;}
-			
+
 			 //$conf = get_object_vars(get_config('filter_videoeasy'));
 			 //$conf = get_config('filter_videoeasy');
 			 $this->adminconfig =get_config('filter_videoeasy');
-					
+
 			//get handle extensions
 			$exts = \filter_videoeasy\videoeasy_utils::fetch_extensions();
 			$handleexts = array();
@@ -71,14 +71,14 @@ class filter_videoeasy extends moodle_text_filter {
 				$search='/<a\s[^>]*href="([^"#\?]+\.(' .  $handleextstring. '))(.*?)"[^>]*>([^>]*)<\/a>/is';
 				$newtext = preg_replace_callback($search, 'self::filter_videoeasy_allexts_callback', $newtext);
 			}
-			
+
            //check for youtube
 			if ($this->fetchconf('handleyoutube')) {
 					 $search = '/<a\s[^>]*href="(?:https?:\/\/)?(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|v\/)?([\w-]{10,})(?:.*?)<\/a>/is';
 					$newtext = preg_replace_callback($search, 'self::filter_videoeasy_youtube_callback', $newtext);
 			}
 
-		
+
 		if (is_null($newtext) or $newtext === $text) {
 			// error or not filtered
 			return $text;
@@ -86,14 +86,14 @@ class filter_videoeasy extends moodle_text_filter {
 
 		return $newtext;
     }
-    
+
     private function fetchconf($prop){
     global $COURSE;
 
     	//I don't know why we need this whole courseconfig business.
     	//we are supposed to be able to just call $this->localconfig / $this->localconfig[$propertyname]
     	//as per here:https://docs.moodle.org/dev/Filters#Local_configuration , but its always empty
-    	//at least at course context, in mod context it works ... 
+    	//at least at course context, in mod context it works ...
     	//I just gave up and do it myself and stuff it in $this->courseconfig . bug?? Justin 20150106
     	if($this->localconfig && !empty($this->localconfig)){
     		$this->courseconfig = $this->localconfig;
@@ -101,15 +101,15 @@ class filter_videoeasy extends moodle_text_filter {
     	if(!$this->courseconfig){
     		$this->courseconfig = filter_get_local_config('videoeasy', context_course::instance($COURSE->id)->id);
     	}
-    	
+
 		if($this->courseconfig && isset($this->courseconfig[$prop]) && $this->courseconfig[$prop] != 'sitedefault') {
 			return $this->courseconfig[$prop];
 		}else{
 			return isset($this->adminconfig->{$prop}) ? $this->adminconfig->{$prop} : false;
 		}
 	}
-	
-	
+
+
 	/**
 	 * Replace youtube links with player
 	 *
@@ -119,8 +119,8 @@ class filter_videoeasy extends moodle_text_filter {
 	private function filter_videoeasy_youtube_callback($link) {
 		return $this->filter_videoeasy_process($link,'youtube');
 	}
-	
-	
+
+
 	/**
 	 * Replace rss links with player
 	 *
@@ -141,18 +141,18 @@ class filter_videoeasy extends moodle_text_filter {
 	 */
 	private function filter_videoeasy_process($link, $ext) {
 	global $CFG, $PAGE, $COURSE;
-		
-		//we use this to see if its a web service calling this, 
+
+		//we use this to see if its a web service calling this,
 		//in which case we return the alternate content
         $climode = defined('CLI_SCRIPT') && CLI_SCRIPT;
 		$is_webservice = false;
 		if(!$climode){
 			$is_webservice = strpos($PAGE->url,$CFG->wwwroot .'/webservice/') === 0;
 		}
-	
+
 		//get template info
 		$conf = get_config('filter_videoeasy');
-		
+
 		//Get params from url, one of these could be "player"
 		//thats why we need to parse this now.
 		$params = array();
@@ -161,10 +161,10 @@ class filter_videoeasy extends moodle_text_filter {
 			//drop the first char if it is ?, whch it probably is
 			$paramstring =  ltrim ($link[3], '?');
 			$paramstring = str_replace('&amp;', '&', $paramstring);
-			//this will fill $params with parsed props from param string	
-			parse_str($paramstring, $params);	
+			//this will fill $params with parsed props from param string
+			parse_str($paramstring, $params);
 		}
-		
+
 		//get our template info
 		//if we have a &player=xxx url param, use that. Otherwise we use filter settings
 		if(!empty($params) && array_key_exists('player',$params)){
@@ -181,18 +181,18 @@ class filter_videoeasy extends moodle_text_filter {
 			}
 		}
 		if(!$templateid){return;}
-		
-		
+
+
 		$defaultposterimage =  $conf->{'defaultposterimage'};
 		$require_js = $conf->{'templaterequire_js_' . $templateid};
-		$require_css = $conf->{'templaterequire_css_' . $templateid}; 
+		$require_css = $conf->{'templaterequire_css_' . $templateid};
 		$uploadcssfile = $conf->{'uploadcss_' . $templateid};
 		$uploadjsfile = $conf->{'uploadjs_' . $templateid};
 		$alternate_content = $conf->{'templatealternate_' . $templateid};
-		
+
 		//are we AMD and Moodle 2.9 or more?
 		$require_amd =  $conf->{'template_amd_' . $templateid} && $CFG->version>=2015051100;
-		
+
 
 
 		$url = $link[1];
@@ -200,7 +200,7 @@ class filter_videoeasy extends moodle_text_filter {
 		$rawurl = $url;
 		$url = clean_param($url, PARAM_URL);
 		$urlstub = substr($rawurl,0,strpos($rawurl,'.' . $ext));
-		
+
 		if($ext=="youtube"){
 			$filename = $link[1];
 			$filenamestub = $filename;
@@ -213,7 +213,7 @@ class filter_videoeasy extends moodle_text_filter {
 			$filetitle="";
 			$title="";
 			$scheme='https:';
-		}else{	
+		}else{
 			//get the bits of the url
 			$bits = parse_url($rawurl);
 			if(!array_key_exists('scheme',$bits)){
@@ -226,7 +226,7 @@ class filter_videoeasy extends moodle_text_filter {
 			}else{
 				$scheme = $bits['scheme'] . ':';
 			}
-	
+
 			$filename = basename($bits['path']);
 			$filenamestub = substr($filename,0,strpos($filename,'.' . $ext));
 			$filetitle = str_replace('.' . $ext,'',$filename);
@@ -237,34 +237,34 @@ class filter_videoeasy extends moodle_text_filter {
 			$autoposterurlpng = $urlstub . '.png';
 			$title = $link[4];
 		}
-		
-		
+
+
 		//fill out require js and require css full urls
 		if(strpos($require_js,'//')===0){
 			$require_js = $scheme . $require_js;
 		}elseif(strpos($require_js,'/')===0){
 			$require_js = $CFG->wwwroot . $require_js;
 		}
-	
+
 		if(strpos($require_css,'//')===0){
 			$require_css = $scheme . $require_css;
 		}elseif(strpos($require_css,'/')===0){
 			$require_css = $CFG->wwwroot . $require_css;
 		}
-	
-		//get template body and defaults 
+
+		//get template body and defaults
 		//at some point template body was called "templatepreset_", and it has never changed. sorry :(
 		$templatebody=$conf->{'templatepreset_' . $templateid};
 		$defaults=$conf->{'templatedefaults_' . $templateid};
 		//make sure we have all the keys and defaults in our proparray
 		$proparray = \filter_videoeasy\videoeasy_utils::fetch_emptyproparray();
 		$proparray = array_merge($proparray,\filter_videoeasy\videoeasy_utils::parsepropstring($defaults));
-	
+
 		//Add any params from url
 		if(!empty($params)){
 			$proparray = array_merge($proparray,$params);
 		}
-	
+
 		//use default widths or explicit width/heights if they were passed in ie http://url.to.video.mp4?d=640x480
 		if(isset($proparray['d'])){
 			$dimensions = explode('x',$proparray['d']);
@@ -272,11 +272,11 @@ class filter_videoeasy extends moodle_text_filter {
 				list($proparray['WIDTH'],$proparray['HEIGHT'])=$dimensions;
 			}
 		}
-	
+
 		//I liked this better, but jquery was odd about it.
 		//$autoid = $urlstub . '_' . time() . (string)rand(100,32767) ;
 		$autoid = 'fv_' . time() . (string)mt_rand() ;
-	
+
 		//get default poster
 		//get uploaded js
 		if($defaultposterimage){
@@ -284,19 +284,19 @@ class filter_videoeasy extends moodle_text_filter {
 		}else{
 			$defaultposterurl = $CFG->wwwroot . '/filter/videoeasy/defaultposter.jpg';
 		}
-		
+
 
 		//make up mime type
 		switch ($ext){
 			case 'mp3': $automime='audio/mpeg';break;
 			case 'webm': $automime='video/webm';break;
-			case 'ogg': $automime='video/ogg';break;	
-			case 'mp4': 
-			case 'youtube': 
+			case 'ogg': $automime='video/ogg';break;
+			case 'mp4':
+			case 'youtube':
 			default:
 				$automime='video/mp4';
 		}
-	
+
 		$proparray['AUTOMIME'] = $automime;
 		$proparray['URLSTUB'] = $urlstub;
 		$proparray['FILENAME'] = $filename;
@@ -319,18 +319,18 @@ class filter_videoeasy extends moodle_text_filter {
 			$context = context_course::instance($COURSE->id);
 			$proparray['COURSECONTEXTID'] = $context->id;
 		}
-		
-		
-		
+
+
+
 		//now we are ready to process
 		//if we are on a mobile app we just return alternate content
 		if($is_webservice && !empty($alternate_content)){
 			foreach($proparray as $name=>$value){
 				$alternate_content = str_replace('@@' . $name .'@@',$value,$alternate_content);
 			}
-			return $alternate_content;		
+			return $alternate_content;
 		}
-		
+
 		//replace the specified names with spec values
 		foreach($proparray as $name=>$value){
 			$templatebody = str_replace('@@' . $name .'@@',$value,$templatebody);
@@ -344,7 +344,7 @@ class filter_videoeasy extends moodle_text_filter {
 			if($require_js){
 				$PAGE->requires->js(new moodle_url($require_js));
 			}
-		
+
 			//get uploaded js
 			if($uploadjsfile){
 				$uploadjsurl = \filter_videoeasy\videoeasy_utils::internal_file_url($uploadjsfile,'uploadjs_' . $templateid);
@@ -371,7 +371,7 @@ class filter_videoeasy extends moodle_text_filter {
 		$proparray['CSSLINK']=false;
 		$proparray['CSSUPLOAD']=false;
 		$proparray['CSSCUSTOM']=false;
-	
+
 		//require any styles from the template
 		$customcssurl=false;
 		$customstyle=$conf->{'templatestyle_' . $templateid};
@@ -380,7 +380,7 @@ class filter_videoeasy extends moodle_text_filter {
 
 		}
 
-			
+
 		if(!$PAGE->headerprinted && !$PAGE->requires->is_head_done()){
 			if($require_css){
 				$PAGE->requires->css( new moodle_url($require_css));
@@ -401,10 +401,10 @@ class filter_videoeasy extends moodle_text_filter {
 			if($customcssurl){
 				$proparray['CSSCUSTOM']=$customcssurl->out();
 			}
-		
+
 		}
 
-	
+
 		//initialise our JS and call it to load
 		//We need this so that we can require the JSON , for json stringify
 			$jsmodule = array(
@@ -412,9 +412,9 @@ class filter_videoeasy extends moodle_text_filter {
 				'fullpath' => '/filter/videoeasy/module.js',
 				'requires' => array('json')
 			);
-		
-		
-		
+
+
+
 		//AMD or not, and then load our js for this template on the page
 		if($require_amd){
 			$generator = new \filter_videoeasy\template_script_generator($templateid,$ext);
@@ -428,16 +428,16 @@ class filter_videoeasy extends moodle_text_filter {
 
 			//load define for this template. Later it will be called from loadgenerico
 			$PAGE->requires->js_amd_inline($template_amd_script);
-			
+
 			//for AMD
 			$PAGE->requires->js_call_amd('filter_videoeasy/videoeasy_amd','loadvideoeasy', array(array('AUTOID'=>$proparray['AUTOID'])));
 
 
-		}else{		
+		}else{
 			//require any scripts from the template
             $customjsurl=new moodle_url('/filter/videoeasy/videoeasyjs.php',array('ext'=>$ext,'t'=>$templateid,'rev'=>$revision));
 			$PAGE->requires->js($customjsurl);
-		
+
 			//for no AMD
 			$PAGE->requires->js_init_call('M.filter_videoeasy.loadvideoeasy', array($proparray),false,$jsmodule);
 		}
@@ -447,5 +447,5 @@ class filter_videoeasy extends moodle_text_filter {
 		return $templatebody;
 	}
 
-   
+
 }//end of class
