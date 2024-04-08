@@ -208,8 +208,8 @@ class filter_videoeasy extends moodle_text_filter {
 			$videourl="https://www.youtube.com/watch?v=" . $filename;
 			$autojpgfilename ="hqdefault.jpg";
 			$autopngfilename ="hqdefault.png";
-			$autoposterurljpg  ="http://img.youtube.com/vi/" . $filename ."/hqdefault.jpg";
-			$autoposterurlpng  ="http://img.youtube.com/vi/" . $filename ."/hqdefault.png";
+			$autoposterurljpg  ="https://img.youtube.com/vi/" . $filename ."/hqdefault.jpg";
+			$autoposterurlpng  ="https://img.youtube.com/vi/" . $filename ."/hqdefault.png";
 			$filetitle="";
 			$title="";
 			$scheme='https:';
