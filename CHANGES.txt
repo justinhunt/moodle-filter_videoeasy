@@ -3,6 +3,7 @@ Change List
 Version 1.2.08(Build 2024040800)
 - Fixed issue where Youtube thumbnail image was not https https://github.com/justinhunt/moodle-filter_videoeasy/issues/6
 - Updated Youtubelightbox to use Fancybox and Fancybox HTML plugin
+- replaced old bundled jquery 1.12.4 with jquery 3.7.0 - for shimmed libraries
 
 Version 1.2.07 (Build 2023100600)
 - fixed js issue with jquery
