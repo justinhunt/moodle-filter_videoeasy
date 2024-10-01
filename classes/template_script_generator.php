@@ -179,7 +179,7 @@ class template_script_generator
             $shim = new \stdClass();
 
             //Add a path to  a separetely loaded jquery for shimmed libraries
-            $paths->{$currentkey . '-jquery'} = $CFG->wwwroot  . '/filter/videoeasy/jquery/jquery-1.12.4.min';
+            $paths->{$currentkey . '-jquery'} = $CFG->wwwroot  . '/filter/videoeasy/jquery/jquery-3.7.0.min';
             $jquery_shimconfig = new \stdClass();
             $jquery_shimconfig->exports = '$';
             $shim->{$currentkey . '-jquery'}=$jquery_shimconfig;
