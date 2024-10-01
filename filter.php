@@ -204,12 +204,16 @@ class filter_videoeasy extends moodle_text_filter {
 		if($ext=="youtube"){
 			$filename = $link[1];
 			$filenamestub = $filename;
-			$url="https://www.youtube.com/watch?v=" . $filename;
-			$videourl="https://www.youtube.com/watch?v=" . $filename;
+            $youtubedomain='youtube';
+            //changing youtubedomain to no-cookie led to no thumbnails being displayed
+            //Seems it's not supported
+            //$youtubedomain="youtube-nocookie";
+			$url="https://www.$youtubedomain.com/watch?v=" . $filename;
+			$videourl="https://www.$youtubedomain.com/watch?v=" . $filename;
 			$autojpgfilename ="hqdefault.jpg";
 			$autopngfilename ="hqdefault.png";
-			$autoposterurljpg  ="http://img.youtube.com/vi/" . $filename ."/hqdefault.jpg";
-			$autoposterurlpng  ="http://img.youtube.com/vi/" . $filename ."/hqdefault.png";
+			$autoposterurljpg  ="http://img.$youtubedomain.com/vi/$filename/hqdefault.jpg";
+			$autoposterurlpng  ="http://img.$youtubedomain.com/vi/$filename/hqdefault.png";
 			$filetitle="";
 			$title="";
 			$scheme='https:';
