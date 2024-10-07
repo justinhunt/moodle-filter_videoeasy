@@ -28,12 +28,12 @@ namespace filter_videoeasy;
 defined('MOODLE_INTERNAL') || die();
 
 if (class_exists('\core_filters\text_filter')) {
-    class_alias('\core_filters\text_filter', 'base_text_filter');
+    class_alias('\core_filters\text_filter', 'videoeasy_base_text_filter');
 } else {
-    class_alias('\moodle_text_filter', 'base_text_filter');
+    class_alias('\moodle_text_filter', 'videoeasy_base_text_filter');
 }
 
-class text_filter extends \base_text_filter {
+class text_filter extends \videoeasy_base_text_filter {
     protected $adminconfig = null;
     protected $courseconfig = null;
 
@@ -74,13 +74,13 @@ class text_filter extends \base_text_filter {
             $handleextstring = implode('|', $handleexts);
             // $oldsearch = '/<a\s[^>]*href="([^"#\?]+\.(' .  $handleextstring. '))(\?d=([\d]{1,4})x([\d]{1,4}))?"[^>]*>([^>]*)<\/a>/is';
             $search = '/<a\s[^>]*href="([^"#\?]+\.(' .  $handleextstring. '))(.*?)"[^>]*>([^>]*)<\/a>/is';
-            $newtext = preg_replace_callback($search, 'self::filter_videoeasy_allexts_callback', $newtext);
+            $newtext = preg_replace_callback($search, [$this, 'filter_videoeasy_allexts_callback'], $newtext);
         }
 
            // check for youtube
         if ($this->fetchconf('handleyoutube')) {
             $search = '/<a\s[^>]*href="(?:https?:\/\/)?(?:www\.)?youtu(?:\.be|be\.com)\/(?:watch\?v=|v\/)?([\w-]{10,})(?:.*?)<\/a>/is';
-            $newtext = preg_replace_callback($search, 'self::filter_videoeasy_youtube_callback', $newtext);
+            $newtext = preg_replace_callback($search, [$this, 'filter_videoeasy_youtube_callback'], $newtext);
         }
 
         if (is_null($newtext) or $newtext === $text) {
