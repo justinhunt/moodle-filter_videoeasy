@@ -25,8 +25,8 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-$plugin->version   = 2024040800;
+$plugin->version   = 2024100700;
 $plugin->requires  = 2015051100;        // Requires this Moodle version or greater
 $plugin->component = 'filter_videoeasy';
 $plugin->maturity  = MATURITY_STABLE;
-$plugin->release   =  '1.2.08(Build 2024040800)';
+$plugin->release   =  '1.2.09 (Build 2024100700)';
