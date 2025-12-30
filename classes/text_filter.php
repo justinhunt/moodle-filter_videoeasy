@@ -214,8 +214,8 @@ class text_filter extends \videoeasy_base_text_filter {
             $videourl = "https://www.$youtubedomain.com/watch?v=" . $filename;
             $autojpgfilename = "hqdefault.jpg";
             $autopngfilename = "hqdefault.png";
-            $autoposterurljpg  = "http://img.$youtubedomain.com/vi/$filename/hqdefault.jpg";
-            $autoposterurlpng  = "http://img.$youtubedomain.com/vi/$filename/hqdefault.png";
+            $autoposterurljpg  = "https://img.$youtubedomain.com/vi/$filename/hqdefault.jpg";
+            $autoposterurlpng  = "https://img.$youtubedomain.com/vi/$filename/hqdefault.png";
             $filetitle = "";
             $title = "";
             $scheme = 'https:';
